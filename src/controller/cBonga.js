@@ -1,11 +1,11 @@
 const { Bonga } = require("../db.js");
 
-const postBonga = async (corteBonga) => {
+const pbo = async (cobo) => {
   try {
-    const registroBonga = [];
+    const rcobo = [];
     // Recorremos corteChat y guardamos cada objeto como un registro en la base de datos
-    for (const i of corteBonga) {
-      const [registros, created] = await Bonga.findOrCreate({
+    for (const i of cobo) {
+      const [r, c] = await Bonga.findOrCreate({
         where: {
           userName: i.user,
           fecha: i.fecha,
@@ -13,33 +13,33 @@ const postBonga = async (corteBonga) => {
           mensual: false,
         },
       });
-      if (created) {
-        registroBonga.push(registros);
+      if (c) {
+        rcobo.push(r);
       }
     }
     // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.
-    registroBonga.sort((a, b) => {
+    rcobo.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     });
-    return registroBonga;
+    return rcobo;
   } catch (error) {
     // Manejo de errores en caso de que algo falle durante el proceso de creación de registros.
     throw new Error("Error al guardar los registros: " + error.message);
   }
 };
-const getAllBonga = async () => {
+const gbo = async () => {
   try {
-    const corteBonga = await Bonga.findAll();
-    corteBonga.sort((a, b) => {
+    const cobo = await Bonga.findAll();
+    cobo.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     });
-    return corteBonga;
+    return cobo;
   } catch (error) {
     throw new Error("Error al buscar los registros " + error.message);
   }
 };
 
 module.exports = {
-  postBonga,
-  getAllBonga,
+  pbo,
+  gbo,
 };

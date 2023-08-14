@@ -1,52 +1,52 @@
 const { Adultwork } = require("../db.js");
 
-const postCorte = async (corte) => {
+const pad = async (coad) => {
   try {
-    const registroCorte = [];
+    const rcoad = [];
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
-    for (const item of corte) {
-      const [registros, created] = await Adultwork.findOrCreate({
+    for (const i of coad) {
+      const [r, c] = await Adultwork.findOrCreate({
         where: {
-          userName: item.user,
-          fecha: item.fecha,
-          creditos: item.creditos,
-          parcial: item.parcial,
+          userName: i.user,
+          fecha: i.fecha,
+          creditos: i.creditos,
+          parcial: i.parcial,
           mensual: false,
         }
         },);
-        if (created) {
-          registroCorte.push(registros)
+        if (c) {
+          rcoad.push(r)
         }
     }
     // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.
-    registroCorte.sort((a, b) => {
+    rcoad.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     })
-    return registroCorte;
+    return rcoad;
   } catch (error) {
     // Manejo de errores en caso de que algo falle durante el proceso de creación de registros.
     throw new Error("Error al guardar los registros: " + error.message);
   }
 };
 
-const getAllQuincena = async () => {
+const gad = async () => {
   try {
-    const corte = await Adultwork.findAll({where: {parcial: 'no'}});
-    corte.sort((a, b) => {
+    const coad = await Adultwork.findAll({where: {parcial: 'no'}});
+    coad.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     })
-    return corte;
+    return coad;
   } catch (error) {
     throw new Error('Error al buscar los registros ' + error.message);
   }
 };
 
-const postParcial = async (parcial) => {
+const ppad = async (copad) => {
   try {
-    const registroParcial = [];
+    const rcopad = [];
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
-    for (const item of parcial) {
-      const [registros, created] = await Adultwork.findOrCreate({
+    for (const i of copad) {
+      const [r, c] = await Adultwork.findOrCreate({
         where: {
           userName: item.user,
           creditos: item.creditos,
@@ -54,38 +54,38 @@ const postParcial = async (parcial) => {
           mensual: false,
         }
       },);
-      if (created) {
-        registroParcial.push(registros)
+      if (c) {
+        rcopad.push(r)
       }
     }
     // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.
-    registroParcial.sort((a, b) => {
+    rcopad.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     })
-    return registroParcial;
+    return rcopad;
   } catch (error) {
     // Manejo de errores en caso de que algo falle durante el proceso de creación de registros.
     throw new Error("Error al guardar los registros: " + error.message);
   }
 };
 
-const getAllParcial = async () => {
+const gpad = async () => {
   try {
-    const parcial = await Adultwork.findAll({where: {parcial: 'si'}});
-    parcial.sort((a, b) => {
+    const copad = await Adultwork.findAll({where: {parcial: 'si'}});
+    copad.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     })
-    return parcial;
+    return copad;
   } catch (error) {
     throw new Error('Error al buscar los registros ' + error.message);
   }
 };
 
 module.exports = {
-  postCorte,
-  getAllQuincena,
-  postParcial,
-  getAllParcial,
+  pad,
+  gad,
+  ppad,
+  gpad,
 };
 
 

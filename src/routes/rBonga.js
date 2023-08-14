@@ -1,14 +1,14 @@
 const { Router } = require("express");
 const router = Router();
 
-const { postBonga, getAllBonga } = require("../controller/cBonga.js");
+const { pbo, gbo } = require("../controller/cBonga.js");
 
 router.post("/", async (req, res) => {
-  const corteBonga = req.body.corteBonga;
+  const cobo = req.body.cobo;
   try {
-    const newCorteBonga = await postBonga(corteBonga);
-    if (newCorteBonga[0]) {
-      return res.status(200).json(newCorteBonga);
+    const ncobo = await pbo(cobo);
+    if (ncobo[0]) {
+      return res.status(200).json(ncobo);
     } else {
       return res
         .status(404)
@@ -21,9 +21,9 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const bonga = await getAllBonga();
-    if (bonga) {
-      return res.status(200).json(bonga);
+    const cobo = await gbo();
+    if (cobo[0]) {
+      return res.status(200).json(cobo);
     } else {
       return res.status(404).json({ error: "No hay resgistros para mostrar." });
     }

@@ -1,9 +1,9 @@
 const { Sender } = require("../db.js");
 
-const ps = async (cs) => {
+const pse = async (cose) => {
   try {
-    const rs = [];
-    for (const i of cs) {
+    const rcose = [];
+    for (const i of cose) {
       const [r, c] = await Sender.findOrCreate({
         where: {
           userName: i.user,
@@ -14,31 +14,31 @@ const ps = async (cs) => {
         },
       });
       if (c) {
-        rs.push(r);
+        rcose.push(r);
       }
     }
-    rs.sort((a, b) => {
+    rcose.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     });
-    return rs;
+    return rcose;
   } catch (error) {
     throw new Error("Error al guardar los registros: " + error.message);
   }
 };
 
-const gas = async () => {
+const gse = async () => {
   try {
-    const cs = await Sender.findAll();
-    cs.sort((a, b) => {
+    const cose = await Sender.findAll();
+    cose.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     });
-    return cs;
+    return cose;
   } catch (error) {
     throw new Error("Error al buscar los registros. " + error.message);
   }
 };
 
 module.exports = {
-  ps,
-  gas,
+  pse,
+  gse,
 };

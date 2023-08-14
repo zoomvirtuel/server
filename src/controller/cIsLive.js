@@ -1,9 +1,9 @@
 const { IsLive } = require("../db.js");
 
-const pil = async (ci) => {
+const pil = async (coil) => {
   try {
-    const ril = [];
-    for (const i of ci) {
+    const rcoil = [];
+    for (const i of coil) {
       const [r, c] = await IsLive.findOrCreate({
         where: {
           codigo: i.codigo,
@@ -12,13 +12,13 @@ const pil = async (ci) => {
         },
       });
       if (c) {
-        ril.push(r);
+        rcoil.push(r);
       }
     }
-    ril.sort((a, b) => {
+    rcoil.sort((a, b) => {
       return a.codigo.localeCompare(b.codigo);
     });
-    return ril;
+    return rcoil;
   } catch (error) {
     throw new Error("Error al guardar los registros: " + error.message);
   }

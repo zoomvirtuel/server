@@ -2,16 +2,16 @@ const { Router } = require("express");
 const router = Router();
 
 const {
-  ps,
-  gas,
+  pse,
+  gse,
 } = require("../controller/cSender.js");
 
 router.post("/", async (req, res) => {
-  const cs = req.body.cs;
+  const cose = req.body.cose;
   try {
-    const ncs = await ps(cs);
-    if (ncs[0]) {
-      return res.status(200).json(ncs);
+    const ncose = await pse(cose);
+    if (ncose[0]) {
+      return res.status(200).json(ncose);
     } else {
       return res
         .status(404)
@@ -24,9 +24,9 @@ router.post("/", async (req, res) => {
 
 router.get('/', async (req, res) => { 
   try {
-    const cs = await gas();
-    if (cs) {
-      return res.status(200).json(cs);
+    const cose = await gse();
+    if (cose) {
+      return res.status(200).json(cose);
     } else {
       return res.status(404).json({error: 'Lo siento no hay resgistros para mostrar.'});
     }

@@ -1,19 +1,19 @@
 const { Router } = require("express");
 const router = Router();
 const {
-  postCorte,
-  getAllQuincena,
-  postParcial,
-  getAllParcial,
+  pad,
+  gad,
+  ppad,
+  gpad,
 } = require("../controller/cAdultwork.js");
 
 router.post("/", async (req, res) => {
-  const corte = req.body.corte;
+  const coad = req.body.coad;
   try {
     
-    const newData = await postCorte(corte); //enviar al controller
-    if (newData[0]) {
-      return res.status(200).json(newData);
+    const necoad = await pad(coad); //enviar al controller
+    if (necoad[0]) {
+      return res.status(200).json(necoad);
     }else {
       return res.status(404).json({error: 'Los registros ya fueron realizados'});
     }
@@ -24,9 +24,9 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const corte = await getAllQuincena();
-    if (corte) {
-      res.status(200).json(corte);
+    const coad = await gad();
+    if (coad[0]) {
+      res.status(200).json(coad);
     }else {
       res.status(405).json({ error: "No hay resgistro para mostrar." });
     }
@@ -36,11 +36,11 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/parcial", async (req, res) => {
-  const parcial = req.body.parcial;
+  const copad = req.body.copad;
   try {
-    const newParcial = await postParcial(parcial);
-    if (newParcial[0]) {
-      return res.status(200).json(newParcial);
+    const ncopad = await ppad(copad);
+    if (ncopad[0]) {
+      return res.status(200).json(ncopad);
     }else {
       return res.status(404).json({error: 'Los registros ya fueron subidos'})
     }
@@ -51,9 +51,9 @@ router.post("/parcial", async (req, res) => {
 
 router.get("/parcial", async (req, res) => {
   try {
-    const parcial = await getAllParcial();
-    if (parcial) {
-      res.status(200).json(parcial);
+    const copad = await gpad();
+    if (copad[0]) {
+      res.status(200).json(copad);
     }else {
       res.status(405).json({ error: "No hay resgistros para mostrar." });
     }

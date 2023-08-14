@@ -1,46 +1,46 @@
 const { Chaturbate } = require("../db.js");
 
-const postChaturbate = async (corteChat) => {
+const pch = async (coch) => {
   try {
-    const registroChat = [];
+    const rcoch = [];
     // Recorremos corteChat y guardamos cada objeto como un registro en la base de datos
-    for (const item of corteChat) {
-      const [registros, created] = await Chaturbate.findOrCreate({
+    for (const i of coch) {
+      const [r, c] = await Chaturbate.findOrCreate({
         where: {
-          userName: item.user,
-          tokens: item.tokens,
-          dolares: item.dolares,
+          userName: i.user,
+          tokens: i.tokens,
+          dolares: i.dolares,
           mensual: false,
         },
       });
-      if (created) {
-        registroChat.push(registros);
+      if (c) {
+        rcoch.push(r);
       }
     }
     // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.
-    registroChat.sort((a, b) => {
+    rcoch.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     });
-    return registroChat;
+    return rcoch;
   } catch (error) {
     // Manejo de errores en caso de que algo falle durante el proceso de creación de registros.
     throw new Error("Error al guardar los registros: " + error.message);
   }
 };
 
-const getAllChaturbate = async () => {
+const gch = async () => {
   try {
-    const corteChat = await Chaturbate.findAll();
-    corteChat.sort((a, b) => {
+    const coch = await Chaturbate.findAll();
+    coch.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     })
-    return corteChat;
+    return coch;
   } catch (error) {
     throw new Error ('Error al buscar los registros ' + error.message);
   }
 };
 
 module.exports = {
-  postChaturbate,
-  getAllChaturbate,
+  pch,
+  gch,
 };

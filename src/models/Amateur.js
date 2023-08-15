@@ -18,11 +18,11 @@ module.exports = (sequelize) => {
       allowNull: false,
       },
       tokens: {
-      type: DataTypes.STRING,
+      type: DataTypes.DOUBLE,
       allowNull: false,
       },
       mensual: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
       },
     },

@@ -1,9 +1,9 @@
 const { Amateur } = require("../db.js");
 
-const pam = async (ncoam) => {
+const pam = async (coam) => {
   try {
     const rcoam = [];
-    for (const i of ncoam) {
+    for (const i of coam) {
       const [r, c] = await Amateur.findOrCreate({
         where: {
           userName: i.user,

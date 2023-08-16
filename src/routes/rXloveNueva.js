@@ -1,15 +1,14 @@
 const { Router } = require("express");
 const router = Router();
 
-const { pxl } = require("../controller/cXlove.js");
+const { pxln } = require("../controller/cXloveNueva.js");
 
 router.post("/", async (req, res) => {
-  const coxl = req.body.coxl;
-  console.log(coxl)
+  const coxln = req.body.coxln;
   try {
-    const ncoxl = await pxl(coxl);
-    if (ncoxl[0]) {
-      return res.status(200).json(ncoxl);
+    const ncoxln = await pxln(coxln);
+    if (ncoxln[0]) {
+      return res.status(200).json(ncoxln);
     } else {
       return res
         .status(404)

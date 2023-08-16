@@ -22,7 +22,7 @@ module.exports = (sequelize) => {
         allowNull: false,
       },
       tokens: {
-        type: DataTypes.STRING,
+        type: DataTypes.DOUBLE,
         allowNull: false,
       },
     },

@@ -14,6 +14,7 @@ const rSkype = require('./rSkype.js')
 const rStripchat = require('./rStripchat.js')
 const rVx = require('./rVx.js')
 const rXlove = require('./rXlove.js')
+const rXloveNueva = require('./rXloveNueva.js')
 
 
 //* ejecucion de rutas
@@ -29,6 +30,7 @@ router.use('/skype', rSkype)
 router.use('/stripchat', rStripchat)
 router.use('/vx', rVx)
 router.use('/xlove', rXlove)
+router.use('/xlovenueva', rXloveNueva)
 
 module.exports = router;
 

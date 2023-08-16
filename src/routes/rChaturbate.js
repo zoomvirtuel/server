@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const coch = await gch();
-    if (cochch) {
+    if (coch) {
       return res.status(200).json(coch);
     } else {
       return res.status(405).json({ error: "No hay registros para mostrar" });

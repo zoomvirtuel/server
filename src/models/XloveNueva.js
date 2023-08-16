@@ -2,7 +2,7 @@ const { DataTypes, UUIDV4 } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Vx",
+    "XloveNueva",
     {
       id: {
         type: DataTypes.UUID,
@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
       },
       euros: {
         type: DataTypes.DOUBLE,
+        allowNull: false,
+      },
+      fecha: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       mensual: {

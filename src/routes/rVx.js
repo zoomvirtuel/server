@@ -7,7 +7,7 @@ router.post("/", async (req, res) => {
   const covx = req.body.covx;
   try {
     const ncovx = await pvx(covx);
-    if (ncovx) {
+    if (ncovx[0]) {
       return res.status(200).json(ncovx);
     } else {
       return res

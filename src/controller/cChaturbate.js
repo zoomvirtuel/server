@@ -33,10 +33,10 @@ const gch = async () => {
     const coch = await Chaturbate.findAll();
     coch.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
-    })
+    });
     return coch;
   } catch (error) {
-    throw new Error ('Error al buscar los registros ' + error.message);
+    throw new Error("Error al buscar los registros " + error.message);
   }
 };
 

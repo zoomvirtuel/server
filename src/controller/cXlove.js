@@ -24,6 +24,17 @@ const pxl = async (coxl) => {
   }
 };
 
+const gxl = async () => {
+  try {
+    const coxl = await Xlove.findAll();
+    coxl.sort((a, b) => a.userName.localeCompare(b.userName));
+    return coxl;
+  } catch (error) {
+    throw new Error("Error no hay resgistros para mostrar");
+  }
+};
+
 module.exports = {
   pxl,
+  gxl,
 };

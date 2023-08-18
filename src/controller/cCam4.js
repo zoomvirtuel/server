@@ -27,6 +27,17 @@ const pca = async (coca) => {
   }
 };
 
+const gca = async () => {
+  try {
+    const coca = await Cam4.findAll();
+    coca.sort((a, b) => a.userName.localeCompare(b.userName));
+    return coca;
+  } catch (error) {
+    throw new Error("Error no hay registros para mostrar");
+  }
+};
+
 module.exports = {
   pca,
+  gca,
 };

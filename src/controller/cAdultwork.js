@@ -12,16 +12,16 @@ const pad = async (coad) => {
           creditos: i.creditos,
           parcial: i.parcial,
           mensual: false,
-        }
-        },);
-        if (c) {
-          rcoad.push(r)
-        }
+        },
+      });
+      if (c) {
+        rcoad.push(r);
+      }
     }
     // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.
     rcoad.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
-    })
+    });
     return rcoad;
   } catch (error) {
     // Manejo de errores en caso de que algo falle durante el proceso de creación de registros.
@@ -31,13 +31,13 @@ const pad = async (coad) => {
 
 const gad = async () => {
   try {
-    const coad = await Adultwork.findAll({where: {parcial: 'no'}});
+    const coad = await Adultwork.findAll({ where: { parcial: false } });
     coad.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
-    })
+    });
     return coad;
   } catch (error) {
-    throw new Error('Error al buscar los registros ' + error.message);
+    throw new Error("Error al buscar los registros " + error.message);
   }
 };
 
@@ -48,20 +48,20 @@ const ppad = async (copad) => {
     for (const i of copad) {
       const [r, c] = await Adultwork.findOrCreate({
         where: {
-          userName: item.user,
-          creditos: item.creditos,
-          parcial: item.parcial,
+          userName: i.user,
+          creditos: i.creditos,
+          parcial: i.parcial,
           mensual: false,
-        }
-      },);
+        },
+      });
       if (c) {
-        rcopad.push(r)
+        rcopad.push(r);
       }
     }
     // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.
     rcopad.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
-    })
+    });
     return rcopad;
   } catch (error) {
     // Manejo de errores en caso de que algo falle durante el proceso de creación de registros.
@@ -71,13 +71,13 @@ const ppad = async (copad) => {
 
 const gpad = async () => {
   try {
-    const copad = await Adultwork.findAll({where: {parcial: 'si'}});
+    const copad = await Adultwork.findAll({ where: { parcial: true } });
     copad.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
-    })
+    });
     return copad;
   } catch (error) {
-    throw new Error('Error al buscar los registros ' + error.message);
+    throw new Error("Error al buscar los registros " + error.message);
   }
 };
 
@@ -87,38 +87,3 @@ module.exports = {
   ppad,
   gpad,
 };
-
-
-// const getCountryById = async (id) => {
-//   const countryFilterId = await Country.findOne({
-//     where: { id },
-//     include: {
-//       model: Activity,
-//       as: "Activities",
-//       attributes: ["id", "name", "difficulty", "duration", "season"],
-//       through: { attributes: [] },
-//     },
-//   });
-  
-//   if (countryFilterId) return countryFilterId;
-//   return { error: `No hay paises con el ID: ${id}` };
-// };
-
-// const getCountryByName = async (name) => {
-//   const countryFilterName = await Country.findAll({
-//     where: {
-//       name: {
-//         [Op.iLike]: `%${name}%`,
-//       },
-//     },
-//   });
-
-//   if (countryFilterName.length >= 0) return countryFilterName;
-//   return { error: `No hay paises con el Nombre: ${name}` };
-// };
-
-// module.exports = {
-//   getAllCountries,
-//   getCountryById,
-//   getCountryByName,
-// };

@@ -25,6 +25,17 @@ const pst = async (cost) => {
   }
 };
 
+const gst = async () => {
+try {
+  const cost = await Stripchat.findAll();
+  cost.sort((a, b) => a.userName.localeCompare(b.userName));
+return cost
+} catch (error) {
+throw new Error ("Error no hay registros para mostrar");
+}
+};
+
 module.exports = {
   pst,
+  gst,
 };

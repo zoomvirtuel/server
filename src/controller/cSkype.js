@@ -24,6 +24,17 @@ const psk = async (cosk) => {
   }
 };
 
+const gsk = async () => {
+  try {
+    const cosk = await Skype.findAll();
+    cosk.sort((a, b) => a.userName.localeCompare(b.userName));
+    return cosk;
+  } catch (error) {
+    throw new Error("Error no hay registros para mostrar");
+  }
+};
+
 module.exports = {
   psk,
+  gsk,
 };

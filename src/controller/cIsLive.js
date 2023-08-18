@@ -24,6 +24,17 @@ const pil = async (coil) => {
   }
 };
 
+const gil = async () => {
+  try {
+    const coil = await IsLive.findAll();
+    coil.sort((a, b) => a.codigo.localeCompare(b.codigo));
+    return coil;
+  } catch (error) {
+    throw new Error("Error no hay registros para mostrar");
+  }
+};
+
 module.exports = {
   pil,
+  gil,
 };

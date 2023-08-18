@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
       return res.status(404).json({error: 'Los registros ya fueron realizados'});
     }
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).json({error: "Error al guardar los registros: "});
   }
 });
 
@@ -45,7 +45,7 @@ router.post("/parcial", async (req, res) => {
       return res.status(404).json({error: 'Los registros ya fueron subidos'})
     }
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).json({error: "Error al guardar los registros: "});
   }
 });
 

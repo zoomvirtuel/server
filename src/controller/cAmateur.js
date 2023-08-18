@@ -10,7 +10,7 @@ const pam = async (coam) => {
           tokens: i.tokens,
           dolares: i.dolares,
           mensual: false,
-        }
+        },
       });
       if (c) {
         rcoam.push(r);
@@ -25,6 +25,17 @@ const pam = async (coam) => {
   }
 };
 
+const gam = async () => {
+  try {
+    const coam = await Amateur.findAll();
+    coam.sort((a, b) => a.userName.localeCompare(b.userName));
+    return coam;
+  } catch (error) {
+    throw new Error("Error No hay registros para mostrar");
+  }
+};
+
 module.exports = {
   pam,
+  gam,
 };

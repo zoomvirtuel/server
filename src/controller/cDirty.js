@@ -11,7 +11,7 @@ const pdi = async (codi) => {
           plata: i.plata,
           moneda: i.moneda,
           mensual: true,
-        }
+        },
       });
       if (c) {
         rcodi.push(r);
@@ -26,6 +26,17 @@ const pdi = async (codi) => {
   }
 };
 
+const gdi = async () => {
+  try {
+    const codi = await Dirty.findAll()
+    codi.sort((a, b) => a.userName.localeCompare(b.userName));
+    return codi;
+  } catch (error) {
+    throw new Error("Error no hay registros para mostrar");
+  }
+};
+
 module.exports = {
   pdi,
+  gdi,
 };

@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
         .json({ error: "Lo sentimos los registros ya fueron hechos." });
     }
   } catch (error) {
-    res.status(500).send(error.message);
+    return res.status(500).json({error: "Error al guardar los registros: "});
   }
 });
 

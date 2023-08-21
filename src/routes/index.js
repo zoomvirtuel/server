@@ -15,9 +15,11 @@ const rStripchat = require('./rStripchat.js')
 const rVx = require('./rVx.js')
 const rXlove = require('./rXlove.js')
 const rXloveNueva = require('./rXloveNueva.js')
+const rPassport = require("./rPassport.js");
 
 
 //* ejecucion de rutas
+router.use("/auth", rPassport);
 router.use("/corte", rAdultwork);
 router.use("/amateur", rAmateur);
 router.use('/bonga', rBonga);

@@ -8,7 +8,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK || process.env.GOOGLE_HOME || process.env.GOOGLE_REGISTER,
+      callbackURL: process.env.GOOGLE_CALLBACK,
     },
     async (_, __, profile, done) => {
       const account = profile._json;

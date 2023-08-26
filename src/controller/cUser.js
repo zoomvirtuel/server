@@ -57,10 +57,18 @@ const getAllUser = async () => {
 const getUserById = async (id) => {
   try {
     const userId = await User.findByPk(id);
-    // x.sort((a, b) => a.userName.localeCompare(b.userName));
     return userId;
   } catch (error) {
     throw new Error("Error no hay resgistros con ese id.");
+  }
+};
+const getUserByBoolean = async (id) => {
+  try {
+    let userId = await User.findByPk(id);
+    return userId = true;
+  } catch (error) {
+    let userId = '';
+    return userId = false;
   }
 };
 
@@ -68,4 +76,5 @@ module.exports = {
   postUser,
   getAllUser,
   getUserById,
+  getUserByBoolean,
 };

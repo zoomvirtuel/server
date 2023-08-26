@@ -3,7 +3,7 @@ require("dotenv").config();
 const router = Router();
 const passport = require("passport");
 
-const { postUser, getUserById } = require("../controller/cUser.js");
+const { postUser, getUserById, getUserByBoolean } = require("../controller/cUser.js");
 
 router.get(
   "/auth/google",
@@ -18,10 +18,10 @@ router.get(
   async (req, res) => {
     try {
       user = req.user;
-      const existe = await getUserById(user.sub);
+      const existe = await getUserByBoolean(user.sub);
       console.log(existe)
       console.log(existe.error)
-      if (existe && !existe.error) {
+      if (existe === true) {
         return res.redirect(process.env.GOOGLE_HOME);
       } else {
         return res.redirect(process.env.GOOGLE_REGISTER);

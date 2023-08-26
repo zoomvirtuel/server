@@ -1,7 +1,7 @@
 const passport = require("passport");
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
 require("dotenv").config();
-const { postUser, getUserById } = require('./controller/cUser.js')
+const { getUserById } = require('./controller/cUser.js')
 
 passport.use(
   new GoogleStrategy(
@@ -13,7 +13,6 @@ passport.use(
     async (_, __, profile, done) => {
       const account = profile._json;
       try {
-        await postUser(account)
         done(null, account)
       } catch (error) {
         done(error)

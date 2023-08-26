@@ -1,23 +1,50 @@
 const { User } = require("../db.js");
 
-const postUser = async (account) => {
-  // console.log(account);
+const postUser = async (user, account) => {
+
   try {
-    const newUser = await User.findOrCreate({
-      where: {
-        id: account.sub,
-        name: account.name,
-        picture: account.picture,
-        correo: account.email,
-      },
-    });
-    return newUser;
+const [newUser, created] = await User.findOrCreate({
+  where: {
+    id: account.sub,
+  },
+  defaults: {
+    name: account.name,
+    picture: account.picture,
+    correo: account.email,
+    nombre: user.nombre,
+    apellido: user.apellido,
+    cedula: user.cedula,
+    fechaDeNacimiento: user.fechaDeNacimiento,
+    telefono: user.telefono,
+    whatsapp: user.whatsapp,
+    direccion: user.direccion,
+    nacionalidad: user.nacionalidad,
+  },
+});
+
+if (created) {
+  const nUser = {
+    id: newUser.dataValues.id,
+    name: newUser.dataValues.name,
+    picture: newUser.dataValues.picture,
+    correo: newUser.dataValues.correo,
+    nombre: newUser.dataValues.nombre,
+    apellido: newUser.dataValues.apellido,
+    telefono: newUser.dataValues.telefono,
+    whatsapp: newUser.dataValues.whatsapp,
+    nacionalidad: newUser.dataValues.nacionalidad,
+  };
+
+  return nUser;
+} else {
+  return user;
+}
   } catch (error) {
     throw new Error("Lo sentimos no se pudo completar.");
   }
 };
 
-const getUser = async () => {
+const getAllUser = async () => {
   try {
     const user = await User.findAll();
     // x.sort((a, b) => a.userName.localeCompare(b.userName));
@@ -39,6 +66,6 @@ const getUserById = async (id) => {
 
 module.exports = {
   postUser,
-  getUser,
+  getAllUser,
   getUserById,
 };

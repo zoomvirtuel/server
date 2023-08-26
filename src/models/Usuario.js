@@ -9,37 +9,13 @@ module.exports = (sequelize) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      Nombre: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      apellido: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      telefono: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      whatsapp: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      cedula: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      Nacimiento: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
       pasaporte: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
-      direccion: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      userName: {
+      type: DataTypes.STRING,
+      allowNull: false,
       },
     },
     {

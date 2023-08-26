@@ -19,6 +19,7 @@ router.get(
     try {
       user = req.user;
       const existe = await getUserById(user.sub);
+      console.log(existe)
       if (existe) {
         return res.redirect(process.env.GOOGLE_HOME);
       } else {

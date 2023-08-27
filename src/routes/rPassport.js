@@ -25,7 +25,8 @@ router.get(
         return res.redirect(process.env.GOOGLE_REGISTER);
       }
     } catch (error) {
-      return res.status(500).send(error.message);
+      console.error("Error en /auth/google/callback:", error);
+      return res.status(500).send("Error en /auth/google/callback: " + error.message);
     }
   }
 );

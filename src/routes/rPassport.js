@@ -19,8 +19,7 @@ router.get(
     try {
       user = req.user;
       const existe = await getUserByBoolean(user.sub);
-      console.log(existe)
-      console.log(existe.error)
+      // console.log(existe)
       if (existe === true) {
         return res.redirect(process.env.GOOGLE_HOME);
       } else {
@@ -38,7 +37,7 @@ router.post("/registro", async (req, res) => {
   try {
     const nUser = await postUser(front, account);
     if (nUser) {
-      console.log(nUser)
+      // console.log(nUser)
       return res.status(200).json(nUser);
     } else {
       return res.status(404).json({

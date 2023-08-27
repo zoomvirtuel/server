@@ -1,11 +1,11 @@
 const { User } = require("../db.js");
 
 const postUser = async (user, account) => {
-
   try {
 const [newUser, created] = await User.findOrCreate({
   where: {
     id: account.sub,
+    cedula: user.cedula,
   },
   defaults: {
     name: account.name,
@@ -13,7 +13,6 @@ const [newUser, created] = await User.findOrCreate({
     correo: account.email,
     nombre: user.nombre,
     apellido: user.apellido,
-    cedula: user.cedula,
     fechaDeNacimiento: user.fechaDeNacimiento,
     telefono: user.telefono,
     whatsapp: user.whatsapp,
@@ -34,7 +33,7 @@ if (created) {
     whatsapp: newUser.dataValues.whatsapp,
     nacionalidad: newUser.dataValues.nacionalidad,
   };
-
+// console.log(nUser)
   return nUser;
 } else {
   return user;
@@ -65,10 +64,14 @@ const getUserById = async (id) => {
 const getUserByBoolean = async (id) => {
   try {
     let userId = await User.findByPk(id);
-    return userId = true;
+    // console.log(userId)
+    if (userId) {
+      return userId = true;
+    } else {
+      return userId = false;
+    }
   } catch (error) {
-    let userId = '';
-    return userId = false;
+    throw Error ('error no se pudo completar la accion');
   }
 };
 

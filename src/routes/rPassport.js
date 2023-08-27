@@ -11,11 +11,13 @@ router.get(
     scope: ["profile", "email"],
   })
 );
+let user = '';
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", { session: true }),
   async (req, res) => {
     try {
+      user = req.user;
       const userId = req.user.sub;
       console.log(req.user);
       const existe = await getUserByBoolean(userId);
@@ -36,6 +38,7 @@ router.get(
 router.post("/registro", async (req, res) => {
   const front = req.body.input;
   const account = user;
+  console.log(req.user)
   try {
     console.log(front)
     console.log(account)

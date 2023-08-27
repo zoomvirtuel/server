@@ -15,7 +15,7 @@ server.use(
   cors(
     {
       // origin: process.env.FRONT_URL,
-      origin: '*',
+      origin: 'http://localhost:5173',
   }
   )
   );

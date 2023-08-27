@@ -17,7 +17,7 @@ router.get(
   async (req, res) => {
     try {
       const userId = req.user.sub;
-      console.log(userId)
+      console.log(req.user);
       const existe = await getUserByBoolean(userId);
 
       if (existe) {

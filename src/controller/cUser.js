@@ -73,7 +73,7 @@ const getUserByBoolean = async (userId) => {
       return false;
     }
   } catch (error) {
-    throw Error ('error no se pudo completar la accion'+ error.message);
+    throw Error ('error no se pudo completar la accion '+ error.message);
   }
 };
 

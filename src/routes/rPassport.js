@@ -27,7 +27,7 @@ router.get(
       }
     } catch (error) {
       console.error("Error en /auth/google/callback:", error);
-      return res.status(500).send("Error en /auth/google/callback: " + error.message);
+      return res.status(500).send(error.message);
     }
   }
 );

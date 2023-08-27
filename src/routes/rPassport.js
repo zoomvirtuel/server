@@ -11,16 +11,15 @@ router.get(
     scope: ["profile", "email"],
   })
 );
-let user = "";
 router.get(
   "/auth/google/callback",
   passport.authenticate("google", { session: true }),
   async (req, res) => {
     try {
-      user = req.user;
-      const existe = await getUserByBoolean(user.sub);
-      // console.log(existe)
-      if (existe === true) {
+      const userId = req.user.sub;
+      const existe = await getUserByBoolean(userId);
+
+      if (existe) {
         return res.redirect(process.env.GOOGLE_HOME);
       } else {
         return res.redirect(process.env.GOOGLE_REGISTER);
@@ -30,6 +29,7 @@ router.get(
     }
   }
 );
+
 
 router.post("/registro", async (req, res) => {
   const front = req.body.input;

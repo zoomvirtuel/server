@@ -61,12 +61,12 @@ const getUserById = async (id) => {
     throw new Error("Error no hay resgistros con ese id.");
   }
 };
-const getUserByBoolean = async (id) => {
+const getUserByBoolean = async (userId) => {
   try {
-    console.log(id)
-    let userId = await User.findByPk(id);
     console.log(userId)
-    if (userId) {
+    let nuserId = await User.findByPk(userId);
+    console.log(userId)
+    if (nuserId) {
       return true;
     } else {
       return false;

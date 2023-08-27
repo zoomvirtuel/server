@@ -27,7 +27,10 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
+    console.log(id)
+    console.log(user.sub)
     const user = await getUserById(id); // Implementa la función para obtener el usuario por su ID
+    console.log(user)
     done(null, user);
   } catch (error) {
     done(error, null);

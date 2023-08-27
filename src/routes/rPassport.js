@@ -19,7 +19,7 @@ router.get(
     try {
       user = req.user;
       const userId = req.user.sub;
-      console.log(req.user);
+      // console.log(req.user);
       const existe = await getUserByBoolean(userId);
 
       if (existe) {
@@ -28,7 +28,7 @@ router.get(
         return res.redirect(process.env.GOOGLE_REGISTER);
       }
     } catch (error) {
-      console.error("Error en /auth/google/callback:", error);
+      // console.error("Error en /auth/google/callback:", error);
       return res.status(500).send(error.message);
     }
   }
@@ -38,10 +38,10 @@ router.get(
 router.post("/registro", async (req, res) => {
   const front = req.body.input;
   const account = user;
-  console.log(req.user)
+  // console.log(req.user)
   try {
-    console.log(front)
-    console.log(account)
+    // console.log(front)
+    // console.log(account)
     const nUser = await postUser(front, account);
     if (nUser) {
       // console.log(nUser)
@@ -57,7 +57,7 @@ router.post("/registro", async (req, res) => {
   }
 });
 
-router.get("/registro/:id", async (req, res) => {
+router.get("/registro", async (req, res) => {
   try {
     const user = await getUserById(id);
     if (user) {

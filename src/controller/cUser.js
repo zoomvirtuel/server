@@ -2,8 +2,8 @@ const { User } = require("../db.js");
 
 const postUser = async (user, account) => {
   try {
-    console.log(user)
-    console.log(account)
+    // console.log(user)
+    // console.log(account)
 const [newUser, created] = await User.findOrCreate({
   where: {
     id: account.sub,
@@ -66,9 +66,9 @@ const getUserById = async (id) => {
 const getUserByBoolean = async (userId) => {
   try {
     const id = userId;
-    console.log(userId)
+    // console.log(userId)
     let nuserId = await User.findByPk(id);
-    console.log(nuserId)
+    // console.log(nuserId)
     if (nuserId) {
       return true;
     } else {

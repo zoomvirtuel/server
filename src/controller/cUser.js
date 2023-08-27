@@ -67,9 +67,9 @@ const getUserByBoolean = async (id) => {
     let userId = await User.findByPk(id);
     console.log(userId)
     if (userId) {
-      return userId = true;
+      return true;
     } else {
-      return userId = false;
+      return false;
     }
   } catch (error) {
     throw Error ('error no se pudo completar la accion');

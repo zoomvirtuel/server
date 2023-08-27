@@ -50,7 +50,7 @@ router.post("/registro", async (req, res) => {
   }
 });
 
-router.get("/registro", async (req, res) => {
+router.get("/registro/:id", async (req, res) => {
   try {
     const user = await getUserById(id);
     if (user) {

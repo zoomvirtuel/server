@@ -37,6 +37,8 @@ router.post("/registro", async (req, res) => {
   const front = req.body.input;
   const account = user;
   try {
+    console.log(front)
+    console.log(account)
     const nUser = await postUser(front, account);
     if (nUser) {
       // console.log(nUser)

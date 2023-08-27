@@ -2,6 +2,8 @@ const { User } = require("../db.js");
 
 const postUser = async (user, account) => {
   try {
+    console.log(user)
+    console.log(account)
 const [newUser, created] = await User.findOrCreate({
   where: {
     id: account.sub,

@@ -15,7 +15,7 @@ server.use(
   cors(
     {
       // origin: process.env.FRONT_URL,
-      origin: 'https://zoomvirtuel.netlify.app/',
+      origin: 'https://zoomvirtuel.netlify.app',
   }
   )
   );

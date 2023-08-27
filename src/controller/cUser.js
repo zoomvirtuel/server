@@ -63,9 +63,10 @@ const getUserById = async (id) => {
 };
 const getUserByBoolean = async (userId) => {
   try {
+    const id = userId;
     console.log(userId)
-    let nuserId = await User.findByPk(userId);
-    console.log(userId)
+    let nuserId = await User.findByPk(id);
+    console.log(nuserId)
     if (nuserId) {
       return true;
     } else {

@@ -64,7 +64,7 @@ const getUserById = async (id) => {
     const userId = await User.findByPk(id);
     return userId;
   } catch (error) {
-    throw new Error("Error no hay resgistros con ese id.");
+    throw new Error("Error no hay resgistros con ese id. "+ error.message);
   }
 };
 

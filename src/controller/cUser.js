@@ -26,7 +26,6 @@ const [newUser, created] = await User.findOrCreate({
   },
 });
 
-if (created) {
   const nUser = {
     id: newUser.dataValues.id,
     image: newUser.dataValues.image,
@@ -38,11 +37,8 @@ if (created) {
     nacionalidad: newUser.dataValues.nacionalidad,
     admin: newUser.dataValues.admin,
   };
-console.log(nUser)
   return nUser;
-} else {
-  return user;
-}
+
   } catch (error) {
     throw new Error("Lo sentimos no se pudo completar.");
   }

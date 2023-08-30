@@ -73,5 +73,4 @@ module.exports = {
   postUser,
   getAllUser,
   getUserById,
-  getUserByBoolean,
 };

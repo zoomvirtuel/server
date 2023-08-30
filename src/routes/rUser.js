@@ -4,7 +4,6 @@ const router = Router();
 const {
   postUser,
   getUserById,
-  getUserByBoolean,
 } = require("../controller/cUser.js");
 
 router.post("/", async (req, res) => {

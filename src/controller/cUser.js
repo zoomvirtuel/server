@@ -67,19 +67,7 @@ const getUserById = async (id) => {
     throw new Error("Error no hay resgistros con ese id.");
   }
 };
-const getUserByBoolean = async (id) => {
-  try {
-    const nuserId = await User.findByPk(id);
-    console.log(nuserId)
-    if (nuserId) {
-      return true;
-    } if (nuserId === null) {
-      return false;
-    }
-  } catch (error) {
-    throw Error (error.message);
-  }
-};
+
 
 module.exports = {
   postUser,

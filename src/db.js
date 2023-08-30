@@ -8,21 +8,21 @@ const { DB_USER, DB_PASSWORD, DB_HOST, DB_RENDER } = process.env;
 
 // //! este sequelize es para local...
 
-// const sequelize = new Sequelize(
-//   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/zoomvirtuel`, {
-//   logging: false,
-//   native: false,
-// });
+const sequelize = new Sequelize(
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/zoomvirtuel`, {
+  logging: false,
+  native: false,
+});
 
 //! este sequelize es para RENDERIZADO... DEPLOY DB en render.s.
 
-const sequelize = new Sequelize(DB_RENDER, {
-  logging: false,
-  native: false,
-  dialectOptions: {
-    ssl: true, // Deshabilitar la conexión SSL/TLS
-  },
-});
+// const sequelize = new Sequelize(DB_RENDER, {
+//   logging: false,
+//   native: false,
+//   dialectOptions: {
+//     ssl: true, // Deshabilitar la conexión SSL/TLS
+//   },
+// });
 
 const basename = path.basename(__filename);
 

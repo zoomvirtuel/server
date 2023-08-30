@@ -15,12 +15,10 @@ const rStripchat = require("./rStripchat.js");
 const rVx = require("./rVx.js");
 const rXlove = require("./rXlove.js");
 const rXloveNueva = require("./rXloveNueva.js");
-const rPassport = require("./rPassport.js");
-// const rUser = require("./rUser.js");
+const rUser = require("./rUser.js");
 
-//* ejecucion de rutas
-router.use("/", rPassport);
-// router.use("/registro", rUser);
+//* ejecucion de rutasrouter.use("/", rPassport);
+router.use("/registro", rUser);
 router.use("/corte", rAdultwork);
 router.use("/amateur", rAmateur);
 router.use("/bonga", rBonga);

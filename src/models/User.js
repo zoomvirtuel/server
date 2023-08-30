@@ -9,11 +9,19 @@ module.exports = (sequelize) => {
         allowNull: false,
         primaryKey: true,
       },
-      name: {
+      firstName: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      picture: {
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      admin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      image: {
         type: DataTypes.STRING,
         allowNull: false,
       },

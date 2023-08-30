@@ -1,18 +1,20 @@
 const { User } = require("../db.js");
 
-const postUser = async (user, account) => {
+const postUser = async (user) => {
   try {
-    // console.log(user)
-    // console.log(account)
+    if (user.email === 'clinicasystemlab@gmail.com') {
+      user.admin = true;
+    }
 const [newUser, created] = await User.findOrCreate({
   where: {
-    id: account.sub,
+    id: user.id,
     cedula: user.cedula,
   },
   defaults: {
-    name: account.name,
-    picture: account.picture,
-    correo: account.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    image: user.image,
+    correo: user.email,
     nombre: user.nombre,
     apellido: user.apellido,
     fechaDeNacimiento: user.fechaDeNacimiento,
@@ -20,22 +22,23 @@ const [newUser, created] = await User.findOrCreate({
     whatsapp: user.whatsapp,
     direccion: user.direccion,
     nacionalidad: user.nacionalidad,
+    admin: user.admin,
   },
 });
 
 if (created) {
   const nUser = {
     id: newUser.dataValues.id,
-    name: newUser.dataValues.name,
-    picture: newUser.dataValues.picture,
+    image: newUser.dataValues.image,
     correo: newUser.dataValues.correo,
     nombre: newUser.dataValues.nombre,
     apellido: newUser.dataValues.apellido,
     telefono: newUser.dataValues.telefono,
     whatsapp: newUser.dataValues.whatsapp,
     nacionalidad: newUser.dataValues.nacionalidad,
+    admin: newUser.dataValues.admin,
   };
-// console.log(nUser)
+console.log(nUser)
   return nUser;
 } else {
   return user;
@@ -57,25 +60,24 @@ const getAllUser = async () => {
 
 const getUserById = async (id) => {
   try {
+    console.log(id)
     const userId = await User.findByPk(id);
     return userId;
   } catch (error) {
     throw new Error("Error no hay resgistros con ese id.");
   }
 };
-const getUserByBoolean = async (userId) => {
+const getUserByBoolean = async (id) => {
   try {
-    const id = userId;
-    // console.log(userId)
-    let nuserId = await User.findByPk(id);
-    // console.log(nuserId)
+    const nuserId = await User.findByPk(id);
+    console.log(nuserId)
     if (nuserId) {
       return true;
-    } else {
+    } if (nuserId === null) {
       return false;
     }
   } catch (error) {
-    throw Error ('error no se pudo completar la accion '+ error.message);
+    throw Error (error.message);
   }
 };
 

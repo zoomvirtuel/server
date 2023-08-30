@@ -8,10 +8,8 @@ const {
 
 router.post("/", async (req, res) => {
   const user = req.body.input;
-  console.log(user)
   try {
     const nUser = await postUser(user);
-    console.log(nUser)
     if (nUser) {
       return res.status(200).json(nUser);
     } else {

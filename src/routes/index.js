@@ -2,23 +2,39 @@ const { Router } = require("express");
 const router = Router();
 
 //* importacion de rutas
-const rAdultwork = require("./rAdultWork.js");
-const rAmateur = require("./rAmateur.js");
-const rBonga = require("./rBonga.js");
-const rCam4 = require("./rCam4.js");
-const rChaturbate = require("./rChaturbate.js");
-const rDirty = require("./rDirty.js");
-const rIslive = require("./rIsLive.js");
-const rSender = require("./rSender.js");
-const rSkype = require("./rSkype.js");
-const rStripchat = require("./rStripchat.js");
-const rVx = require("./rVx.js");
-const rXlove = require("./rXlove.js");
-const rXloveNueva = require("./rXloveNueva.js");
-const rUser = require("./rUser.js");
+const rAdultwork = require("./routesPaginas/rAdultWork.js");
+const rAmateur = require("./routesPaginas/rAmateur.js");
+const rBonga = require("./routesPaginas/rBonga.js");
+const rCam4 = require("./routesPaginas/rCam4.js");
+const rChaturbate = require("./routesPaginas/rChaturbate.js");
+const rDirty = require("./routesPaginas/rDirty.js");
+const rIslive = require("./routesPaginas/rIsLive.js");
+const rSender = require("./routesPaginas/rSender.js");
+const rSkype = require("./routesPaginas/rSkype.js");
+const rStripchat = require("./routesPaginas/rStripchat.js");
+const rVx = require("./routesPaginas/rVx.js");
+const rXlove = require("./routesPaginas/rXlove.js");
+const rXloveNueva = require("./routesPaginas/rXloveNueva.js");
+const rUser = require("./routesRegistros/rUser.js");
+const rPaginas = require("./routesRegistros/rPaginas.js");
+const rProducto = require("./routesRegistros/rProducto.js");
+const rCompras = require('./routesRegistros/rCompras.js');
+const rVenta = require("./routesRegistros/rVentas.js");
+const rQuincena = require("./routesRegistros/rQuincena.js");
+const rComment = require("./routesRegistros/rComments.js");
+const rUserName = require('./routesRegistros/rUserName.js');
 
 //* ejecucion de rutasrouter.use("/", rPassport);
 router.use("/registro", rUser);
+router.use("/paginas", rPaginas);
+router.use("/producto", rProducto);
+router.use('/compras', rCompras);
+router.use('/venta', rVenta);
+router.use('/quincena', rQuincena);
+router.use('/comentario', rComment);
+router.use('/username', rUserName);
+
+
 router.use("/corte", rAdultwork);
 router.use("/amateur", rAmateur);
 router.use("/bonga", rBonga);

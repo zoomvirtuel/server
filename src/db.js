@@ -5,24 +5,25 @@ const fs = require("fs");
 const path = require("path");
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_RENDER } = process.env;
 
-
 // //! este sequelize es para local...
 
-// const sequelize = new Sequelize(
-//   `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/zoomvirtuel`, {
-//   logging: false,
-//   native: false,
-// });
+const sequelize = new Sequelize(
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/zoomvirtuel`,
+  {
+    logging: false,
+    native: false,
+  }
+);
 
 //! este sequelize es para RENDERIZADO... DEPLOY DB en render.s.
 
-const sequelize = new Sequelize(DB_RENDER, {
-  logging: false,
-  native: false,
-  dialectOptions: {
-    ssl: true, // Deshabilitar la conexión SSL/TLS
-  },
-});
+// const sequelize = new Sequelize(DB_RENDER, {
+//   logging: false,
+//   native: false,
+//   dialectOptions: {
+//     ssl: true, // Deshabilitar la conexión SSL/TLS
+//   },
+// });
 
 const basename = path.basename(__filename);
 
@@ -46,13 +47,39 @@ let capsEntries = entries.map((entry) => [
 ]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Adultwork } = sequelize.models;
+const {
+  Adultwork,
+  Amateur,
+  Bonga,
+  Cam4,
+  Chaturbate,
+  Dirty,
+  IsLive,
+  Paginas,
+  Sender,
+  Skype,
+  Stripchat,
+  User,
+  UserName,
+  Vx,
+  Xlove,
+  XloveNueva,
+  Comentario,
+} = sequelize.models;
 
 // Aca vendrian las relaciones
 // Product.hasMany(Reviews);
+// User.belongsToMany(Paginas, { through: "User_id", as: "pag" });
+// Paginas.belongsToMany(User, { through: "User_id", as: "pag" });
 
-// Country.belongsToMany(Activity, { through: "country_activity" });
-// Activity.belongsToMany(Country, { through: "country_activity" });
+User.hasMany(UserName, { as: "useres", foreignKey: "newUser" });
+UserName.belongsTo(User, { as: "useres", foreignKey: "newUser" });
+
+Paginas.hasMany(UserName, { as: "userNames", foreignKey: "pagina" });
+UserName.belongsTo(Paginas, { as: "userNames", foreignKey: "pagina" });
+
+User.hasMany(Comentario, { as: "comments", foreignKey: "userId" });
+Comentario.belongsTo(User, { as: "comments", foreignKey: "userId" });
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

@@ -23,6 +23,7 @@ const rVenta = require("./routesRegistros/rVentas.js");
 const rQuincena = require("./routesRegistros/rQuincena.js");
 const rComment = require("./routesRegistros/rComments.js");
 const rUserName = require('./routesRegistros/rUserName.js');
+const rMoneda = require('./routesRegistros/rMoneda.js');
 
 //* ejecucion de rutasrouter.use("/", rPassport);
 router.use("/registro", rUser);
@@ -33,6 +34,7 @@ router.use('/venta', rVenta);
 router.use('/quincena', rQuincena);
 router.use('/comentario', rComment);
 router.use('/username', rUserName);
+router.use('/moneda', rMoneda);
 
 
 router.use("/corte", rAdultwork);

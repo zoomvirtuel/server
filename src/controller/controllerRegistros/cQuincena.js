@@ -1,4 +1,4 @@
-const { Quincena } = require("../../db.js");
+const { Quincena, Moneda } = require("../../db.js");
 
 const postQuincena = async ({nombreQuincena, fechaDeInicio, fechaFinal}) => {
   try {
@@ -17,7 +17,14 @@ const postQuincena = async ({nombreQuincena, fechaDeInicio, fechaFinal}) => {
 
 const getAllQuincena = async () => {
   try {
-    const allQuincena = await Quincena.findAll();
+    const allQuincena = await Quincena.findAll({
+      include: [
+        {
+          model: Moneda,
+          as: 'monedas',
+        },
+      ]
+    });
     allQuincena.sort((a, b) => a.nombre.localeCompare(b.nombre));
     return allQuincena;
   } catch (error) {

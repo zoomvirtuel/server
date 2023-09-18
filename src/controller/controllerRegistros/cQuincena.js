@@ -1,6 +1,6 @@
 const { Quincena, Moneda } = require("../../db.js");
 
-const postQuincena = async ({nombreQuincena, fechaDeInicio, fechaFinal}) => {
+const postQuincena = async ({ nombreQuincena, fechaDeInicio, fechaFinal }) => {
   try {
     const nQuincena = await Quincena.findOrCreate({
       where: {
@@ -21,9 +21,9 @@ const getAllQuincena = async () => {
       include: [
         {
           model: Moneda,
-          as: 'monedas',
+          as: "monedas",
         },
-      ]
+      ],
     });
     allQuincena.sort((a, b) => a.nombre.localeCompare(b.nombre));
     return allQuincena;
@@ -34,7 +34,10 @@ const getAllQuincena = async () => {
 
 const getQuincenaById = async (id) => {
   try {
-    const quincena = await Quincena.findByPk(id);
+    const quincena = await Quincena.findOne({
+      where: { id },
+      include: [{ model: Moneda, as: "monedas" },],
+    });
     return quincena;
   } catch (error) {
     throw new Error("Error no hay resgistros para mostrar.");

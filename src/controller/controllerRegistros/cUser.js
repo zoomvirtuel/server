@@ -1,4 +1,4 @@
-const { User, Comentario, UserName } = require("../../db.js");
+const { User, Comentario, UserName, Adultwork, Location } = require("../../db.js");
 
 const postUser = async (user) => {
   try {
@@ -55,6 +55,10 @@ const getAllUser = async () => {
           model: UserName,
           as: "useres",
         },
+        {
+          model: Location,
+          as: 'p_u',
+        }
       ],
     });
     user.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -78,6 +82,11 @@ const getUserById = async (id) => {
           model: UserName,
           as: "useres",
         },
+        {
+          model: Location,
+          as: 'p_u',
+        }
+
       ],
     });
     return userId;

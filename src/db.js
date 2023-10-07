@@ -55,23 +55,29 @@ const {
   Chaturbate,
   Dirty,
   IsLive,
-  Paginas,
   Sender,
   Skype,
   Stripchat,
-  User,
-  UserName,
   Vx,
   Xlove,
   XloveNueva,
+  Paginas,
+  User,
+  UserName,
   Comentario,
   Moneda,
   Quincena,
+  Location,
 } = sequelize.models;
+
+UserName.hasMany(Adultwork, {as: 'corte', foreignKey: 'userId'});
+Adultwork.belongsTo(UserName, {as: 'corte', foreignKey: 'userId'});
+
+Quincena.hasMany(Adultwork, {as: 'q_a', foreignKey: 'quincena'});
+Adultwork.belongsTo(Quincena, {as: 'q_a', foreignKey: 'quincena'});
 
 Quincena.hasMany(Moneda, {as: 'monedas', foreignKey: 'quince'});
 Moneda.belongsTo(Quincena, {as: 'monedas', foreignKey: 'quince'});
-
 
 User.hasMany(UserName, { as: "useres", foreignKey: "newUser" });
 UserName.belongsTo(User, { as: "useres", foreignKey: "newUser" });
@@ -79,8 +85,13 @@ UserName.belongsTo(User, { as: "useres", foreignKey: "newUser" });
 Paginas.hasMany(UserName, { as: "userNames", foreignKey: "pagina" });
 UserName.belongsTo(Paginas, { as: "userNames", foreignKey: "pagina" });
 
+//? relacion usuario comentarios
 User.hasMany(Comentario, { as: "comments", foreignKey: "userId" });
 Comentario.belongsTo(User, { as: "comments", foreignKey: "userId" });
+
+//? relacion usuario porcentaje 
+User.hasOne(Location, {as: 'p_u', foreignKey: 'userId'});
+Location.belongsTo(User, {as: 'p_u', foreignKey: 'userId'});
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

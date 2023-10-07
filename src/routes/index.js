@@ -24,6 +24,7 @@ const rQuincena = require("./routesRegistros/rQuincena.js");
 const rComment = require("./routesRegistros/rComments.js");
 const rUserName = require('./routesRegistros/rUserName.js');
 const rMoneda = require('./routesRegistros/rMoneda.js');
+const rLocation = require('./routesRegistros/rLocation.js');
 
 //* ejecucion de rutasrouter.use("/", rPassport);
 router.use("/registro", rUser);
@@ -35,6 +36,7 @@ router.use('/quincena', rQuincena);
 router.use('/comentario', rComment);
 router.use('/username', rUserName);
 router.use('/moneda', rMoneda);
+router.use('/location', rLocation);
 
 
 router.use("/corte", rAdultwork);

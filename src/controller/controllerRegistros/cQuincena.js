@@ -1,4 +1,4 @@
-const { Quincena, Moneda } = require("../../db.js");
+const { Quincena, Moneda, Adultwork } = require("../../db.js");
 
 const postQuincena = async ({ nombreQuincena, fechaDeInicio, fechaFinal }) => {
   try {
@@ -23,9 +23,13 @@ const getAllQuincena = async () => {
           model: Moneda,
           as: "monedas",
         },
+        {
+          model: Adultwork,
+          as: "q_a",
+        },
       ],
     });
-    allQuincena.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    // allQuincena.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     return allQuincena;
   } catch (error) {
     throw new Error("Error no hay resgistros para mostrar");
@@ -36,7 +40,16 @@ const getQuincenaById = async (id) => {
   try {
     const quincena = await Quincena.findOne({
       where: { id },
-      include: [{ model: Moneda, as: "monedas" },],
+      include: [
+        {
+          model: Moneda,
+          as: "monedas",
+        },
+        {
+          model: Adultwork,
+          as: "q_a",
+        },
+      ],
     });
     return quincena;
   } catch (error) {

@@ -67,7 +67,7 @@ const {
   Comentario,
   Moneda,
   Quincena,
-  Location,
+  Porcentaje,
 } = sequelize.models;
 
 UserName.hasMany(Adultwork, {as: 'corte', foreignKey: 'userId'});
@@ -90,8 +90,8 @@ User.hasMany(Comentario, { as: "comments", foreignKey: "userId" });
 Comentario.belongsTo(User, { as: "comments", foreignKey: "userId" });
 
 //? relacion usuario porcentaje 
-User.hasOne(Location, {as: 'p_u', foreignKey: 'userId'});
-Location.belongsTo(User, {as: 'p_u', foreignKey: 'userId'});
+User.hasOne(Porcentaje, {as: 'p_u', foreignKey: 'userId'});
+Porcentaje.belongsTo(User, {as: 'p_u', foreignKey: 'userId'});
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

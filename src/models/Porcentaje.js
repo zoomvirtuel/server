@@ -2,18 +2,14 @@ const { DataTypes, UUIDV4 } = require("sequelize");
 
 module.exports = (sequelize) => {
   sequelize.define(
-    "Location",
+    "Porcentaje",
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      location: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      porcentaje: {
+      nombre: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -21,18 +17,14 @@ module.exports = (sequelize) => {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
+      final: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      },
       meta: {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
-      // city: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false,
-      // },
-      // departament: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false,
-      // },
     },
     {
       paranoid: true,

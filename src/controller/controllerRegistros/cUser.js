@@ -1,4 +1,4 @@
-const { User, Comentario, UserName, Adultwork, Location } = require("../../db.js");
+const { User, Comentario, UserName, Adultwork, Porcentaje } = require("../../db.js");
 
 const postUser = async (user) => {
   try {
@@ -56,7 +56,7 @@ const getAllUser = async () => {
           as: "useres",
         },
         {
-          model: Location,
+          model: Porcentaje,
           as: 'p_u',
         }
       ],
@@ -83,7 +83,7 @@ const getUserById = async (id) => {
           as: "useres",
         },
         {
-          model: Location,
+          model: Porcentaje,
           as: 'p_u',
         }
 

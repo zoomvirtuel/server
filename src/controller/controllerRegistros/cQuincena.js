@@ -17,19 +17,14 @@ const postQuincena = async ({ nombreQuincena, fechaDeInicio, fechaFinal }) => {
 
 const getAllQuincena = async () => {
   try {
-    const allQuincena = await Quincena.findAll({
-      include: [
-        {
-          model: Moneda,
-          as: "monedas",
-        },
-        {
-          model: Adultwork,
-          as: "q_a",
-        },
-      ],
+    const allQuincena = await Quincena.findAll();
+    allQuincena.sort((a, b) => {
+      // Convierte las fechas a un formato numérico para comparar
+      const dateA = Date.parse(a.inicia.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+      const dateB = Date.parse(b.inicia.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+    
+      return dateA - dateB;
     });
-    // allQuincena.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     return allQuincena;
   } catch (error) {
     throw new Error("Error no hay resgistros para mostrar");

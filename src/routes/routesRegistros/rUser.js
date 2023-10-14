@@ -5,12 +5,15 @@ const {
   postUser,
   getAllUser,
   getUserById,
+  getCheckById,
   updateUser,
   deleteUser,
 } = require("../../controller/controllerRegistros/cUser.js");
 
 router.post("/", async (req, res) => {
-  const user = req.body.input;
+  const user = req.body;
+  // console.log(req.body)
+  console.log(user);
   try {
     const nUser = await postUser(user);
     if (nUser) {
@@ -22,7 +25,7 @@ router.post("/", async (req, res) => {
       });
     }
   } catch (error) {
-    return res.status(500).send(error.message);
+    return res.status(500).json({ error: "No se pudo registrar el usuario" });
   }
 });
 
@@ -43,6 +46,20 @@ router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const user = await getUserById(id);
+    if (user) {
+      return res.status(200).json(user);
+    } else {
+      return res.status(404).json({ error: "No se encontro el usuario" });
+    }
+  } catch (error) {
+    return res.status(500).send(error.message);
+  }
+});
+router.get("/check/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+    const user = await getCheckById(id);
     if (user) {
       return res.status(200).json(user);
     } else {

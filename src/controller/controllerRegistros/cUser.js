@@ -1,4 +1,10 @@
-const { User, Comentario, UserName, Adultwork, Porcentaje } = require("../../db.js");
+const {
+  User,
+  Comentario,
+  UserName,
+  Adultwork,
+  Porcentaje,
+} = require("../../db.js");
 
 const postUser = async (user) => {
   try {
@@ -57,8 +63,8 @@ const getAllUser = async () => {
         },
         {
           model: Porcentaje,
-          as: 'p_u',
-        }
+          as: "p_u",
+        },
       ],
     });
     user.sort((a, b) => a.nombre.localeCompare(b.nombre));
@@ -84,11 +90,18 @@ const getUserById = async (id) => {
         },
         {
           model: Porcentaje,
-          as: 'p_u',
-        }
-
+          as: "p_u",
+        },
       ],
     });
+    return userId;
+  } catch (error) {
+    throw new Error("Error no hay resgistros con ese id. " + error.message);
+  }
+};
+const getCheckById = async (id) => {
+  try {
+    const userId = await User.findOne({ where: { id: id } });
     return userId;
   } catch (error) {
     throw new Error("Error no hay resgistros con ese id. " + error.message);
@@ -126,6 +139,7 @@ module.exports = {
   postUser,
   getAllUser,
   getUserById,
+  getCheckById,
   updateUser,
   deleteUser,
 };

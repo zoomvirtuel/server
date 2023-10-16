@@ -36,7 +36,7 @@ const pad = async (coad) => {
         console.log(userId.id)
         console.log(quincena.id)
         await r.setCorte(userId.id);
-        await r.setQ_a(quincena.id);
+        await r.setQ_adult(quincena.id);
         console.log(r)
         rcoad.push(r);
       }

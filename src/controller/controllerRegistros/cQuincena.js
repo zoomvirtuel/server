@@ -42,7 +42,7 @@ const getQuincenaById = async (id) => {
         },
         {
           model: Adultwork,
-          as: "q_a",
+          as: "q_adult",
         },
       ],
     });

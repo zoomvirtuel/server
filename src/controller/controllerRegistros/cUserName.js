@@ -1,23 +1,19 @@
-const { UserName, Paginas, User, Adultwork } = require("../../db.js");
+const {
+  UserName,
+  Paginas,
+  User,
+  Adultwork,
+} = require("../../db.js");
 
 const postUserName = async (input) => {
   try {
     const { paginas, user, ...userName } = input;
 
-    const newUser = await User.findOne({
-      where: { id: user },
-      include: 
-        {
-          model: UserName,
-          as: "useres",
-        },
-       
-      
-    });
-    console.log(newUser.useres);
+    const newUser = await User.findByPk(user);
     if (!newUser) {
       throw new Error("Usuario no encontrado");
     }
+   
 
     const createdUserNames = [];
 
@@ -34,9 +30,12 @@ const postUserName = async (input) => {
           const newUserName = await UserName.create({ userName: paginaName });
           // console.log("creacion");
           // console.log(newUserName);
-
+          
           await newUserName.setUseres(newUser);
+          // console.log("creacion");
+          // console.log(newUserName);
           await newUserName.setUserNames(pagina);
+        
 
           newUserName.pagina = pagina.nombrePagina;
 
@@ -53,13 +52,7 @@ const postUserName = async (input) => {
 
 const getAllUserName = async () => {
   try {
-    const allUserName = await UserName.findAll({
-      include:
-      {
-        model: Adultwork,
-        as: 'corte'
-      }
-    });
+    const allUserName = await UserName.findAll();
     return allUserName;
   } catch (error) {
     throw new Error("No hay registros para mostrar");

@@ -21,10 +21,6 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      // tokens: {
-      // type: DataTypes.STRING,
-      // allowNull: false,
-      // },
       mensual: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

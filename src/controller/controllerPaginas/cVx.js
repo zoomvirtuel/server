@@ -1,18 +1,33 @@
-const { Vx } = require("../../db.js");
+const { Vx, UserName, Quincena } = require("../../db.js");
 
 const pvx = async (covx) => {
   try {
     const rcovx = [];
     for (const i of covx) {
-      const [r, c] = await Vx.findOrCreate({
-        where: {
+      try {
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
+        const r = await Vx.create({
           userName: i.user,
           euros: i.euros,
           mensual: false,
-        },
-      });
-      if (c) {
-        rcovx.push(r);
+        });
+        if (r) {
+          await r.setCorte_vx(userId);
+          await r.setQ_vx(quincena);
+          rcovx.push(r);
+        }
+      } catch (error) {
+        console.error("Error en una iteración del bucle:", error);
+        // Continuar con la próxima iteración
       }
     }
     rcovx.sort((a, b) => {

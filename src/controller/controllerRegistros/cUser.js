@@ -2,8 +2,9 @@ const {
   User,
   Comentario,
   UserName,
-  Adultwork,
+  // Adultwork,
   Porcentaje,
+  Ubicacion
 } = require("../../db.js");
 
 const postUser = async (user) => {
@@ -63,7 +64,11 @@ const getAllUser = async () => {
         },
         {
           model: Porcentaje,
-          as: "p_u",
+          as: "p_porcentaje",
+        },
+        {
+          model: Ubicacion,
+          as: "p_ubicacion",
         },
       ],
     });
@@ -90,7 +95,11 @@ const getUserById = async (id) => {
         },
         {
           model: Porcentaje,
-          as: "p_u",
+          as: "p_porcentaje",
+        },
+        {
+          model: Ubicacion,
+          as: "p_ubicacion",
         },
       ],
     });
@@ -101,7 +110,7 @@ const getUserById = async (id) => {
 };
 const getCheckById = async (id) => {
   try {
-    const userId = await User.findOne({ where: { id: id } });
+    const userId = await User.findByPk(id);
     return userId;
   } catch (error) {
     throw new Error("Error no hay resgistros con ese id. " + error.message);

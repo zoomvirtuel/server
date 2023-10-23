@@ -5,7 +5,6 @@ const { pxl, gxl } = require("../../controller/controllerPaginas/cXlove.js");
 
 router.post("/", async (req, res) => {
   const coxl = req.body.coxl;
-  console.log(coxl);
   try {
     const ncoxl = await pxl(coxl);
     if (ncoxl[0]) {

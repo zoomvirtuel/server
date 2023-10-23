@@ -1,4 +1,4 @@
-const { Cam4 } = require("../../db.js");
+const { Cam4, UserName, Quincena } = require("../../db.js");
 
 const pca = async (coca) => {
   // console.log(coca)
@@ -6,6 +6,17 @@ const pca = async (coca) => {
     const rcoca = [];
     for (const i of coca) {
       // console.log(i)
+      try {
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
       const [r, c] = await Cam4.findOrCreate({
         where: {
           userName: i.user,
@@ -14,8 +25,14 @@ const pca = async (coca) => {
         },
       });
       if (c) {
-        rcoca.push(r);
+        await r.setCorte_cam4(userId);
+        await r.setQ_cam4(quincena);
+        rcoca.push(r)
       }
+    } catch (error) {
+      console.error("Error en una iteración del bucle:", error);
+      // Continuar con la próxima iteración
+    }
     }
     // console.log(rcoca)
     rcoca.sort((a, b) => {

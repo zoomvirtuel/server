@@ -1,19 +1,40 @@
-const { Amateur } = require("../../db.js");
+const { Amateur, UserName, Quincena } = require("../../db.js");
 
 const pam = async (coam) => {
   try {
     const rcoam = [];
     for (const i of coam) {
-      const [r, c] = await Amateur.findOrCreate({
-        where: {
-          userName: i.user,
+      try {
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
+        // console.log(quincena);
+        const r = await Amateur.create({
           tokens: i.tokens,
+          userName: i.user,
           dolares: i.dolares,
           mensual: false,
-        },
-      });
-      if (c) {
-        rcoam.push(r);
+        });
+        // console.log(c);
+        // console.log(r);
+        if (r) {
+          // console.log(r);
+          await r.setCorte_amateur(userId);
+          await r.setQ_amateur(quincena);
+          console.log(r);
+          // rcoam.push(r);
+          console.log(rcoam);
+        }
+      } catch (error) {
+        console.error("Error en una iteración del bucle:", error);
+        // Continuar con la próxima iteración
       }
     }
     rcoam.sort((a, b) => {

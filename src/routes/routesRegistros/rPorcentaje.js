@@ -11,9 +11,8 @@ const {
 
 router.post("/", async (req, res) => {
   const porcentajes = req.body;
-  // console.log(porcentajes);
   try {
-    const newPorcentaje = await postLocation(porcentajes);
+    const newPorcentaje = await postPorcentaje(porcentajes);
     return res.status(200).json(newPorcentaje);
   } catch (error) {
     return res.status(500).send(error.message);

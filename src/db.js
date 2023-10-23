@@ -68,11 +68,10 @@ const {
   Moneda,
   Quincena,
   Porcentaje,
+  Ubicacion,
 } = sequelize.models;
 
-//? relation of userName and adultwork
-UserName.hasMany(Adultwork, {as: 'corte', foreignKey: 'userId'});
-Adultwork.belongsTo(UserName, {as: 'corte', foreignKey: 'userId'});
+
 
 //? relation of fortnight nad money
 Quincena.hasMany(Moneda, {as: 'monedas', foreignKey: 'quince'});
@@ -88,57 +87,110 @@ UserName.belongsTo(Paginas, { as: "userNames", foreignKey: "pagina" });
 
 //! ***********************************************// P A G I N A S \\*******************************
 
+//? ********************// A D U L T W O R K \\  ********************
 //? relation of fortnight and adultWork
 Quincena.hasMany(Adultwork, {as: 'q_adult', foreignKey: 'quincena'});
 Adultwork.belongsTo(Quincena, {as: 'q_adult', foreignKey: 'quincena'});
+//? relation of userName and adultwork
+UserName.hasMany(Adultwork, {as: 'corte_adult', foreignKey: 'userId'});
+Adultwork.belongsTo(UserName, {as: 'corte_adult', foreignKey: 'userId'});
 
+//? ********************// A M A T E U R \\  ********************
 //? relation of fortnight and amateur
 Quincena.hasMany(Amateur, {as: 'q_amateur', foreignKey: 'quincena'});
-Amateur.belongsTo(Quincena, {as: 'q_aamateur', foreignKey: 'quincena'});
+Amateur.belongsTo(Quincena, {as: 'q_amateur', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Amateur, {as: 'corte_amateur', foreignKey: 'userId'});
+Amateur.belongsTo(UserName, {as: 'corte_amateur', foreignKey: 'userId'});
 
+//? ********************// B O N G A \\  ********************
 //? relation of fortnight and bonga
 Quincena.hasMany(Bonga, {as: 'q_bonga', foreignKey: 'quincena'});
 Bonga.belongsTo(Quincena, {as: 'q_bonga', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Bonga, {as: 'corte_bonga', foreignKey: 'userId'});
+Bonga.belongsTo(UserName, {as: 'corte_bonga', foreignKey: 'userId'});
 
+//? ********************// C A M 4 \\  ********************
 //? relation of fortnight and cam4
 Quincena.hasMany(Cam4, {as: 'q_cam4', foreignKey: 'quincena'});
 Cam4.belongsTo(Quincena, {as: 'q_cam4', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Cam4, {as: 'corte_cam4', foreignKey: 'userId'});
+Cam4.belongsTo(UserName, {as: 'corte_cam4', foreignKey: 'userId'});
 
+//? ********************// C H A T U R B A T E \\  ********************
 //? relation of fortnight and chaturbate
 Quincena.hasMany(Chaturbate, {as: 'q_chaturbate', foreignKey: 'quincena'});
 Chaturbate.belongsTo(Quincena, {as: 'q_chaturbate', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Chaturbate, {as: 'corte_chaturbate', foreignKey: 'userId'});
+Chaturbate.belongsTo(UserName, {as: 'corte_chaturbate', foreignKey: 'userId'});
 
+//? ********************// D I R T Y \\  ********************
 //? relation of fortnight and Dirty
 Quincena.hasMany(Dirty, {as: 'q_dirty', foreignKey: 'quincena'});
 Dirty.belongsTo(Quincena, {as: 'q_dirty', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Dirty, {as: 'corte_dirty', foreignKey: 'userId'});
+Dirty.belongsTo(UserName, {as: 'corte_dirty', foreignKey: 'userId'});
 
+//? ********************// I S L I V E \\  ********************
 //? relation of fortnight and Islive
-Quincena.hasMany(IsLive, {as: 'q_islive', foreignKey: 'quincena'});
-IsLive.belongsTo(Quincena, {as: 'q_islive', foreignKey: 'quincena'});
+Quincena.hasMany(IsLive, {as: 'q_isLive', foreignKey: 'quincena'});
+IsLive.belongsTo(Quincena, {as: 'q_isLive', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(IsLive, {as: 'corte_isLive', foreignKey: 'userId'});
+IsLive.belongsTo(UserName, {as: 'corte_isLive', foreignKey: 'userId'});
 
+//? ********************// S E N D E R \\  ********************
 //? relation of fortnight and Sender
 Quincena.hasMany(Sender, {as: 'q_sender', foreignKey: 'quincena'});
 Sender.belongsTo(Quincena, {as: 'q_sender', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Sender, {as: 'corte_sender', foreignKey: 'userId'});
+Sender.belongsTo(UserName, {as: 'corte_sender', foreignKey: 'userId'});
 
+//? ********************// S K Y P E \\  ********************
 //? relation of fortnight and Skype
 Quincena.hasMany(Skype, {as: 'q_skype', foreignKey: 'quincena'});
 Skype.belongsTo(Quincena, {as: 'q_skype', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Skype, {as: 'corte_skype', foreignKey: 'userId'});
+Skype.belongsTo(UserName, {as: 'corte_skype', foreignKey: 'userId'});
 
+//? ********************//  S T R I P C H A T \\  ********************
 //? relation of fortnight and Stripchat
 Quincena.hasMany(Stripchat, {as: 'q_stripchat', foreignKey: 'quincena'});
 Stripchat.belongsTo(Quincena, {as: 'q_stripchat', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Stripchat, {as: 'corte_stripchat', foreignKey: 'userId'});
+Stripchat.belongsTo(UserName, {as: 'corte_stripchat', foreignKey: 'userId'});
 
+//? ********************// V X  \\  ********************
 //? relation of fortnight and Vx
 Quincena.hasMany(Vx, {as: 'q_vx', foreignKey: 'quincena'});
 Vx.belongsTo(Quincena, {as: 'q_vx', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Vx, {as: 'corte_vx', foreignKey: 'userId'});
+Vx.belongsTo(UserName, {as: 'corte_vx', foreignKey: 'userId'});
 
+//? ********************// X L O V E \\  ********************
 //? relation of fortnight and Xlove
 Quincena.hasMany(Xlove, {as: 'q_xlove', foreignKey: 'quincena'});
 Xlove.belongsTo(Quincena, {as: 'q_xlove', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(Xlove, {as: 'corte_xlove', foreignKey: 'userId'});
+Xlove.belongsTo(UserName, {as: 'corte_xlove', foreignKey: 'userId'});
 
+//? ********************// X L O V E  N U E V A \\  ********************
 //? relation of fortnight and XloveNueva
-Quincena.hasMany(XloveNueva, {as: 'q_xlovenueva', foreignKey: 'quincena'});
-XloveNueva.belongsTo(Quincena, {as: 'q_xlovenueva', foreignKey: 'quincena'});
+Quincena.hasMany(XloveNueva, {as: 'q_xloveNueva', foreignKey: 'quincena'});
+XloveNueva.belongsTo(Quincena, {as: 'q_xloveNueva', foreignKey: 'quincena'});
+//? relation of userName and amateur
+UserName.hasMany(XloveNueva, {as: 'corte_xloveNueva', foreignKey: 'userId'});
+XloveNueva.belongsTo(UserName, {as: 'corte_xloveNueva', foreignKey: 'userId'});
+
 //! ***********************************************// P A G I N A S \\*******************************
 
 //? relation of user and comments
@@ -146,8 +198,12 @@ User.hasMany(Comentario, { as: "comments", foreignKey: "userId" });
 Comentario.belongsTo(User, { as: "comments", foreignKey: "userId" });
 
 //? relation of user and percentage
-User.hasOne(Porcentaje, {as: 'p_u', foreignKey: 'userId'});
-Porcentaje.belongsTo(User, {as: 'p_u', foreignKey: 'userId'});
+User.belongsTo(Porcentaje, {as: 'p_porcentaje', foreignKey: 'porcentajeId'});
+Porcentaje.belongsTo(User, {as: 'p_porcentaje', foreignKey: 'porcentajeId'});
+
+//? relation of user and Ubicacion
+User.belongsTo(Ubicacion, {as: 'p_ubicacion', foreignKey: 'ubicacionId'});
+Ubicacion.belongsTo(User, {as: 'p_ubicacion', foreignKey: 'ubicacionId'});
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

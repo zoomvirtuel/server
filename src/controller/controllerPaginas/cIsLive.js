@@ -1,18 +1,35 @@
-const { IsLive } = require("../../db.js");
+const { IsLive, UserName, Quincena } = require("../../db.js");
 
 const pil = async (coil) => {
   try {
     const rcoil = [];
     for (const i of coil) {
-      const [r, c] = await IsLive.findOrCreate({
-        where: {
-          codigo: i.codigo,
-          euros: i.euros,
-          mensual: true,
-        },
-      });
-      if (c) {
-        rcoil.push(r);
+      try {
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.codigo,
+          },
+        });
+        const [r, c] = await IsLive.findOrCreate({
+          where: {
+            codigo: i.codigo,
+            euros: i.euros,
+            mensual: true,
+          },
+        });
+        if (c) {
+          await r.setCorte_isLive(userId);
+          await r.setQ_isLive(quincena);
+          rcoil.push(r);
+        }
+      } catch (error) {
+        console.error("Error en una iteración del bucle:", error);
+        // Continuar con la próxima iteración
       }
     }
     rcoil.sort((a, b) => {

@@ -1,9 +1,10 @@
 const { Ubicacion } = require("../../db.js");
 
 const postUbicacion = async (ubicacion) => {
+  console.log(ubicacion)
   try {
-    const ubicacion = await Ubicacion.findOrCreate({ where: { ubicacion } });
-    return ubicacion;
+    const ubication = await Ubicacion.findOrCreate({ where: { ubicacion } });
+    return ubication;
   } catch (error) {
     throw new Error("Error no fue posible crear esa ubicacion.");
   }

@@ -1,19 +1,38 @@
-const { XloveNueva } = require("../../db.js");
+const { XloveNueva, UserName, Quincena } = require("../../db.js");
 
 const pxln = async (coxln) => {
   try {
     const rcoxln = [];
     for (const i of coxln) {
-      const [r, c] = await XloveNueva.findOrCreate({
-        where: {
+      try {
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        console.log(quincena)
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
+        console.log(userId)
+        const r = await XloveNueva.create({
           userName: i.user,
           fecha: i.fecha,
           euros: i.euros,
           mensual: false,
-        },
-      });
-      if (c) {
-        rcoxln.push(r);
+        });
+        console.log(r)
+        if (r) {
+          console.log(r)
+          await r.setCorte_xloveNueva(userId);
+          await r.setQ_xloveNueva(quincena);
+          rcoxln.push(r);
+        }
+      } catch (error) {
+        console.error("Error en una iteración del bucle:", error);
+        // Continuar con la próxima iteración
       }
     }
     rcoxln.sort((a, b) => {

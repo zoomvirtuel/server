@@ -1,21 +1,39 @@
-const { Dirty } = require("../../db.js");
+const { Dirty, UserName, Quincena } = require("../../db.js");
 
 const pdi = async (codi) => {
+  console.log(codi)
   try {
     const rcodi = [];
     for (const i of codi) {
-      const [r, c] = await Dirty.findOrCreate({
+      try {
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
+        const [r, c] = await Dirty.findOrCreate({
         where: {
           userName: i.user,
-          // tokens: i.tokens,
           plata: i.plata,
           moneda: i.moneda,
           mensual: true,
         },
       });
       if (c) {
+        await r.setCorte_dirty(userId);
+        await r.setQ_dirty(quincena);
+        console.log(r)
         rcodi.push(r);
       }
+      } catch (error) {
+        throw new Error("Error al guardar los registros: " + error.message);
+      }
+      
     }
     rcodi.sort((a, b) => {
       return a.userName.localeCompare(b.userName);

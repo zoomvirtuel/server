@@ -26,6 +26,7 @@ const rUserName = require("./routesRegistros/rUserName.js");
 const rMoneda = require("./routesRegistros/rMoneda.js");
 const rPorcentaje = require("./routesRegistros/rPorcentaje.js");
 const rUbicacion = require("./routesRegistros/rUbicacion.js");
+const rRelationUbicationAndPorcentaje = require("./routesRegistros/rRelationUbicationAndPorcentaje.js");
 
 //* ejecucion de rutasrouter.use("/", rPassport);
 router.use("/registro", rUser);
@@ -39,6 +40,7 @@ router.use("/username", rUserName);
 router.use("/moneda", rMoneda);
 router.use("/porcentaje", rPorcentaje);
 router.use("/ubicacion", rUbicacion);
+router.use("/relation", rRelationUbicationAndPorcentaje);
 
 router.use("/corte", rAdultwork);
 router.use("/amateur", rAmateur);

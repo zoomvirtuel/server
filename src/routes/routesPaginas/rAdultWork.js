@@ -5,10 +5,11 @@ const {
   gad,
   ppad,
   gpad,
-} = require("../../controller/controllerPaginas/cAdultwork.js");
+} = require("../../controller/controllerPaginas/cAdultwork");
 
 router.post("/", async (req, res) => {
   const coad = req.body.coad;
+  // console.log(req.body);
   try {
     const necoad = await pad(coad); //enviar al controller
     if (necoad[0]) {

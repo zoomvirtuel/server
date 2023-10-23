@@ -1,17 +1,18 @@
 const { Porcentaje } = require("../../db.js");
 
 const postPorcentaje = async (porcentajes) => {
-  console.log(porcentajes)
+  console.log(porcentajes);
   const { nombre, inicial, final, meta } = porcentajes;
   try {
-    const newPorcentaje = await Porcentaje.findOrCreate({where: {
+    const newPorcentaje = await Porcentaje.findOrCreate({
+      where: {
         nombre: nombre,
       },
       defaults: {
         inicial: inicial,
         final: final,
-        meta: meta,   
-      }   
+        meta: meta,
+      },
     });
     return newPorcentaje;
   } catch (error) {

@@ -6,39 +6,39 @@ const pad = async (coad) => {
     const rcoad = [];
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of coad) {
-      // const userName = i.user;
-      // console.log(userName)
-      const userId = await UserName.findOne({
-        where: {
-          userName: i.user
-        }
-      })
-      const quincena = await Quincena.findOne({
-        where: {
-          id: i.quincena
-        }
-      })
-      console.log(i.user)
-      console.log(userId.dataValues)
-      console.log(quincena.dataValues)
-      const [r, c] = await Adultwork.findOrCreate({
-        where: {
+      try {
+        // const userName = i.user;
+        // console.log(userName)
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        // console.log(i.user)
+        console.log(userId);
+        console.log(quincena);
+        const r = await Adultwork.create({
           fecha: i.fecha,
-        },
-        defaults: {
           userName: i.user,
           creditos: i.creditos,
           parcial: i.parcial,
           mensual: false,
-        },
-      });
-      if (c) {
-        console.log(userId.id)
-        console.log(quincena.id)
-        await r.setCorte(userId.id);
-        await r.setQ_adult(quincena.id);
-        console.log(r)
-        rcoad.push(r);
+        });
+        if (r) {
+          console.log(r);
+          // console.log(quincena.id)
+          await r.setCorte_adult(userId);
+          await r.setQ_adult(quincena);
+          // console.log(r)
+        }
+      } catch (error) {
+        console.error("Error en una iteración del bucle:", error);
+        // Continuar con la próxima iteración
       }
     }
     // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.

@@ -1,9 +1,20 @@
-const { Skype } = require("../../db.js");
+const { Skype, UserName, Quincena } = require("../../db.js");
 
 const psk = async (cosk) => {
   try {
     const rcosk = [];
     for (const i of cosk) {
+      try {
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
       const [r, c] = await Skype.findOrCreate({
         where: {
           userName: i.user,
@@ -12,8 +23,14 @@ const psk = async (cosk) => {
         },
       });
       if (c) {
+        await r.setCorte_skype(userId);
+        await r.setQ_skype(quincena);
         rcosk.push(r);
       }
+    } catch (error) {
+      console.error("Error en una iteración del bucle:", error);
+      // Continuar con la próxima iteración
+    }
     }
     rcosk.sort((a, b) => {
       return a.userName.localeCompare(b.userName);

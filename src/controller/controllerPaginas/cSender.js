@@ -1,20 +1,37 @@
-const { Sender } = require("../../db.js");
+const { Sender, UserName, Quincena } = require("../../db.js");
 
 const pse = async (cose) => {
   try {
     const rcose = [];
     for (const i of cose) {
-      const [r, c] = await Sender.findOrCreate({
-        where: {
-          userName: i.user,
-          fecha: i.fecha,
-          coins: i.coins,
-          euros: i.euros,
-          mensual: true,
-        },
-      });
-      if (c) {
-        rcose.push(r);
+      try {
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
+        const [r, c] = await Sender.findOrCreate({
+          where: {
+            userName: i.user,
+            fecha: i.fecha,
+            coins: i.coins,
+            euros: i.euros,
+            mensual: true,
+          },
+        });
+        if (c) {
+          await r.setCorte_sender(userId);
+          await r.setQ_sender(quincena);
+          rcose.push(r);
+        }
+      } catch (error) {
+        console.error("Error en una iteración del bucle:", error);
+        // Continuar con la próxima iteración
       }
     }
     rcose.sort((a, b) => {

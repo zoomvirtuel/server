@@ -1,19 +1,38 @@
-const { Stripchat } = require("../../db.js");
+const { Stripchat, UserName, Quincena } = require("../../db.js");
 
 const pst = async (cost) => {
   try {
     const rcost = [];
     for (const i of cost) {
-      const [r, c] = await Stripchat.findOrCreate({
-        where: {
+      try {
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        const userId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
+        console.log(userId);
+        console.log(quincena);
+        console.log(cost);
+        const r = await Stripchat.create({
           userName: i.user,
           tokens: i.tokens,
           dolares: i.dolares,
           mensual: false,
-        },
-      });
-      if (c) {
-        rcost.push(r);
+        });
+        console.log(r);
+        if (r) {
+          await r.setCorte_stripchat(userId);
+          await r.setQ_stripchat(quincena);
+          rcost.push(r);
+        }
+      } catch (error) {
+        console.error("Error en una iteración del bucle:", error);
+        // Continuar con la próxima iteración
       }
     }
     rcost.sort((a, b) => {

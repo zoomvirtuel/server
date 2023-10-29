@@ -1,14 +1,12 @@
 const { Adultwork, UserName, Quincena } = require("../../db.js");
 
 const pad = async (coad) => {
-  // console.log(coad)
   try {
     const rcoad = [];
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of coad) {
       try {
-        // const userName = i.user;
-        // console.log(userName)
+
         const userId = await UserName.findOne({
           where: {
             userName: i.user,
@@ -19,9 +17,6 @@ const pad = async (coad) => {
             id: i.quincena,
           },
         });
-        // console.log(i.user)
-        console.log(userId);
-        console.log(quincena);
         const r = await Adultwork.create({
           fecha: i.fecha,
           userName: i.user,
@@ -30,11 +25,8 @@ const pad = async (coad) => {
           mensual: false,
         });
         if (r) {
-          console.log(r);
-          // console.log(quincena.id)
           await r.setCorte_adult(userId);
           await r.setQ_adult(quincena);
-          // console.log(r)
         }
       } catch (error) {
         console.error("Error en una iteración del bucle:", error);

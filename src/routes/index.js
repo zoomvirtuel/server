@@ -27,6 +27,11 @@ const rMoneda = require("./routesRegistros/rMoneda.js");
 const rPorcentaje = require("./routesRegistros/rPorcentaje.js");
 const rUbicacion = require("./routesRegistros/rUbicacion.js");
 const rRelationUbicationAndPorcentaje = require("./routesRegistros/rRelationUbicationAndPorcentaje.js");
+const rMondo = require("./routesPaginas/rMondo.js");
+const rMyFreeCams = require("./routesPaginas/rMyFreeCams.js");
+const rSakura = require("./routesPaginas/rSakura.js");
+const rstreamate = require("./routesPaginas/rStreamate.js");
+const rStreamRay = require("./routesPaginas/rStreamRay.js");
 
 //* ejecucion de rutasrouter.use("/", rPassport);
 router.use("/registro", rUser);
@@ -55,5 +60,10 @@ router.use("/stripchat", rStripchat);
 router.use("/vx", rVx);
 router.use("/xlove", rXlove);
 router.use("/xlovenueva", rXloveNueva);
+router.use("/mondo", rMondo);
+router.use("/myfreecams", rMyFreeCams);
+router.use("/sakura", rSakura);
+router.use("/streamate", rstreamate);
+router.use("/streamray", rStreamRay);
 
 module.exports = router;

@@ -6,7 +6,7 @@ const postSakura = async (sakura) => {
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of sakura) {
       try {
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -23,7 +23,7 @@ const postSakura = async (sakura) => {
           mensual: false,
         });
         if (r) {
-          await r.setCorte_sakura(userId);
+          await r.setCorte_sakura(userNameId);
           await r.setQ_sakura(quincena);
         }
       } catch (error) {

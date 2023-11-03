@@ -10,7 +10,7 @@ const psk = async (cosk) => {
             id: i.quincena,
           },
         });
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -23,7 +23,7 @@ const psk = async (cosk) => {
         },
       });
       if (c) {
-        await r.setCorte_skype(userId);
+        await r.setCorte_skype(userNameId);
         await r.setQ_skype(quincena);
         rcosk.push(r);
       }

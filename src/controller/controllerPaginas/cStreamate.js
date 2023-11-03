@@ -6,7 +6,7 @@ const postStreamate = async (streamate) => {
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of streamate) {
       try {
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -24,7 +24,7 @@ const postStreamate = async (streamate) => {
           // mensual: false,
         });
         if (r) {
-          await r.setCorte_adult(userId);
+          await r.setCorte_adult(userNameId);
           await r.setQ_adult(quincena);
         }
       } catch (error) {

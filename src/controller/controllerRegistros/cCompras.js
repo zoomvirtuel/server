@@ -1,8 +1,22 @@
-const { Compras } = require("../../db.js");
+const { Compras, Producto } = require("../../db.js");
 
-const postCompras = async (compras) => {
+const postCompras = async (compra) => {
   try {
-    const nCompra = await Compras.create(compras);
+    console.log(compra)
+    const productoId = await Producto.findOne({where: {nombre: compra.producto}});
+    console.log(productoId)
+    if (!productoId) {
+      throw Error('No se encontro el producto buscado')
+    }
+    const nCompra = await Compras.create({
+      cantidad: compra.cantidad,
+      precioCompra: compra.precioCompra,
+      precioVenta: compra.precioVenta,
+      precioVentaDiferido: compra.precioDiferido,
+    });
+console.log(nCompra)
+    await nCompra.setCompra(productoId)
+    console.log(nCompra)
     return nCompra;
   } catch (error) {
     throw new Error("Lo sentimos no pudimos crear la compra");
@@ -12,7 +26,7 @@ const postCompras = async (compras) => {
 const getAllCompras = async () => {
   try {
     const allCompras = await Compras.findAll();
-    allCompras.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    // allCompras.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     return allCompras;
   } catch (error) {
     throw new Error("Error no hay resgistros para mostrar");

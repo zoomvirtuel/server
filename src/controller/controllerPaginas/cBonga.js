@@ -6,7 +6,7 @@ const pbo = async (cobo) => {
     // Recorremos corteChat y guardamos cada objeto como un registro en la base de datos
     for (const i of cobo) {
       try {
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -28,10 +28,9 @@ const pbo = async (cobo) => {
           },
         });
         
-        console.log(userId)
         if (c) {
           console.log(r)
-          await r.setCorte_bonga(userId); // Establecer la relación con UserName
+          await r.setCorte_bonga(userNameId); // Establecer la relación con UserName
           await r.setQ_bonga(quincena); // Establecer la relación con Quincena
           console.log(r)
           rcobo.push(r);

@@ -3,6 +3,7 @@ const {
   Paginas,
   User,
   Adultwork,
+  Amateur,
 } = require("../../db.js");
 
 const postUserName = async (input) => {

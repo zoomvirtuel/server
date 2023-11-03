@@ -10,7 +10,7 @@ const pvx = async (covx) => {
             id: i.quincena,
           },
         });
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -21,7 +21,7 @@ const pvx = async (covx) => {
           mensual: false,
         });
         if (r) {
-          await r.setCorte_vx(userId);
+          await r.setCorte_vx(userNameId);
           await r.setQ_vx(quincena);
           rcovx.push(r);
         }

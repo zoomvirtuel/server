@@ -78,6 +78,17 @@ const getAllUser = async () => {
     throw new Error("Error no hay resgistros para mostrar");
   }
 };
+const getAllUserIdName = async () => {
+  try {
+    const user = await User.findAll({
+      attributes: ['id', 'nombre', 'apellido'],
+    });
+    user.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    return user;
+  } catch (error) {
+    throw new Error("Error no hay resgistros para mostrar");
+  }
+};
 
 const getUserById = async (id) => {
   try {
@@ -147,6 +158,7 @@ const deleteUser = async (id) => {
 module.exports = {
   postUser,
   getAllUser,
+  getAllUserIdName,
   getUserById,
   getCheckById,
   updateUser,

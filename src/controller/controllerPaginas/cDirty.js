@@ -11,7 +11,7 @@ const pdi = async (codi) => {
             id: i.quincena,
           },
         });
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -25,7 +25,7 @@ const pdi = async (codi) => {
         },
       });
       if (c) {
-        await r.setCorte_dirty(userId);
+        await r.setCorte_dirty(userNameId);
         await r.setQ_dirty(quincena);
         console.log(r)
         rcodi.push(r);

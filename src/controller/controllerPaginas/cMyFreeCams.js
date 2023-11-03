@@ -6,7 +6,7 @@ const postMyFreeCams = async (myFreeCams) => {
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of myFreeCams) {
       try {
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -23,7 +23,7 @@ const postMyFreeCams = async (myFreeCams) => {
           mensual: false,
         });
         if (r) {
-          await r.setCorte_myFreeCams(userId);
+          await r.setCorte_myFreeCams(userNameId);
           await r.setQ_myFreeCams(quincena);
         }
       } catch (error) {

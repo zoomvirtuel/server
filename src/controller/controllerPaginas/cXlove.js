@@ -11,7 +11,7 @@ const pxl = async (coxl) => {
             id: i.quincena,
           },
         });
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -21,11 +21,11 @@ const pxl = async (coxl) => {
           euros: i.euros,
           mensual: false,
         });
-        console.log(userId);
+        console.log(userNameId);
         console.log(quincena);
         console.log(r);
         if (r) {
-          await r.setCorte_xlove(userId);
+          await r.setCorte_xlove(userNameId);
           await r.setQ_xlove(quincena);
           console.log(r);
           rcoxl.push(r);

@@ -10,7 +10,7 @@ const {
 } = require("../../controller/controllerRegistros/cCompras.js");
 
 router.post("/", async (req, res) => {
-  const compra = req.body.compra;
+  const compra = req.body;
   try {
     const nCompra = await postCompras(compra);
     return res.status(200).json(nCompra);

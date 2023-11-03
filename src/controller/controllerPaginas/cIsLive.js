@@ -10,7 +10,7 @@ const pil = async (coil) => {
             id: i.quincena,
           },
         });
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.codigo,
           },
@@ -23,7 +23,7 @@ const pil = async (coil) => {
           },
         });
         if (c) {
-          await r.setCorte_isLive(userId);
+          await r.setCorte_isLive(userNameId);
           await r.setQ_isLive(quincena);
           rcoil.push(r);
         }

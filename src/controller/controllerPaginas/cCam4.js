@@ -12,7 +12,7 @@ const pca = async (coca) => {
             id: i.quincena,
           },
         });
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -25,7 +25,7 @@ const pca = async (coca) => {
         },
       });
       if (c) {
-        await r.setCorte_cam4(userId);
+        await r.setCorte_cam4(userNameId);
         await r.setQ_cam4(quincena);
         rcoca.push(r)
       }

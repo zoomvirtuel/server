@@ -11,7 +11,7 @@ const pch = async (coch) => {
             id: i.quincena,
           },
         });
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -25,7 +25,7 @@ const pch = async (coch) => {
         },
       });
       if (c) {
-        await r.setCorte_chaturbate(userId);
+        await r.setCorte_chaturbate(userNameId);
         await r.setQ_chaturbate(quincena);
         console.log(r);
         rcoch.push(r);

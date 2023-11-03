@@ -6,7 +6,7 @@ const postStreamRay = async (streamRay) => {
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of streamRay) {
       try {
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -22,7 +22,7 @@ const postStreamRay = async (streamRay) => {
           mensual: false,
         });
         if (r) {
-          await r.setCorte_streamRay(userId);
+          await r.setCorte_streamRay(userNameId);
           await r.setQ_streamRay(quincena);
         }
       } catch (error) {

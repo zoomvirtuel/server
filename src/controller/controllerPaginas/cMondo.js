@@ -6,7 +6,7 @@ const postMondo = async (mondo) => {
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of mondo) {
       try {
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -22,7 +22,7 @@ const postMondo = async (mondo) => {
           mensual: false,
         });
         if (r) {
-          await r.setCorte_mondo(userId);
+          await r.setCorte_mondo(userNameId);
           await r.setQ_mondo(quincena);
         }
       } catch (error) {

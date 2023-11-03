@@ -10,7 +10,7 @@ const pse = async (cose) => {
             id: i.quincena,
           },
         });
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
@@ -25,7 +25,7 @@ const pse = async (cose) => {
           },
         });
         if (c) {
-          await r.setCorte_sender(userId);
+          await r.setCorte_sender(userNameId);
           await r.setQ_sender(quincena);
           rcose.push(r);
         }

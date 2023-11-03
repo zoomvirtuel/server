@@ -10,12 +10,12 @@ const pst = async (cost) => {
             id: i.quincena,
           },
         });
-        const userId = await UserName.findOne({
+        const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
         });
-        console.log(userId);
+        console.log(userNameId);
         console.log(quincena);
         console.log(cost);
         const r = await Stripchat.create({
@@ -26,7 +26,7 @@ const pst = async (cost) => {
         });
         console.log(r);
         if (r) {
-          await r.setCorte_stripchat(userId);
+          await r.setCorte_stripchat(userNameId);
           await r.setQ_stripchat(quincena);
           rcost.push(r);
         }

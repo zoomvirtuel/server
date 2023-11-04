@@ -10,9 +10,16 @@ const {
   Chaturbate,
   Dirty,
   IsLive,
+  Mondo,
+  MyFreeCams,
+  Sakura,
   Sender,
   Skype,
+  Streamate,
+  StreamRay,
   Stripchat,
+  TripleSiete,
+  Ventas,
   Vx,
   Xlove,
   XloveNueva,
@@ -446,6 +453,7 @@ const searchUserByFortnight = async (ids, id) => {
 
 const searchAllUserByFortnight = async (id) => {
   try {
+    console.log(id);
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio peticiones al base de datos   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const quincenas = await Quincena.findAll({
       attributes: ["id", "nombre", "inicia", "final"],
@@ -473,7 +481,7 @@ const searchAllUserByFortnight = async (id) => {
         return nombreQuincena.endsWith("1");
       });
     }
-    let quincenaId = quincenaAnterior.id;
+    let quincenaId = quincenaAnterior?.id || null;
     const adultwork = await Quincena.findOne({
       where: { id: id },
       attributes: ["id", "nombre", "inicia", "final"],
@@ -506,6 +514,7 @@ const searchAllUserByFortnight = async (id) => {
             "userNameId",
             "mensual",
             "tokens",
+            "createdAt",
           ],
         },
       ],
@@ -535,7 +544,14 @@ const searchAllUserByFortnight = async (id) => {
         {
           model: Cam4,
           as: "q_cam4",
-          attributes: ["id", "userName", "dolares", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "userName",
+            "dolares",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -553,6 +569,7 @@ const searchAllUserByFortnight = async (id) => {
             "mensual",
             "userNameId",
             "tokens",
+            "createdAt",
           ],
         },
       ],
@@ -570,8 +587,9 @@ const searchAllUserByFortnight = async (id) => {
             "plata",
             "userName",
             "mensual",
-
+            "createdAt",
             "userNameId",
+            "createdAt",
           ],
         },
       ],
@@ -583,10 +601,39 @@ const searchAllUserByFortnight = async (id) => {
         {
           model: IsLive,
           as: "q_isLive",
-          attributes: ["id", "codigo", "euros", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "codigo",
+            "euros",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
+    const mondo = await Quincena.findOne({
+      where: { id: id },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Mondo,
+          as: "q_mondo",
+          attributes: ["id", "euros", "userName", "userNameId", "createdAt"],
+        },
+      ],
+    });
+    const myFreeCams = await Quincena.findOne({
+      where: {id: id},
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: MyFreeCams,
+          as: "q_myfreecams",
+          attributes: ["id", "tokens", "dolares", "userName", "userNameId", "createdAt"],
+        },
+      ],
+    })
     const sender = await Quincena.findOne({
       where: { id: id },
       attributes: ["id", "nombre", "inicia", "final"],
@@ -602,29 +649,33 @@ const searchAllUserByFortnight = async (id) => {
             "userNameId",
             "coins",
             "euros",
+            "createdAt",
           ],
         },
       ],
     });
-    const senderQuincenaAnterior = await Quincena.findOne({
-      where: { id: quincenaId },
-      attributes: ["id", "nombre", "inicia", "final"],
-      include: [
-        {
-          model: Sender,
-          as: "q_sender",
-          attributes: [
-            "id",
-            "userName",
-            "fecha",
-            "mensual",
-            "userNameId",
-            "coins",
-            "euros",
-          ],
-        },
-      ],
-    });
+    const senderQuincenaAnterior =
+      (await Quincena.findOne({
+        where: { id: quincenaId },
+        attributes: ["id", "nombre", "inicia", "final"],
+        include: [
+          {
+            model: Sender,
+            as: "q_sender",
+            attributes: [
+              "id",
+              "userName",
+              "fecha",
+              "mensual",
+              "userNameId",
+              "coins",
+              "euros",
+              "createdAt",
+            ],
+          },
+        ],
+      })) || [];
+
     const skype = await Quincena.findOne({
       where: { id: id },
       attributes: ["id", "nombre", "inicia", "final"],
@@ -649,9 +700,20 @@ const searchAllUserByFortnight = async (id) => {
             "mensual",
             "dolares",
             "tokens",
-
             "userNameId",
+            "createdAt",
           ],
+        },
+      ],
+    });
+    const tripleSiete = await Quincena.findOne({
+      where: { id: id },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: TripleSiete,
+          as: "q_triplesiete",
+          attributes: ["id", "userName", "dolares", "userNameId", "createdAt"],
         },
       ],
     });
@@ -835,7 +897,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin adultwork  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio amateur   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-
+    //* se arreglo bug de ultimo registro
     const registrosAgrupadosAmateur = {};
 
     for (const registro of amateur.q_amateur) {
@@ -848,6 +910,7 @@ const searchAllUserByFortnight = async (id) => {
           userNameId: registro.userNameId,
           mensual: registro.mensual,
           tokens: registro.tokens,
+          fecha: registro.createdAt,
         };
 
         if (!registrosAgrupadosAmateur[userName]) {
@@ -868,7 +931,16 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.amateur = registrosUsuario[0];
+          // Encontrar el registro más reciente utilizando reduce
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+
+          usuario.amateur = registroMasReciente;
           delete registrosAgrupadosAmateur[nombreUsuario];
         }
       }
@@ -884,6 +956,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin amateur   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio bonga   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //! a la espera de confirmacion de cortes
     const registrosAgrupadosBonga = {};
 
     for (const registro of bonga.q_bonga) {
@@ -939,6 +1012,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin bonga   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio cam4   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+        //* se arreglo bug de ultimo registro
     const registrosAgrupadosCam4 = {};
 
     for (const registro of cam4.q_cam4) {
@@ -949,6 +1023,7 @@ const searchAllUserByFortnight = async (id) => {
           userName: registro.userName,
           dolares: registro.dolares,
           userNameId: registro.userNameId,
+          fecha: registro.createdAt,
         };
 
         if (!registrosAgrupadosCam4[userName]) {
@@ -969,7 +1044,15 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.cam4 = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+
+          usuario.cam4 = registroMasReciente;
           delete registrosAgrupadosCam4[nombreUsuario];
         }
       }
@@ -985,6 +1068,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin cam4   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Chaturbate   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arreglo bug de ultimo registro
     const registrosAgrupadosChaturbate = {};
 
     for (const registro of chaturbate.q_chaturbate) {
@@ -996,6 +1080,7 @@ const searchAllUserByFortnight = async (id) => {
           dolares: registro.dolares,
           userNameId: registro.userNameId,
           tokens: registro.tokens,
+          fecha: registro.createdAt,
         };
 
         if (!registrosAgrupadosChaturbate[userName]) {
@@ -1016,7 +1101,14 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.chaturbate = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+          usuario.chaturbate = registroMasReciente;
           delete registrosAgrupadosChaturbate[nombreUsuario];
         }
       }
@@ -1032,6 +1124,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin Chaturbate   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Dirty   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arreglo bug de ultimo registro
     const registrosAgrupadosDirty = {};
 
     for (const registro of dirty.q_dirty) {
@@ -1043,6 +1136,7 @@ const searchAllUserByFortnight = async (id) => {
           plata: registro.plata,
           userName: registro.userName,
           userNameId: registro.userNameId,
+          fecha: registro.createdAt,
         };
 
         if (!registrosAgrupadosDirty[userName]) {
@@ -1063,7 +1157,15 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.dirty = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+
+          usuario.dirty = registroMasReciente;
           delete registrosAgrupadosDirty[nombreUsuario];
         }
       }
@@ -1079,6 +1181,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin Dirty   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Islive   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arreglo ultimo registro subido
     const registrosAgrupadosIsLive = {};
 
     for (const registro of islive.q_isLive) {
@@ -1109,7 +1212,15 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.islive = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+
+          usuario.islive = registroMasReciente;
           delete registrosAgrupadosIsLive[nombreUsuario];
         }
       }
@@ -1125,97 +1236,116 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  islive  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  Mondo  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    // const registrosAgrupadosDirty = {};
+        //* se arreglo bug de ultimo registro
+    const registrosAgrupadosMondo = {};
 
-    //         for (const registro of dirty.q_dirty) {
-    //           const { userName, userNameId } = registro;
-    //           if (userName) {
-    //             const registroDirty = {
-    //               id: registro.id,
-    //               moneda: registro.moneda,
-    //               plata: registro.plata,
-    //               userName: registro.userName,
-    //               userNameId: registro.userNameId,
-    //             };
+    for (const registro of mondo?.q_mondo) {
+      const { userName, userNameId } = registro;
+      if (userName) {
+        const registroMondo = {
+          id: registro.id,
+          euros: registro.euros,
+          userName: registro.userName,
+          userNameId: registro.userNameId,
+          fecha: registro.createdAt,
+        };
 
-    //             if (!registrosAgrupadosDirty[userName]) {
-    //               registrosAgrupadosDirty[userName] = [registroDirty];
-    //             } else {
-    //               registrosAgrupadosDirty[userName].push(registroDirty);
-    //             }
-    //           }
-    //         }
+        if (!registrosAgrupadosMondo[userName]) {
+          registrosAgrupadosMondo[userName] = [registroMondo];
+        } else {
+          registrosAgrupadosMondo[userName].push(registroMondo);
+        }
+      }
+    }
 
-    //         for (const usuarioKey of Object.keys(resultado.modelos)) {
-    //           const usuario = resultado.modelos[usuarioKey];
-    //           for (const nombreUsuario of Object.keys(registrosAgrupadosDirty)) {
-    //             const registrosUsuario = registrosAgrupadosDirty[nombreUsuario];
-    //             const usuarioEncontrado = usuario.userNamePage.find(
-    //               (name) =>
-    //                 name.pagina.toLowerCase() === "dirty" &&
-    //                 name.userName === nombreUsuario
-    //             );
-    //             if (usuarioEncontrado) {
-    //               usuario.dirty = registrosUsuario;
-    //               delete registrosAgrupadosDirty[nombreUsuario];
-    //             }
-    //           }
-    //         }
+    for (const usuarioKey of Object.keys(resultado.modelos)) {
+      const usuario = resultado.modelos[usuarioKey];
+      for (const nombreUsuario of Object.keys(registrosAgrupadosMondo)) {
+        const registrosUsuario = registrosAgrupadosMondo[nombreUsuario];
+        const usuarioEncontrado = usuario.userNamePage.find(
+          (name) =>
+            name.pagina.toLowerCase() === "mondo" &&
+            name.userName === nombreUsuario
+        );
+        if (usuarioEncontrado) {
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
 
-    //         const registrosNoAsignadosDirty = Object.values(
-    //           registrosAgrupadosDirty
-    //         ).flat();
+          usuario.mondo = registroMasReciente;
+          delete registrosAgrupadosMondo[nombreUsuario];
+        }
+      }
+    }
 
-    //         if (registrosNoAsignadosDirty.length > 0) {
-    //           resultado.paginas.dirty = registrosNoAsignadosDirty;
-    //         }
+    const registrosNoAsignadosMondo = Object.values(
+      registrosAgrupadosMondo
+    ).flat();
+
+    if (registrosNoAsignadosMondo.length > 0) {
+      resultado.paginas.mondo = registrosNoAsignadosMondo;
+    }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  Mondo  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio MyFreeCams   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    // const registrosAgrupadosDirty = {};
+    const registrosAgrupadosMyFreeCams = {};
 
-    //         for (const registro of dirty.q_dirty) {
-    //           const { userName, userNameId } = registro;
-    //           if (userName) {
-    //             const registroDirty = {
-    //               id: registro.id,
-    //               moneda: registro.moneda,
-    //               plata: registro.plata,
-    //               userName: registro.userName,
-    //               userNameId: registro.userNameId,
-    //             };
+            for (const registro of myFreeCams.q_myfreecams) {
+              const { userName, userNameId } = registro;
+              if (userName) {
+                const registroMyFreeCams = {
+                  id: registro.id,
+                  tokens: registro.tokens,
+                  dolares: registro.dolares,
+                  userName: registro.userName,
+                  userNameId: registro.userNameId,
+                  fecha: registro.createdAt,
+                };
 
-    //             if (!registrosAgrupadosDirty[userName]) {
-    //               registrosAgrupadosDirty[userName] = [registroDirty];
-    //             } else {
-    //               registrosAgrupadosDirty[userName].push(registroDirty);
-    //             }
-    //           }
-    //         }
+                if (!registrosAgrupadosMyFreeCams[userName]) {
+                  registrosAgrupadosMyFreeCams[userName] = [registroMyFreeCams];
+                } else {
+                  registrosAgrupadosMyFreeCams[userName].push(registroMyFreeCams);
+                }
+              }
+            }
 
-    //         for (const usuarioKey of Object.keys(resultado.modelos)) {
-    //           const usuario = resultado.modelos[usuarioKey];
-    //           for (const nombreUsuario of Object.keys(registrosAgrupadosDirty)) {
-    //             const registrosUsuario = registrosAgrupadosDirty[nombreUsuario];
-    //             const usuarioEncontrado = usuario.userNamePage.find(
-    //               (name) =>
-    //                 name.pagina.toLowerCase() === "dirty" &&
-    //                 name.userName === nombreUsuario
-    //             );
-    //             if (usuarioEncontrado) {
-    //               usuario.dirty = registrosUsuario;
-    //               delete registrosAgrupadosDirty[nombreUsuario];
-    //             }
-    //           }
-    //         }
+            for (const usuarioKey of Object.keys(resultado.modelos)) {
+              const usuario = resultado.modelos[usuarioKey];
+              for (const nombreUsuario of Object.keys(registrosAgrupadosMyFreeCams)) {
+                const registrosUsuario = registrosAgrupadosMyFreeCams[nombreUsuario];
+                const usuarioEncontrado = usuario.userNamePage.find(
+                  (name) =>
+                    name.pagina.toLowerCase() === "myfreecams" &&
+                    name.userName === nombreUsuario
+                );
+                if (usuarioEncontrado) {
+                  const registroMasReciente = registrosUsuario.reduce(
+                    (prev, current) => {
+                      return new Date(prev.fecha) > new Date(current.fecha)
+                        ? prev
+                        : current;
+                    }
+                  );
+        
+                  usuario.myFreeCams = registroMasReciente;
+                  delete registrosAgrupadosMyFreeCams[nombreUsuario];
+                }
+                
+              }
+            }
 
-    //         const registrosNoAsignadosDirty = Object.values(
-    //           registrosAgrupadosDirty
-    //         ).flat();
+            const registrosNoAsignadosMyFreeCams = Object.values(
+              registrosAgrupadosMyFreeCams
+            ).flat();
 
-    //         if (registrosNoAsignadosDirty.length > 0) {
-    //           resultado.paginas.dirty = registrosNoAsignadosDirty;
-    //         }
+            if (registrosNoAsignadosMyFreeCams.length > 0) {
+              resultado.paginas.myFreeCams = registrosNoAsignadosMyFreeCams;
+            }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin MyFreeCams   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Sakura   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1314,55 +1444,59 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  sender  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio sender anterior   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    const registrosAgrupadosSenderAnterior = {};
+    if (senderQuincenaAnterior.length) {
+      const registrosAgrupadosSenderAnterior = {};
 
-    for (const registro of senderQuincenaAnterior.q_sender) {
-      const { userName, userNameId } = registro;
-      if (userName) {
-        const registroSenderAnterior = {
-          id: registro.id,
-          userName: registro.userName,
-          fecha: registro.fecha,
-          euros: registro.euros,
-          coins: registro.coins,
-          userNameId: registro.userNameId,
-        };
+      for (const registro of senderQuincenaAnterior?.q_sender) {
+        const { userName, userNameId } = registro;
+        if (userName) {
+          const registroSenderAnterior = {
+            id: registro.id,
+            userName: registro.userName,
+            fecha: registro.fecha,
+            euros: registro.euros,
+            coins: registro.coins,
+            userNameId: registro.userNameId,
+          };
 
-        if (!registrosAgrupadosSenderAnterior[userName]) {
-          registrosAgrupadosSenderAnterior[userName] = [registroSenderAnterior];
-        } else {
-          registrosAgrupadosSenderAnterior[userName].push(
-            registroSenderAnterior
+          if (!registrosAgrupadosSenderAnterior[userName]) {
+            registrosAgrupadosSenderAnterior[userName] = [
+              registroSenderAnterior,
+            ];
+          } else {
+            registrosAgrupadosSenderAnterior[userName].push(
+              registroSenderAnterior
+            );
+          }
+        }
+      }
+
+      for (const usuarioKey of Object.keys(resultado.modelos)) {
+        const usuario = resultado.modelos[usuarioKey];
+        for (const nombreUsuario of Object.keys(
+          registrosAgrupadosSenderAnterior
+        )) {
+          const registrosUsuario =
+            registrosAgrupadosSenderAnterior[nombreUsuario];
+          const usuarioEncontrado = usuario.userNamePage.find(
+            (name) =>
+              name.pagina.toLowerCase() === "sender" &&
+              name.userName === nombreUsuario
           );
+          if (usuarioEncontrado) {
+            usuario.senderAnterior = registrosUsuario[0];
+            delete registrosAgrupadosSenderAnterior[nombreUsuario];
+          }
         }
       }
-    }
 
-    for (const usuarioKey of Object.keys(resultado.modelos)) {
-      const usuario = resultado.modelos[usuarioKey];
-      for (const nombreUsuario of Object.keys(
+      const registrosNoAsignadosSenderAnterior = Object.values(
         registrosAgrupadosSenderAnterior
-      )) {
-        const registrosUsuario =
-          registrosAgrupadosSenderAnterior[nombreUsuario];
-        const usuarioEncontrado = usuario.userNamePage.find(
-          (name) =>
-            name.pagina.toLowerCase() === "sender" &&
-            name.userName === nombreUsuario
-        );
-        if (usuarioEncontrado) {
-          usuario.senderAnterior = registrosUsuario[0];
-          delete registrosAgrupadosSenderAnterior[nombreUsuario];
-        }
+      ).flat();
+
+      if (registrosNoAsignadosSenderAnterior.length > 0) {
+        resultado.paginas.senderAnterior = registrosNoAsignadosSenderAnterior;
       }
-    }
-
-    const registrosNoAsignadosSenderAnterior = Object.values(
-      registrosAgrupadosSenderAnterior
-    ).flat();
-
-    if (registrosNoAsignadosSenderAnterior.length > 0) {
-      resultado.paginas.senderAnterior = registrosNoAsignadosSenderAnterior;
     }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  sender anterior  ↑↑↑↑↑↑↑↑↑↑↑↑
 
@@ -1691,8 +1825,10 @@ const searchAllUserByFortnight = async (id) => {
     //todo  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   final  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     return resultado;
   } catch (error) {
+    console.log(error);
     throw new Error(
-      "Error ocurrio algo en el proceso por favor intente nuevamente o contacte con un programing thanks"
+      "Error ocurrio algo en el proceso por favor intente nuevamente o contacte con un programing thanks" +
+        error.message
     );
   }
 };

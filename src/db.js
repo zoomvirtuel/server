@@ -64,6 +64,7 @@ const {
   Streamate,
   StreamRay,
   Stripchat,
+  TripleSiete,
   Vx,
   Xlove,
   XloveNueva,
@@ -144,7 +145,10 @@ Cam4.belongsTo(UserName, { as: "corte_cam4", foreignKey: "userNameId" });
 Quincena.hasMany(Chaturbate, { as: "q_chaturbate", foreignKey: "quincena" });
 Chaturbate.belongsTo(Quincena, { as: "q_chaturbate", foreignKey: "quincena" });
 //? relation of userName and chaturbate
-UserName.hasMany(Chaturbate, { as: "corte_chaturbate", foreignKey: "userNameId" });
+UserName.hasMany(Chaturbate, {
+  as: "corte_chaturbate",
+  foreignKey: "userNameId",
+});
 Chaturbate.belongsTo(UserName, {
   as: "corte_chaturbate",
   foreignKey: "userNameId",
@@ -179,7 +183,10 @@ Mondo.belongsTo(UserName, { as: "corte_mondo", foreignKey: "userNameId" });
 Quincena.hasMany(MyFreeCams, { as: "q_myfreecams", foreignKey: "quincena" });
 MyFreeCams.belongsTo(Quincena, { as: "q_myfreecams", foreignKey: "quincena" });
 //? relation of userName and MYFREECAMS
-UserName.hasMany(MyFreeCams, { as: "corte_myfreecams", foreignKey: "userNameId" });
+UserName.hasMany(MyFreeCams, {
+  as: "corte_myfreecams",
+  foreignKey: "userNameId",
+});
 MyFreeCams.belongsTo(UserName, {
   as: "corte_myfreecams",
   foreignKey: "userNameId",
@@ -214,24 +221,59 @@ Skype.belongsTo(UserName, { as: "corte_skype", foreignKey: "userNameId" });
 Quincena.hasMany(Streamate, { as: "q_streamate", foreignKey: "quincena" });
 Streamate.belongsTo(Quincena, { as: "q_streamate", foreignKey: "quincena" });
 //? relation of userName and Skype
-UserName.hasMany(Streamate, { as: "corte_streamate", foreignKey: "userNameId" });
-Streamate.belongsTo(UserName, { as: "corte_streamate", foreignKey: "userNameId" });
+UserName.hasMany(Streamate, {
+  as: "corte_streamate",
+  foreignKey: "userNameId",
+});
+Streamate.belongsTo(UserName, {
+  as: "corte_streamate",
+  foreignKey: "userNameId",
+});
 
 //? ********************// S T R E A M R A Y \\  ********************
 //? relation of fortnight and Skype
 Quincena.hasMany(StreamRay, { as: "q_streamRay", foreignKey: "quincena" });
 StreamRay.belongsTo(Quincena, { as: "q_streamRay", foreignKey: "quincena" });
 //? relation of userName and Skype
-UserName.hasMany(StreamRay, { as: "corte_streamRay", foreignKey: "userNameId" });
-StreamRay.belongsTo(UserName, { as: "corte_streamRay", foreignKey: "userNameId" });
+UserName.hasMany(StreamRay, {
+  as: "corte_streamRay",
+  foreignKey: "userNameId",
+});
+StreamRay.belongsTo(UserName, {
+  as: "corte_streamRay",
+  foreignKey: "userNameId",
+});
 
 //? ********************//  S T R I P C H A T \\  ********************
 //? relation of fortnight and Stripchat
 Quincena.hasMany(Stripchat, { as: "q_stripchat", foreignKey: "quincena" });
 Stripchat.belongsTo(Quincena, { as: "q_stripchat", foreignKey: "quincena" });
 //? relation of userName and Stripchat
-UserName.hasMany(Stripchat, { as: "corte_stripchat", foreignKey: "userNameId" });
-Stripchat.belongsTo(UserName, { as: "corte_stripchat", foreignKey: "userNameId" });
+UserName.hasMany(Stripchat, {
+  as: "corte_stripchat",
+  foreignKey: "userNameId",
+});
+Stripchat.belongsTo(UserName, {
+  as: "corte_stripchat",
+  foreignKey: "userNameId",
+});
+
+//? ********************//  T R I P L E S I E T E \\  ********************
+//? relation of fortnight and TripleSiete
+Quincena.hasMany(TripleSiete, { as: "q_triplesiete", foreignKey: "quincena" });
+TripleSiete.belongsTo(Quincena, {
+  as: "q_triplesiete",
+  foreignKey: "quincena",
+});
+//? relation of userName and TripleSiete
+UserName.hasMany(TripleSiete, {
+  as: "corte_triplesiete",
+  foreignKey: "userNameId",
+});
+TripleSiete.belongsTo(UserName, {
+  as: "corte_triplesiete",
+  foreignKey: "userNameId",
+});
 
 //? ********************// V X  \\  ********************
 //? relation of fortnight and Vx
@@ -254,7 +296,10 @@ Xlove.belongsTo(UserName, { as: "corte_xlove", foreignKey: "userNameId" });
 Quincena.hasMany(XloveNueva, { as: "q_xloveNueva", foreignKey: "quincena" });
 XloveNueva.belongsTo(Quincena, { as: "q_xloveNueva", foreignKey: "quincena" });
 //? relation of userName and XloveNueva
-UserName.hasMany(XloveNueva, { as: "corte_xloveNueva", foreignKey: "userNameId" });
+UserName.hasMany(XloveNueva, {
+  as: "corte_xloveNueva",
+  foreignKey: "userNameId",
+});
 XloveNueva.belongsTo(UserName, {
   as: "corte_xloveNueva",
   foreignKey: "userNameId",

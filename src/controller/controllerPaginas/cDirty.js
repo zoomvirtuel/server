@@ -16,15 +16,13 @@ const pdi = async (codi) => {
             userName: i.user,
           },
         });
-        const [r, c] = await Dirty.findOrCreate({
-        where: {
+        const r = await Dirty.create({
           userName: i.user,
           plata: i.plata,
           moneda: i.moneda,
           mensual: true,
-        },
       });
-      if (c) {
+      if (r) {
         await r.setCorte_dirty(userNameId);
         await r.setQ_dirty(quincena);
         console.log(r)

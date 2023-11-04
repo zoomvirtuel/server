@@ -23,8 +23,9 @@ const postMyFreeCams = async (myFreeCams) => {
           mensual: false,
         });
         if (r) {
-          await r.setCorte_myFreeCams(userNameId);
-          await r.setQ_myFreeCams(quincena);
+          await r.setCorte_myfreecams(userNameId);
+          await r.setQ_myfreecams(quincena);
+          console.log(r)
         }
       } catch (error) {
         console.error("Error en una iteración del bucle:", error);

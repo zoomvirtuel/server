@@ -3,7 +3,6 @@ const { Sakura, UserName, Quincena } = require("../../db.js");
 const postSakura = async (sakura) => {
   try {
     const rSakura = [];
-    // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of sakura) {
       try {
         const userNameId = await UserName.findOne({
@@ -31,13 +30,11 @@ const postSakura = async (sakura) => {
         // Continuar con la próxima iteración
       }
     }
-    // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.
     rSakura.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     });
     return rSakura;
   } catch (error) {
-    // Manejo de errores en caso de que algo falle durante el proceso de creación de registros.
     throw new Error("Error al guardar los registros: " + error.message);
   }
 };

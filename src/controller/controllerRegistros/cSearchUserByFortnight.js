@@ -624,16 +624,23 @@ const searchAllUserByFortnight = async (id) => {
       ],
     });
     const myFreeCams = await Quincena.findOne({
-      where: {id: id},
+      where: { id: id },
       attributes: ["id", "nombre", "inicia", "final"],
       include: [
         {
           model: MyFreeCams,
           as: "q_myfreecams",
-          attributes: ["id", "tokens", "dolares", "userName", "userNameId", "createdAt"],
+          attributes: [
+            "id",
+            "tokens",
+            "dolares",
+            "userName",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
-    })
+    });
     const sender = await Quincena.findOne({
       where: { id: id },
       attributes: ["id", "nombre", "inicia", "final"],
@@ -1012,7 +1019,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin bonga   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio cam4   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-        //* se arreglo bug de ultimo registro
+    //* se arreglo bug de ultimo registro
     const registrosAgrupadosCam4 = {};
 
     for (const registro of cam4.q_cam4) {
@@ -1236,7 +1243,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  islive  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  Mondo  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-        //* se arreglo bug de ultimo registro
+    //* se arreglo bug de ultimo registro
     const registrosAgrupadosMondo = {};
 
     for (const registro of mondo?.q_mondo) {
@@ -1294,58 +1301,57 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio MyFreeCams   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const registrosAgrupadosMyFreeCams = {};
 
-            for (const registro of myFreeCams.q_myfreecams) {
-              const { userName, userNameId } = registro;
-              if (userName) {
-                const registroMyFreeCams = {
-                  id: registro.id,
-                  tokens: registro.tokens,
-                  dolares: registro.dolares,
-                  userName: registro.userName,
-                  userNameId: registro.userNameId,
-                  fecha: registro.createdAt,
-                };
+    for (const registro of myFreeCams.q_myfreecams) {
+      const { userName, userNameId } = registro;
+      if (userName) {
+        const registroMyFreeCams = {
+          id: registro.id,
+          tokens: registro.tokens,
+          dolares: registro.dolares,
+          userName: registro.userName,
+          userNameId: registro.userNameId,
+          fecha: registro.createdAt,
+        };
 
-                if (!registrosAgrupadosMyFreeCams[userName]) {
-                  registrosAgrupadosMyFreeCams[userName] = [registroMyFreeCams];
-                } else {
-                  registrosAgrupadosMyFreeCams[userName].push(registroMyFreeCams);
-                }
-              }
+        if (!registrosAgrupadosMyFreeCams[userName]) {
+          registrosAgrupadosMyFreeCams[userName] = [registroMyFreeCams];
+        } else {
+          registrosAgrupadosMyFreeCams[userName].push(registroMyFreeCams);
+        }
+      }
+    }
+
+    for (const usuarioKey of Object.keys(resultado.modelos)) {
+      const usuario = resultado.modelos[usuarioKey];
+      for (const nombreUsuario of Object.keys(registrosAgrupadosMyFreeCams)) {
+        const registrosUsuario = registrosAgrupadosMyFreeCams[nombreUsuario];
+        const usuarioEncontrado = usuario.userNamePage.find(
+          (name) =>
+            name.pagina.toLowerCase() === "myfreecams" &&
+            name.userName === nombreUsuario
+        );
+        if (usuarioEncontrado) {
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
             }
+          );
 
-            for (const usuarioKey of Object.keys(resultado.modelos)) {
-              const usuario = resultado.modelos[usuarioKey];
-              for (const nombreUsuario of Object.keys(registrosAgrupadosMyFreeCams)) {
-                const registrosUsuario = registrosAgrupadosMyFreeCams[nombreUsuario];
-                const usuarioEncontrado = usuario.userNamePage.find(
-                  (name) =>
-                    name.pagina.toLowerCase() === "myfreecams" &&
-                    name.userName === nombreUsuario
-                );
-                if (usuarioEncontrado) {
-                  const registroMasReciente = registrosUsuario.reduce(
-                    (prev, current) => {
-                      return new Date(prev.fecha) > new Date(current.fecha)
-                        ? prev
-                        : current;
-                    }
-                  );
-        
-                  usuario.myFreeCams = registroMasReciente;
-                  delete registrosAgrupadosMyFreeCams[nombreUsuario];
-                }
-                
-              }
-            }
+          usuario.myFreeCams = registroMasReciente;
+          delete registrosAgrupadosMyFreeCams[nombreUsuario];
+        }
+      }
+    }
 
-            const registrosNoAsignadosMyFreeCams = Object.values(
-              registrosAgrupadosMyFreeCams
-            ).flat();
+    const registrosNoAsignadosMyFreeCams = Object.values(
+      registrosAgrupadosMyFreeCams
+    ).flat();
 
-            if (registrosNoAsignadosMyFreeCams.length > 0) {
-              resultado.paginas.myFreeCams = registrosNoAsignadosMyFreeCams;
-            }
+    if (registrosNoAsignadosMyFreeCams.length > 0) {
+      resultado.paginas.myFreeCams = registrosNoAsignadosMyFreeCams;
+    }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin MyFreeCams   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Sakura   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1444,7 +1450,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  sender  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio sender anterior   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    if (senderQuincenaAnterior.length) {
+    if (senderQuincenaAnterior?.q_sender) {
       const registrosAgrupadosSenderAnterior = {};
 
       for (const registro of senderQuincenaAnterior?.q_sender) {
@@ -1821,8 +1827,58 @@ const searchAllUserByFortnight = async (id) => {
       resultado.paginas.xlovenueva = registrosNoAsignadosXloveNueva;
     }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin xloveNueva   ↑↑↑↑↑↑↑↑↑↑↑↑
+    for (const modelo of resultado.modelos) {
+      let totalLibras = modelo.adultworkTotal?.creditos || 0;
 
+      let totalEuros =
+        ((modelo.dirty?.moneda === "euro" ? modelo.dirty?.plata : 0)||0) +
+        (modelo.islive?.euros || 0) +
+        ((modelo.senderAnterior?.euros?modelo.sender?.euros - modelo.senderAnterior?.euros:0) || 0) +
+        (modelo.vx?.euros || 0) +
+        (modelo.xlove?.euros || 0) +
+        (modelo.xlovenueva?.euros || 0);
+
+      let totalDolares =
+        (modelo.amateur?.dolares || 0) +
+        (modelo.bongaTotal?.dolares || 0) +
+        (modelo.cam4?.dolares || 0) +
+        (modelo.chaturbate?.dolares || 0) +
+        ((modelo.dirty?.moneda === "dolar" ? modelo.dirty?.plata : 0)||0) +
+          (modelo.myFreeCams?.dolares || 0) +
+          (modelo.skype?.dolares || 0) +
+          (modelo.stripchat?.dolares || 0);
+      const totalCreditos = totalDolares + totalEuros + totalLibras;
+      const porcentajeFinal =
+        totalCreditos >= modelo.porcentaje?.meta
+          ? modelo.porcentaje?.final
+          : modelo.porcentaje?.inicial;
+    const dolar = moneda?.monedas?.find((x) => x.dolar)?.dolar || 0;
+      const euro = moneda?.monedas?.find((x) => x.euro)?.euro || 0;
+      const libra = moneda?.monedas?.find((x) => x.libra)?.libra || 0;
+      const totalPesos =
+        ((totalLibras * porcentajeFinal) / 100) * libra +
+        ((totalEuros * porcentajeFinal) / 100) * euro +
+        ((totalDolares * porcentajeFinal) / 100) * dolar;
+      // Guardar los totales en el modelo
+      console.log('senderAnterior')
+      console.log(modelo.senderAnterior?.euros)
+      console.log((modelo.senderAnterior? modelo.sender?.euros - modelo.senderAnterior?.euros:0) || 0)
+      modelo.totales = {
+        totalCreditos,
+        totalDolares,
+        totalEuros,
+        totalLibras,
+        porcentajeFinal,
+        totalPesos,
+        libra,
+        euro,
+        dolar
+      };
+      console.log(modelo.totales)
+    }
+    
     //todo  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   final  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    // console.log(resultado)
     return resultado;
   } catch (error) {
     console.log(error);

@@ -32,8 +32,9 @@ const rMyFreeCams = require("./routesPaginas/rMyFreeCams.js");
 const rSakura = require("./routesPaginas/rSakura.js");
 const rstreamate = require("./routesPaginas/rStreamate.js");
 const rStreamRay = require("./routesPaginas/rStreamRay.js");
-const rSearchProducto = require('./routesRegistros/rSearchProducto.js')
-const rSearchUserByFortnight = require('./routesRegistros/rSearchUserByFortnight.js')
+const rSearchProducto = require("./routesRegistros/rSearchProducto.js");
+const rSearchUserByFortnight = require("./routesRegistros/rSearchUserByFortnight.js");
+const rPrestamos = require("./routesRegistros/rPrestamos.js");
 
 //* ejecucion de rutasrouter.use("/", rPassport);
 router.use("/registro", rUser);
@@ -48,8 +49,9 @@ router.use("/moneda", rMoneda);
 router.use("/porcentaje", rPorcentaje);
 router.use("/ubicacion", rUbicacion);
 router.use("/relation", rRelationUbicationAndPorcentaje);
-router.use('/productos', rSearchProducto);
-router.use('/quincenauser', rSearchUserByFortnight)
+router.use("/productos", rSearchProducto);
+router.use("/quincenauser", rSearchUserByFortnight);
+router.use("/prestamos", rPrestamos);
 
 router.use("/corte", rAdultwork);
 router.use("/amateur", rAmateur);

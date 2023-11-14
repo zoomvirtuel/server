@@ -26,6 +26,7 @@ const {
   Porcentaje,
   Ubicacion,
   Paginas,
+  Prestamos
 } = require("../../db.js");
 
 const searchUserByFortnight = async (ids, id) => {
@@ -785,6 +786,22 @@ const searchAllUserByFortnight = async (id) => {
         },
       ],
     });
+    const prestamos = await Quincena.findOne({
+      where: { id: id },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Prestamos,
+          as: "q_prestamos",
+          attributes: [
+            "id",
+            "userId",
+            "cantidad",
+            "createdAt"
+          ],
+        },
+      ],
+    });
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin peticiones a la base de datos   ↑↑↑↑↑↑↑↑↑↑↑↑
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio formateo de usuario   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const formatearUsuarios = (usuarios, paginas) => {
@@ -851,7 +868,7 @@ const searchAllUserByFortnight = async (id) => {
 
     const registrosAgrupados = {};
 
-    for (const registro of adultwork.q_adult) {
+    for (const registro of adultwork?.q_adult) {
       const { userName, userNameId } = registro;
 
       if (userName) {
@@ -907,7 +924,7 @@ const searchAllUserByFortnight = async (id) => {
     //* se arreglo bug de ultimo registro
     const registrosAgrupadosAmateur = {};
 
-    for (const registro of amateur.q_amateur) {
+    for (const registro of amateur?.q_amateur) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroAmateur = {
@@ -966,7 +983,7 @@ const searchAllUserByFortnight = async (id) => {
     //! a la espera de confirmacion de cortes
     const registrosAgrupadosBonga = {};
 
-    for (const registro of bonga.q_bonga) {
+    for (const registro of bonga?.q_bonga) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroBonga = {
@@ -1022,7 +1039,7 @@ const searchAllUserByFortnight = async (id) => {
     //* se arreglo bug de ultimo registro
     const registrosAgrupadosCam4 = {};
 
-    for (const registro of cam4.q_cam4) {
+    for (const registro of cam4?.q_cam4) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroCam4 = {
@@ -1078,7 +1095,7 @@ const searchAllUserByFortnight = async (id) => {
     //* se arreglo bug de ultimo registro
     const registrosAgrupadosChaturbate = {};
 
-    for (const registro of chaturbate.q_chaturbate) {
+    for (const registro of chaturbate?.q_chaturbate) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroChaturbate = {
@@ -1134,7 +1151,7 @@ const searchAllUserByFortnight = async (id) => {
     //* se arreglo bug de ultimo registro
     const registrosAgrupadosDirty = {};
 
-    for (const registro of dirty.q_dirty) {
+    for (const registro of dirty?.q_dirty) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroDirty = {
@@ -1191,7 +1208,7 @@ const searchAllUserByFortnight = async (id) => {
     //* se arreglo ultimo registro subido
     const registrosAgrupadosIsLive = {};
 
-    for (const registro of islive.q_isLive) {
+    for (const registro of islive?.q_isLive) {
       const { codigo, userNameId } = registro;
       if (codigo) {
         const registroIslive = {
@@ -1301,7 +1318,7 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio MyFreeCams   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const registrosAgrupadosMyFreeCams = {};
 
-    for (const registro of myFreeCams.q_myfreecams) {
+    for (const registro of myFreeCams?.q_myfreecams) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroMyFreeCams = {
@@ -1357,7 +1374,7 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Sakura   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     // const registrosAgrupadosDirty = {};
 
-    //         for (const registro of dirty.q_dirty) {
+    //         for (const registro of dirty?.q_dirty) {
     //           const { userName, userNameId } = registro;
     //           if (userName) {
     //             const registroDirty = {
@@ -1404,7 +1421,7 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  sender  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const registrosAgrupadosSender = {};
 
-    for (const registro of sender.q_sender) {
+    for (const registro of sender?.q_sender) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroSender = {
@@ -1509,7 +1526,7 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  skype  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const registrosAgrupadosSkype = {};
 
-    for (const registro of skype.q_skype) {
+    for (const registro of skype?.q_skype) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroSkype = {
@@ -1555,7 +1572,7 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Streamate   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     // const registrosAgrupadosSkype = {};
 
-    //         for (const registro of skype.q_skype) {
+    //         for (const registro of skype?.q_skype) {
     //           const { userName, userNameId } = registro;
     //           if (userName) {
     //             const registroSkype = {
@@ -1601,7 +1618,7 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio StreamRay   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     // const registrosAgrupadosSkype = {};
 
-    //         for (const registro of skype.q_skype) {
+    //         for (const registro of skype?.q_skype) {
     //           const { userName, userNameId } = registro;
     //           if (userName) {
     //             const registroSkype = {
@@ -1647,7 +1664,7 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  stripchat  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const registrosAgrupadosStripchat = {};
 
-    for (const registro of stripchat.q_stripchat) {
+    for (const registro of stripchat?.q_stripchat) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroStripchat = {
@@ -1694,7 +1711,7 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  vx   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const registrosAgrupadosVx = {};
 
-    for (const registro of vx.q_vx) {
+    for (const registro of vx?.q_vx) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroVx = {
@@ -1738,7 +1755,7 @@ const searchAllUserByFortnight = async (id) => {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Xlove    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const registrosAgrupadosXlove = {};
 
-    for (const registro of xlove.q_xlove) {
+    for (const registro of xlove?.q_xlove) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroXlove = {
@@ -1784,7 +1801,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio XloveNueva  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const registrosAgrupadosXloveNueva = {};
 
-    for (const registro of xlovenueva.q_xloveNueva) {
+    for (const registro of xlovenueva?.q_xloveNueva) {
       const { userName, userNameId } = registro;
       if (userName) {
         const registroXloveNueva = {
@@ -1827,6 +1844,21 @@ const searchAllUserByFortnight = async (id) => {
       resultado.paginas.xlovenueva = registrosNoAsignadosXloveNueva;
     }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin xloveNueva   ↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio prestamos  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    prestamos.q_prestamos.forEach((prestamo) => {
+      const userModel = resultado.modelos.find((model) => model.id === prestamo.userId);
+      if (userModel) {
+        // Inicializar 'prestamos' si aún no existe
+        if (!userModel.prestamos) {
+          userModel.prestamos = [];
+        }
+        userModel.prestamos.push(prestamo);
+      }
+    });
+    
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin prestamos   ↑↑↑↑↑↑↑↑↑↑↑↑
+
     for (const modelo of resultado.modelos) {
       let totalLibras = modelo.adultworkTotal?.creditos || 0;
 
@@ -1852,13 +1884,18 @@ const searchAllUserByFortnight = async (id) => {
         totalCreditos >= modelo.porcentaje?.meta
           ? modelo.porcentaje?.final
           : modelo.porcentaje?.inicial;
-    const dolar = moneda?.monedas?.find((x) => x.dolar)?.dolar || 0;
-      const euro = moneda?.monedas?.find((x) => x.euro)?.euro || 0;
-      const libra = moneda?.monedas?.find((x) => x.libra)?.libra || 0;
+          const monedaEstadisticas = moneda?.monedas?.find((x) => x.descripcion === "estadisticas");
+          const monedaPago = moneda?.monedas?.find((x) => x.descripcion === "pago");
+          const monedaSeleccionada = monedaPago || monedaEstadisticas;
+    const dolar = monedaSeleccionada?.dolar || 0;
+      const euro = monedaSeleccionada?.euro || 0;
+      const libra = monedaSeleccionada?.libra || 0;
       const totalPesos =
         ((totalLibras * porcentajeFinal) / 100) * libra +
         ((totalEuros * porcentajeFinal) / 100) * euro +
-        ((totalDolares * porcentajeFinal) / 100) * dolar;
+        ((totalDolares * porcentajeFinal) / 100) * dolar || 0;
+      let totalPrestamos = modelo?.prestamos?.reduce((x, y) => x + y.cantidad, 0)
+      let saldo = totalPesos - totalPrestamos || 0
       // Guardar los totales en el modelo
       console.log('senderAnterior')
       console.log(modelo.senderAnterior?.euros)
@@ -1868,8 +1905,10 @@ const searchAllUserByFortnight = async (id) => {
         totalDolares,
         totalEuros,
         totalLibras,
+        totalPrestamos,
         porcentajeFinal,
         totalPesos,
+        saldo,
         libra,
         euro,
         dolar

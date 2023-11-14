@@ -92,6 +92,8 @@ const {
   Ventas,
   //? ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    producto    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
   Producto,
+  //? ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    producto    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+  Prestamos,
 } = sequelize.models;
 
 //? relation of fortnight nad money
@@ -115,6 +117,7 @@ Adultwork.belongsTo(Quincena, { as: "q_adult", foreignKey: "quincena" });
 //? relation of userName and adultwork
 UserName.hasMany(Adultwork, { as: "corte_adult", foreignKey: "userNameId" });
 Adultwork.belongsTo(UserName, { as: "corte_adult", foreignKey: "userNameId" });
+
 
 //? ********************// A M A T E U R \\  ********************
 //? relation of fortnight and amateur
@@ -307,25 +310,41 @@ XloveNueva.belongsTo(UserName, {
 
 //! ***********************************************// P A G I N A S \\*******************************
 
+//? ********************// C O M E N T A R I O S \\  ********************
 //? relation of user and comments
 User.hasMany(Comentario, { as: "comments", foreignKey: "userId" });
 Comentario.belongsTo(User, { as: "comments", foreignKey: "userId" });
 
+//? ********************// P O R C E N T A J E  \\  ********************
 //? relation of user and percentage
 User.belongsTo(Porcentaje, { as: "p_porcentaje", foreignKey: "porcentajeId" });
 Porcentaje.belongsTo(User, { as: "p_porcentaje", foreignKey: "porcentajeId" });
 
+//? ********************// U B I C A C I O N  \\  ********************
 //? relation of user and Ubicacion
 User.belongsTo(Ubicacion, { as: "p_ubicacion", foreignKey: "ubicacionId" });
 Ubicacion.belongsTo(User, { as: "p_ubicacion", foreignKey: "ubicacionId" });
 
+// //? ********************// V E N T A S  \\  ********************
 //? relation of product and sell
 Producto.hasMany(Ventas, { as: "venta", foreignKey: "productoId" });
 Ventas.belongsTo(Producto, { as: "venta", foreignKey: "productoId" });
+//? relation of quincena and sell
+Quincena.hasMany(Ventas, { as: "q_venta", foreignKey: "quincenaId" });
+Ventas.belongsTo(Quincena, { as: "q_venta", foreignKey: "quincenaId" });
 
+//? ********************// C O M P R A S  \\  ********************
 //? relation of product and buy
 Producto.hasMany(Compras, { as: "compra", foreignKey: "productoId" });
 Compras.belongsTo(Producto, { as: "compra", foreignKey: "productoId" });
+
+// //? ********************// P R E S T A M O S \\  ********************
+// //? relation of fortnight and Prestamos
+Quincena.hasMany(Prestamos, { as: "q_prestamos", foreignKey: "quincena" });
+Prestamos.belongsTo(Quincena, { as: "q_prestamos", foreignKey: "quincena" });
+// //? relation of userName and Prestamos
+// UserName.hasMany(Prestamos, { as: "corte_prestamos", foreignKey: "userId" });
+// Prestamos.belongsTo(UserName, { as: "corte_prestamos", foreignKey: "userId" });
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

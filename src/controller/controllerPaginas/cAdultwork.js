@@ -61,17 +61,32 @@ const ppad = async (copad) => {
     const rcopad = [];
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of copad) {
-      const [r, c] = await Adultwork.findOrCreate({
+      try {
+        
+      
+      const userNameId = await UserName.findOne({
         where: {
+          userName: i.user,
+        },
+      });
+      const quincena = await Quincena.findOne({
+        where: {
+          id: i.quincena,
+        },
+      });
+      const r = await Adultwork.create({
           userName: i.user,
           creditos: i.creditos,
           parcial: i.parcial,
           mensual: false,
-        },
       });
-      if (c) {
-        rcopad.push(r);
+      if (r) {
+        await r.setCorte_adult(userNameId);
+        await r.setQ_adult(quincena);
       }
+    } catch (error) {
+      console.error("Error en una iteración del bucle:", error);
+    }
     }
     // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.
     rcopad.sort((a, b) => {

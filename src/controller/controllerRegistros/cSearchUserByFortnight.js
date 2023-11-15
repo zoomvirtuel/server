@@ -26,7 +26,7 @@ const {
   Porcentaje,
   Ubicacion,
   Paginas,
-  Prestamos
+  Prestamos,
 } = require("../../db.js");
 
 const searchUserByFortnight = async (ids, id) => {
@@ -497,6 +497,7 @@ const searchAllUserByFortnight = async (id) => {
             "parcial",
             "userName",
             "userNameId",
+            "createdAt",
           ],
         },
       ],
@@ -793,12 +794,7 @@ const searchAllUserByFortnight = async (id) => {
         {
           model: Prestamos,
           as: "q_prestamos",
-          attributes: [
-            "id",
-            "userId",
-            "cantidad",
-            "createdAt"
-          ],
+          attributes: ["id", "userId", "cantidad", "createdAt"],
         },
       ],
     });
@@ -879,6 +875,7 @@ const searchAllUserByFortnight = async (id) => {
           parcial: registro.parcial,
           userName: registro.userName,
           userNameId: registro.userNameId,
+          createdAt: registro.createdAt,
         };
 
         if (!registrosAgrupados[userName]) {
@@ -899,15 +896,71 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          const creditosTotales = registrosUsuario.reduce(
+          // Filtra solo los registros parciales
+          const parciales = registrosUsuario.filter(
+            (registro) => registro.parcial === true
+          );
+
+          // Filtra solo los registros cortes
+          const cortes = registrosUsuario.filter(
+            (registro) => registro.parcial === false
+          );
+
+          // Encuentra el parcial más reciente
+          const latestParcialRecord = parciales.reduce((latest, registro) => {
+            if (
+              !latest ||
+              new Date(registro.createdAt) > new Date(latest.createdAt)
+            ) {
+              return registro;
+            }
+            return latest;
+          }, null);
+
+          // Aplica el descuento del 30% a los créditos del parcial más reciente
+          if (latestParcialRecord) {
+            latestParcialRecord.creditos *= 0.7;
+          }
+          // Encuentra el corte más reciente
+          const latestCorteRecord = cortes.reduce((latest, registro) => {
+            if (
+              !latest ||
+              new Date(registro.createdAt) > new Date(latest.createdAt)
+            ) {
+              return registro;
+            }
+            return latest;
+          }, null);
+
+          // Suma todos los créditos de los registros
+          // console.log(registrosUsuario)
+          const totalCreditos = cortes.reduce(
             (total, registro) => total + registro.creditos,
             0
           );
-          usuario.adultworkTotal = {
-            userName: nombreUsuario,
-            creditos: creditosTotales,
-          };
-          usuario.adultwork = registrosUsuario;
+
+          // Compara las fechas y decide qué registros incluir
+          if (
+            latestCorteRecord &&
+            new Date(latestCorteRecord.createdAt) >
+              new Date(latestParcialRecord.createdAt)
+          ) {
+            usuario.adultworkTotal = {
+              userName: nombreUsuario,
+              creditos: totalCreditos,
+            };
+            usuario.adultwork = cortes;
+          } else {
+            usuario.adultworkTotal = {
+              userName: nombreUsuario,
+              creditos: parseFloat(
+                (totalCreditos + latestParcialRecord.creditos).toFixed(2)
+              ),
+            };
+            // console.log(latestParcialRecord)
+            usuario.adultwork = [...cortes, latestParcialRecord];
+          }
+
           delete registrosAgrupados[nombreUsuario];
         }
       }
@@ -1847,25 +1900,30 @@ const searchAllUserByFortnight = async (id) => {
 
     //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio prestamos  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     prestamos.q_prestamos.forEach((prestamo) => {
-      const userModel = resultado.modelos.find((model) => model.id === prestamo.userId);
+      const userModel = resultado.modelos.find(
+        (model) => model.id === prestamo.userId
+      );
       if (userModel) {
         // Inicializar 'prestamos' si aún no existe
         if (!userModel.prestamos) {
           userModel.prestamos = [];
         }
         userModel.prestamos.push(prestamo);
+        userModel.prestamos.sort((a, b) => b.createdAt - a.createdAt);
       }
     });
-    
+
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin prestamos   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     for (const modelo of resultado.modelos) {
       let totalLibras = modelo.adultworkTotal?.creditos || 0;
 
       let totalEuros =
-        ((modelo.dirty?.moneda === "euro" ? modelo.dirty?.plata : 0)||0) +
+        ((modelo.dirty?.moneda === "euro" ? modelo.dirty?.plata : 0) || 0) +
         (modelo.islive?.euros || 0) +
-        ((modelo.senderAnterior?.euros?modelo.sender?.euros - modelo.senderAnterior?.euros:0) || 0) +
+        ((modelo.senderAnterior?.euros
+          ? modelo.sender?.euros - modelo.senderAnterior?.euros
+          : 0) || 0) +
         (modelo.vx?.euros || 0) +
         (modelo.xlove?.euros || 0) +
         (modelo.xlovenueva?.euros || 0);
@@ -1875,31 +1933,40 @@ const searchAllUserByFortnight = async (id) => {
         (modelo.bongaTotal?.dolares || 0) +
         (modelo.cam4?.dolares || 0) +
         (modelo.chaturbate?.dolares || 0) +
-        ((modelo.dirty?.moneda === "dolar" ? modelo.dirty?.plata : 0)||0) +
-          (modelo.myFreeCams?.dolares || 0) +
-          (modelo.skype?.dolares || 0) +
-          (modelo.stripchat?.dolares || 0);
+        ((modelo.dirty?.moneda === "dolar" ? modelo.dirty?.plata : 0) || 0) +
+        (modelo.myFreeCams?.dolares || 0) +
+        (modelo.skype?.dolares || 0) +
+        (modelo.stripchat?.dolares || 0);
       const totalCreditos = totalDolares + totalEuros + totalLibras;
       const porcentajeFinal =
         totalCreditos >= modelo.porcentaje?.meta
           ? modelo.porcentaje?.final
           : modelo.porcentaje?.inicial;
-          const monedaEstadisticas = moneda?.monedas?.find((x) => x.descripcion === "estadisticas");
-          const monedaPago = moneda?.monedas?.find((x) => x.descripcion === "pago");
-          const monedaSeleccionada = monedaPago || monedaEstadisticas;
-    const dolar = monedaSeleccionada?.dolar || 0;
+      const monedaEstadisticas = moneda?.monedas?.find(
+        (x) => x.descripcion === "estadisticas"
+      );
+      const monedaPago = moneda?.monedas?.find((x) => x.descripcion === "pago");
+      const monedaSeleccionada = monedaPago || monedaEstadisticas;
+      const dolar = monedaSeleccionada?.dolar || 0;
       const euro = monedaSeleccionada?.euro || 0;
       const libra = monedaSeleccionada?.libra || 0;
       const totalPesos =
         ((totalLibras * porcentajeFinal) / 100) * libra +
-        ((totalEuros * porcentajeFinal) / 100) * euro +
-        ((totalDolares * porcentajeFinal) / 100) * dolar || 0;
-      let totalPrestamos = modelo?.prestamos?.reduce((x, y) => x + y.cantidad, 0)
-      let saldo = totalPesos - totalPrestamos || 0
+          ((totalEuros * porcentajeFinal) / 100) * euro +
+          ((totalDolares * porcentajeFinal) / 100) * dolar || 0;
+      let totalPrestamos = modelo?.prestamos?.reduce(
+        (x, y) => x + y.cantidad,
+        0
+      );
+      let saldo = totalPesos - totalPrestamos || 0;
       // Guardar los totales en el modelo
-      console.log('senderAnterior')
-      console.log(modelo.senderAnterior?.euros)
-      console.log((modelo.senderAnterior? modelo.sender?.euros - modelo.senderAnterior?.euros:0) || 0)
+      console.log("senderAnterior");
+      console.log(modelo.senderAnterior?.euros);
+      console.log(
+        (modelo.senderAnterior
+          ? modelo.sender?.euros - modelo.senderAnterior?.euros
+          : 0) || 0
+      );
       modelo.totales = {
         totalCreditos,
         totalDolares,
@@ -1911,16 +1978,14 @@ const searchAllUserByFortnight = async (id) => {
         saldo,
         libra,
         euro,
-        dolar
+        dolar,
       };
-      console.log(modelo.totales)
     }
-    
+
     //todo  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   final  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     // console.log(resultado)
     return resultado;
   } catch (error) {
-    console.log(error);
     throw new Error(
       "Error ocurrio algo en el proceso por favor intente nuevamente o contacte con un programing thanks" +
         error.message

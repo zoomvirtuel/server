@@ -22,10 +22,10 @@ const postProducto = async (producto) => {
 const getAllProductos = async () => {
   try {
     const allProductos = await Producto.findAll();
-    allProductos.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    
     return allProductos;
   } catch (error) {
-    throw new Error("Error no hay resgistros para mostrar");
+    throw new Error("Error: no hay registros para mostrar");
   }
 };
 

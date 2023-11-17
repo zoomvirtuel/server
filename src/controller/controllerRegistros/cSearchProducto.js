@@ -5,25 +5,34 @@ const getProductoPrecioAndCantidad = async () => {
     const productos = await Producto.findAll({
       include: [
         { model: Ventas, as: "venta" },
-        { model: Compras, as: "compra", order: [["createdAt", "DESC"]] }, // Ordena las compras por fecha descendente
+        {
+          model: Compras,
+          as: "compra",
+        }, // Ordena las compras por fecha descendente
       ],
     });
-
     const productosConInfo = productos.map((producto) => {
       // Calcula la cantidad de ventas
-      const cantidadVentas = producto.venta.reduce(
+      const ventasConProductoId = producto.venta.filter(
+        (venta) => venta.productoId !== null
+      );
+      const cantidadVentas = ventasConProductoId.reduce(
         (total, venta) => total + venta.cantidad,
         0
       );
 
       // Calcula la cantidad de compras
+      
       const cantidadCompras = producto.compra.reduce(
         (total, compra) => total + compra.cantidad,
         0
       );
 
       // Obtiene la última compra para obtener los precios más recientes
-      const ultimaCompra = producto.compra[0]; // La primera compra es la más reciente debido al ordenamiento
+      const comprasOrdenadas = producto.compra.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      const ultimaCompra = comprasOrdenadas[0]; // La primera compra es la más reciente debido al ordenamiento
 
       return {
         id: producto.id,

@@ -27,6 +27,7 @@ const {
   Ubicacion,
   Paginas,
   Prestamos,
+  Producto,
 } = require("../../db.js");
 
 const searchUserByFortnight = async (ids, id) => {
@@ -795,6 +796,17 @@ const searchAllUserByFortnight = async (id) => {
           model: Prestamos,
           as: "q_prestamos",
           attributes: ["id", "userId", "cantidad", "createdAt"],
+        },
+      ],
+    });
+    const ventas = await Quincena.findOne({
+      where: { id: id },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Ventas,
+          as: "q_venta",
+          attributes: ["id", "userId", "cantidad", "cuotas", "productoId", "nombre", "valor", "createdAt"],
         },
       ],
     });
@@ -1899,7 +1911,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin xloveNueva   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio prestamos  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    prestamos.q_prestamos.forEach((prestamo) => {
+    prestamos?.q_prestamos?.forEach((prestamo) => {
       const userModel = resultado.modelos.find(
         (model) => model.id === prestamo.userId
       );
@@ -1914,7 +1926,28 @@ const searchAllUserByFortnight = async (id) => {
     });
 
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin prestamos   ↑↑↑↑↑↑↑↑↑↑↑↑
+    
+    //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio prestamos  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    ventas?.q_venta?.forEach((venta) => {
+      const userModel = resultado.modelos.find(
+        (model) => model.id === venta.userId
+      );
+  
+      if (userModel) {
+        // Crear la propiedad 'ventas' si aún no existe
+        if (!userModel.vitrina) {
+          userModel.vitrina = [];
+        }
+  
+        // Agregar la venta al array 'ventas' del modelo
+        userModel.vitrina.push(venta);
+  
+        // Ordenar las ventas de manera descendente por fecha
+        userModel.vitrina.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }
+    });
 
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin prestamos   ↑↑↑↑↑↑↑↑↑↑↑↑
     for (const modelo of resultado.modelos) {
       let totalLibras = modelo.adultworkTotal?.creditos || 0;
 
@@ -1954,25 +1987,21 @@ const searchAllUserByFortnight = async (id) => {
         ((totalLibras * porcentajeFinal) / 100) * libra +
           ((totalEuros * porcentajeFinal) / 100) * euro +
           ((totalDolares * porcentajeFinal) / 100) * dolar || 0;
-      let totalPrestamos = modelo?.prestamos?.reduce(
+      const totalPrestamos = modelo?.prestamos?.reduce(
         (x, y) => x + y.cantidad,
         0
       );
-      let saldo = totalPesos - totalPrestamos || 0;
+      const totalVitrina = parseFloat(modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2))
+      const saldo = parseFloat((totalPesos - totalPrestamos - totalVitrina).toFixed(2)) || 0;
+
       // Guardar los totales en el modelo
-      console.log("senderAnterior");
-      console.log(modelo.senderAnterior?.euros);
-      console.log(
-        (modelo.senderAnterior
-          ? modelo.sender?.euros - modelo.senderAnterior?.euros
-          : 0) || 0
-      );
       modelo.totales = {
         totalCreditos,
         totalDolares,
         totalEuros,
         totalLibras,
         totalPrestamos,
+        totalVitrina,
         porcentajeFinal,
         totalPesos,
         saldo,

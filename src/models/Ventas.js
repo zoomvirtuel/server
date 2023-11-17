@@ -17,6 +17,18 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
       },
+      cuotas: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      },
+      valor: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      },
+      nombre: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      },
     },
     {
       paranoid: true,

@@ -1,18 +1,81 @@
-const { Ventas } = require("../../db.js");
+const { Ventas, Quincena, Producto } = require("../../db.js");
 
 const postVentas = async (venta) => {
   try {
-    const nVenta = await Ventas.create(venta);
-    return nVenta;
+    const ventas = [];
+    for (const item of venta) {
+      try {
+        const quincenaId = await Quincena.findOne({
+          where: { id: item.quincenaId },
+        });
+        const productoId = await Producto.findOne({
+          where: { id: item.productoId },
+        });
+
+        if (item.cuotas > 1) {
+          const allQuincenas = await Quincena.findAll();
+    allQuincenas.sort((a, b) => {
+      // Convierte las fechas a un formato numérico para comparar
+      const dateA = Date.parse(
+        a.inicia.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+      );
+      const dateB = Date.parse(
+        b.inicia.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+      );
+
+      return dateA - dateB;
+    });
+          for (let i = 0; i < item.cuotas; i++) {
+            const quincenaIndex = allQuincenas.findIndex((q) => q.id === item.quincenaId);
+            const cuotaQuincenaId = allQuincenas[quincenaIndex + i]?.id;
+            const nombre = `${i + 1}/${item.cuotas} ${productoId.nombre}`;
+
+            const nVenta = await Ventas.create({
+              cantidad: item.cantidad,
+              cuotas: item.cuotas,
+              userId: item.userId,
+              valor: (item.precioVentaDiferido * item.cantidad) / item.cuotas,
+              nombre: nombre,
+            });
+
+            await nVenta.setQ_venta(cuotaQuincenaId);
+
+            if (i === 0) {
+              await nVenta.setVenta(productoId);
+            }
+
+            ventas.push(nVenta);
+          }
+        } else {
+          const nVenta = await Ventas.create({
+            cantidad: item.cantidad,
+            cuotas: item.cuotas,
+            userId: item.userId,
+            valor: item.precioVenta * item.cantidad,
+            nombre: productoId.nombre,
+          });
+
+          if (nVenta) {
+            await nVenta.setVenta(productoId);
+            await nVenta.setQ_venta(quincenaId);
+            ventas.push(nVenta);
+          }
+        }
+      } catch (error) {
+        console.error("Error en una iteración del bucle:", error);
+      }
+    }
+    return ventas;
   } catch (error) {
     throw new Error("Lo sentimos no pudimos crear la venta");
   }
 };
 
+
 const getAllVentas = async () => {
   try {
     const allVentas = await Ventas.findAll();
-    allVentas.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    // allVentas.sort((a, b) => a.createdAt.localeCompare(b.createdAt));
     return allVentas;
   } catch (error) {
     throw new Error("Error no hay resgistros para mostrar");

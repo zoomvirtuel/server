@@ -8,7 +8,7 @@ const { DB_USER, DB_PASSWORD, DB_HOST, DB_RENDER } = process.env;
 // //! este sequelize es para local...
 
 const sequelize = new Sequelize(
-  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/zoomvirtuel`,
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/zoomVirtuel`,
   {
     logging: false,
     native: false,

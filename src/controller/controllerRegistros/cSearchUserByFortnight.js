@@ -1381,6 +1381,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  Mondo  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio MyFreeCams   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arreglo bug de ultimo registro
     const registrosAgrupadosMyFreeCams = {};
 
     for (const registro of myFreeCams?.q_myfreecams) {

@@ -37,21 +37,21 @@ const rSearchUserByFortnight = require("./routesRegistros/rSearchUserByFortnight
 const rPrestamos = require("./routesRegistros/rPrestamos.js");
 
 //* ejecucion de rutasrouter.use("/", rPassport);
-router.use("/registro", rUser);
-router.use("/paginas", rPaginas);
-router.use("/producto", rProducto);
-router.use("/compras", rCompras);
-router.use("/venta", rVenta);
-router.use("/quincena", rQuincena);
 router.use("/comentario", rComment);
-router.use("/username", rUserName);
+router.use("/compras", rCompras);
 router.use("/moneda", rMoneda);
 router.use("/porcentaje", rPorcentaje);
-router.use("/ubicacion", rUbicacion);
-router.use("/relation", rRelationUbicationAndPorcentaje);
-router.use("/productos", rSearchProducto);
-router.use("/quincenauser", rSearchUserByFortnight);
+router.use("/paginas", rPaginas);
 router.use("/prestamos", rPrestamos);
+router.use("/producto", rProducto);
+router.use("/productos", rSearchProducto);
+router.use("/quincena", rQuincena);
+router.use("/quincenauser", rSearchUserByFortnight);
+router.use("/ubicacion", rUbicacion);
+router.use("/registro", rUser);
+router.use("/venta", rVenta);
+router.use("/relation", rRelationUbicationAndPorcentaje);
+router.use("/username", rUserName);
 
 router.use("/corte", rAdultwork);
 router.use("/amateur", rAmateur);

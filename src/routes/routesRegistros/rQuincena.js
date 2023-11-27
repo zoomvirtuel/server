@@ -4,22 +4,9 @@ const router = Router();
 const {
   postQuincena,
   getAllQuincena,
+  getQuincenaById,
   updateQuincena,
   deleteQuincena,
-  getQuincenaMoneda,
-  getQuincenaAdult,
-  getQuincenaAmateur,
-  getQuincenaBonga,
-  getQuincenaCam4,
-  getQuincenaChaturbate,
-  getQuincenaDirty,
-  getQuincenaIsLive,
-  getQuincenaSender,
-  getQuincenaSkype,
-  getQuincenaStripchat,
-  getQuincenaVx,
-  getQuincenaXlove,
-  getQuincenaXloveNueva,
 } = require("../../controller/controllerRegistros/cQuincena.js");
 
 router.post("/", async (req, res) => {
@@ -41,130 +28,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/moneda/:id", async (req, res) => {
-  const { id } = req.params;
-  console.log(req.params)
-  try {
-    const quincena = await getQuincenaMoneda(id);
-    console.log(quincena)
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/adult/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const quincena = await getQuincenaAdult(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/amateur/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaAmateur(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/bonga/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaBonga(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/cam4/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaCam4(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/chaturbate/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaChaturbate(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/dirty/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaDirty(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/islive/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaIsLive(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/sender/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaSender(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/skype/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaSkype(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/stripchat/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaStripchat(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/vx/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaVx(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/xlove/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaXlove(id);
-    return res.status(200).json(quincena);
-  } catch (error) {
-    return res.status(500).send(error.message);
-  }
-});
-router.get("/xlovenueva/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const quincena = await getQuincenaXloveNueva(id);
-    return res.status(200).json(quincena);
+    const quincenaId = await getQuincenaById(id);
+    return res.status(200).json(quincenaId);
   } catch (error) {
     return res.status(500).send(error.message);
   }

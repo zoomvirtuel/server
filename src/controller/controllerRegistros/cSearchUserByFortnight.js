@@ -644,6 +644,24 @@ const searchAllUserByFortnight = async (id) => {
         },
       ],
     });
+    const sakura = await Quincena.findOne({
+      where: { id: id },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Sakura,
+          as: "q_sakura",
+          attributes: [
+            "id",
+            "tokens",
+            "dolares",
+            "userName",
+            "userNameId",
+            "createdAt",
+          ],
+        },
+      ],
+    });
     const sender = await Quincena.findOne({
       where: { id: id },
       attributes: ["id", "nombre", "inicia", "final"],
@@ -870,6 +888,7 @@ const searchAllUserByFortnight = async (id) => {
       modelos: modelos,
       paginas: {},
       moneda: moneda,
+      sakura,
     };
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin formateo usuario   ↑↑↑↑↑↑↑↑↑↑↑↑
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio adultwork   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1438,50 +1457,60 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin MyFreeCams   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Sakura   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    // const registrosAgrupadosDirty = {};
+    //* se arreglo bug de ultimo registro
+    const registrosAgrupadosSakura = {};
 
-    //         for (const registro of dirty?.q_dirty) {
-    //           const { userName, userNameId } = registro;
-    //           if (userName) {
-    //             const registroDirty = {
-    //               id: registro.id,
-    //               moneda: registro.moneda,
-    //               plata: registro.plata,
-    //               userName: registro.userName,
-    //               userNameId: registro.userNameId,
-    //             };
+    for (const registro of sakura?.q_sakura) {
+      const { userName, userNameId } = registro;
+      if (userName) {
+        const registroSakura = {
+          id: registro.id,
+          tokens: registro.tokens,
+          dolares: registro.dolares,
+          userName: registro.userName,
+          userNameId: registro.userNameId,
+          fecha: registro.createdAt,
+        };
 
-    //             if (!registrosAgrupadosDirty[userName]) {
-    //               registrosAgrupadosDirty[userName] = [registroDirty];
-    //             } else {
-    //               registrosAgrupadosDirty[userName].push(registroDirty);
-    //             }
-    //           }
-    //         }
+        if (!registrosAgrupadosSakura[userName]) {
+          registrosAgrupadosSakura[userName] = [registroSakura];
+        } else {
+          registrosAgrupadosSakura[userName].push(registroSakura);
+        }
+      }
+    }
 
-    //         for (const usuarioKey of Object.keys(resultado.modelos)) {
-    //           const usuario = resultado.modelos[usuarioKey];
-    //           for (const nombreUsuario of Object.keys(registrosAgrupadosDirty)) {
-    //             const registrosUsuario = registrosAgrupadosDirty[nombreUsuario];
-    //             const usuarioEncontrado = usuario.userNamePage.find(
-    //               (name) =>
-    //                 name.pagina.toLowerCase() === "dirty" &&
-    //                 name.userName === nombreUsuario
-    //             );
-    //             if (usuarioEncontrado) {
-    //               usuario.dirty = registrosUsuario;
-    //               delete registrosAgrupadosDirty[nombreUsuario];
-    //             }
-    //           }
-    //         }
+    for (const usuarioKey of Object.keys(resultado.modelos)) {
+      const usuario = resultado.modelos[usuarioKey];
+      for (const nombreUsuario of Object.keys(registrosAgrupadosSakura)) {
+        const registrosUsuario = registrosAgrupadosSakura[nombreUsuario];
+        const usuarioEncontrado = usuario.userNamePage.find(
+          (name) =>
+            name.pagina.toLowerCase() === "sakura" &&
+            name.userName === nombreUsuario
+        );
+        if (usuarioEncontrado) {
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
 
-    //         const registrosNoAsignadosDirty = Object.values(
-    //           registrosAgrupadosDirty
-    //         ).flat();
+          usuario.sakura = registroMasReciente;
+          delete registrosAgrupadosSakura[nombreUsuario];
+        }
+      }
+    }
 
-    //         if (registrosNoAsignadosDirty.length > 0) {
-    //           resultado.paginas.dirty = registrosNoAsignadosDirty;
-    //         }
+    const registrosNoAsignadosSakura = Object.values(
+      registrosAgrupadosSakura
+    ).flat();
+
+    if (registrosNoAsignadosSakura.length > 0) {
+      resultado.paginas.sakura = registrosNoAsignadosSakura;
+    }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  Sakura  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  sender  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1969,6 +1998,7 @@ const searchAllUserByFortnight = async (id) => {
         (modelo.chaturbate?.dolares || 0) +
         ((modelo.dirty?.moneda === "dolar" ? modelo.dirty?.plata : 0) || 0) +
         (modelo.myFreeCams?.dolares || 0) +
+        (modelo.sakura?.dolares || 0)+
         (modelo.skype?.dolares || 0) +
         (modelo.stripchat?.dolares || 0);
       const totalCreditos = totalDolares + totalEuros + totalLibras;
@@ -1992,7 +2022,7 @@ const searchAllUserByFortnight = async (id) => {
         (x, y) => x + y.cantidad,
         0
       );
-      const totalVitrina = parseFloat(modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2))
+      const totalVitrina = parseFloat(modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2)) || 0
       const saldo = parseFloat((totalPesos - totalPrestamos - totalVitrina).toFixed(2)) || 0;
 
       // Guardar los totales en el modelo

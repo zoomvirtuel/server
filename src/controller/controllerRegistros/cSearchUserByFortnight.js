@@ -715,6 +715,42 @@ const searchAllUserByFortnight = async (id) => {
         },
       ],
     });
+    const streamate = await Quincena.findOne({
+      where: { id: id },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Streamate,
+          as: "q_streamate",
+          attributes: [
+            "id",
+            "userName",
+            "mensual",
+            "dolares",
+            "userNameId",
+            "createdAt",
+          ],
+        },
+      ],
+    });
+    const streamRay = await Quincena.findOne({
+      where: { id: id },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: StreamRay,
+          as: "q_streamRay",
+          attributes: [
+            "id",
+            "userName",
+            "mensual",
+            "dolares",
+            "userNameId",
+            "createdAt",
+          ],
+        },
+      ],
+    });
     const stripchat = await Quincena.findOne({
       where: { id: id },
       attributes: ["id", "nombre", "inicia", "final"],
@@ -824,7 +860,16 @@ const searchAllUserByFortnight = async (id) => {
         {
           model: Ventas,
           as: "q_venta",
-          attributes: ["id", "userId", "cantidad", "cuotas", "productoId", "nombre", "valor", "createdAt"],
+          attributes: [
+            "id",
+            "userId",
+            "cantidad",
+            "cuotas",
+            "productoId",
+            "nombre",
+            "valor",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -888,7 +933,6 @@ const searchAllUserByFortnight = async (id) => {
       modelos: modelos,
       paginas: {},
       moneda: moneda,
-      sakura,
     };
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin formateo usuario   ↑↑↑↑↑↑↑↑↑↑↑↑
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio adultwork   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1711,49 +1755,58 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  Streamate  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio StreamRay   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    // const registrosAgrupadosSkype = {};
+    const registrosAgrupadosStreamRay = {};
 
-    //         for (const registro of skype?.q_skype) {
-    //           const { userName, userNameId } = registro;
-    //           if (userName) {
-    //             const registroSkype = {
-    //               id: registro.id,
-    //               userName: registro.userName,
-    //               dolares: registro.dolares,
-    //               userNameId: registro.userNameId,
-    //             };
+    for (const registro of streamRay?.q_streamRay) {
+      const { userName, userNameId } = registro;
+      if (userName) {
+        const registroStreamRay = {
+          id: registro.id,
+          userName: registro.userName,
+          dolares: registro.dolares,
+          userNameId: registro.userNameId,
+          fecha: registro.createdAt,
+        };
 
-    //             if (!registrosAgrupadosSkype[userName]) {
-    //               registrosAgrupadosSkype[userName] = [registroSkype];
-    //             } else {
-    //               registrosAgrupadosSkype[userName].push(registroSkype);
-    //             }
-    //           }
-    //         }
+        if (!registrosAgrupadosStreamRay[userName]) {
+          registrosAgrupadosStreamRay[userName] = [registroStreamRay];
+        } else {
+          registrosAgrupadosStreamRay[userName].push(registroStreamRay);
+        }
+      }
+    }
 
-    //         for (const usuarioKey of Object.keys(resultado.modelos)) {
-    //           const usuario = resultado.modelos[usuarioKey];
-    //           for (const nombreUsuario of Object.keys(registrosAgrupadosSkype)) {
-    //             const registrosUsuario = registrosAgrupadosSkype[nombreUsuario];
-    //             const usuarioEncontrado = usuario.userNamePage.find(
-    //               (name) =>
-    //                 name.pagina.toLowerCase() === "skype" &&
-    //                 name.userName === nombreUsuario
-    //             );
-    //             if (usuarioEncontrado) {
-    //               usuario.skype = registrosUsuario;
-    //               delete registrosAgrupadosSkype[nombreUsuario];
-    //             }
-    //           }
-    //         }
+    for (const usuarioKey of Object.keys(resultado.modelos)) {
+      const usuario = resultado.modelos[usuarioKey];
+      for (const nombreUsuario of Object.keys(registrosAgrupadosStreamRay)) {
+        const registrosUsuario = registrosAgrupadosStreamRay[nombreUsuario];
+        const usuarioEncontrado = usuario.userNamePage.find(
+          (name) =>
+            name.pagina.toLowerCase() === "streamray" &&
+            name.userName === nombreUsuario
+        );
+        if (usuarioEncontrado) {
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
 
-    //         const registrosNoAsignadosSkype = Object.values(
-    //           registrosAgrupadosSkype
-    //         ).flat();
+          usuario.streamRay = registroMasReciente;
+          delete registrosAgrupadosStreamRay[nombreUsuario];
+        }
+      }
+    }
 
-    //         if (registrosNoAsignadosSkype.length > 0) {
-    //           resultado.paginas.skype = registrosNoAsignadosSkype;
-    //         }
+    const registrosNoAsignadosStreamRay = Object.values(
+      registrosAgrupadosStreamRay
+    ).flat();
+
+    if (registrosNoAsignadosStreamRay.length > 0) {
+      resultado.paginas.streamRay = registrosNoAsignadosStreamRay;
+    }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  StreamRay  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  stripchat  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1956,24 +2009,26 @@ const searchAllUserByFortnight = async (id) => {
     });
 
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin prestamos   ↑↑↑↑↑↑↑↑↑↑↑↑
-    
+
     //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio prestamos  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     ventas?.q_venta?.forEach((venta) => {
       const userModel = resultado.modelos.find(
         (model) => model.id === venta.userId
       );
-  
+
       if (userModel) {
         // Crear la propiedad 'ventas' si aún no existe
         if (!userModel.vitrina) {
           userModel.vitrina = [];
         }
-  
+
         // Agregar la venta al array 'ventas' del modelo
         userModel.vitrina.push(venta);
-  
+
         // Ordenar las ventas de manera descendente por fecha
-        userModel.vitrina.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        userModel.vitrina.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
       }
     });
 
@@ -1984,6 +2039,7 @@ const searchAllUserByFortnight = async (id) => {
       let totalEuros =
         ((modelo.dirty?.moneda === "euro" ? modelo.dirty?.plata : 0) || 0) +
         (modelo.islive?.euros || 0) +
+        modelo.mondo?.euros +
         ((modelo.senderAnterior?.euros
           ? modelo.sender?.euros - modelo.senderAnterior?.euros
           : 0) || 0) +
@@ -1998,9 +2054,10 @@ const searchAllUserByFortnight = async (id) => {
         (modelo.chaturbate?.dolares || 0) +
         ((modelo.dirty?.moneda === "dolar" ? modelo.dirty?.plata : 0) || 0) +
         (modelo.myFreeCams?.dolares || 0) +
-        (modelo.sakura?.dolares || 0)+
+        (modelo.sakura?.dolares || 0) +
         (modelo.skype?.dolares || 0) +
-        (modelo.stripchat?.dolares || 0);
+        (modelo.stripchat?.dolares || 0) +
+        modelo.streamRay?.dolares;
       const totalCreditos = totalDolares + totalEuros + totalLibras;
       const porcentajeFinal =
         totalCreditos >= modelo.porcentaje?.meta
@@ -2018,12 +2075,15 @@ const searchAllUserByFortnight = async (id) => {
         ((totalLibras * porcentajeFinal) / 100) * libra +
           ((totalEuros * porcentajeFinal) / 100) * euro +
           ((totalDolares * porcentajeFinal) / 100) * dolar || 0;
-      const totalPrestamos = modelo?.prestamos?.reduce(
-        (x, y) => x + y.cantidad,
-        0
+      const totalPrestamos =
+        modelo?.prestamos?.reduce((x, y) => x + y.cantidad, 0) || 0;
+      const totalVitrina =
+        parseFloat(
+          modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2)
+        ) || 0;
+      const saldo = parseFloat(
+        (totalPesos - totalPrestamos - totalVitrina).toFixed(2)
       );
-      const totalVitrina = parseFloat(modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2)) || 0
-      const saldo = parseFloat((totalPesos - totalPrestamos - totalVitrina).toFixed(2)) || 0;
 
       // Guardar los totales en el modelo
       modelo.totales = {

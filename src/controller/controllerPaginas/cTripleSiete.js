@@ -16,10 +16,10 @@ const postTripeSiete = async (tripleSiete) => {
           },
         });
         const r = await TripleSiete.create({
-          // userName: i.user,
-          // plata: i.plata,
-          // moneda: i.moneda,
-          // mensual: true,
+          userName: i.user,
+          plata: i.plata,
+          moneda: i.moneda,
+          mensual: true,
         });
         if (r) {
           await r.setCorte_triplesiete(userNameId);

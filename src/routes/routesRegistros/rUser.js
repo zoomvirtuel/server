@@ -13,8 +13,6 @@ const {
 
 router.post("/", async (req, res) => {
   const user = req.body;
-  // console.log(req.body)
-  console.log(user);
   try {
     const nUser = await postUser(user);
     if (nUser) {

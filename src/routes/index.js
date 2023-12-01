@@ -32,6 +32,7 @@ const rMyFreeCams = require("./routesPaginas/rMyFreeCams.js");
 const rSakura = require("./routesPaginas/rSakura.js");
 const rstreamate = require("./routesPaginas/rStreamate.js");
 const rStreamRay = require("./routesPaginas/rStreamRay.js");
+const rTripleSiete = require("./routesPaginas/rTripleSiete.js");
 const rSearchProducto = require("./routesRegistros/rSearchProducto.js");
 const rSearchUserByFortnight = require("./routesRegistros/rSearchUserByFortnight.js");
 const rPrestamos = require("./routesRegistros/rPrestamos.js");
@@ -71,5 +72,6 @@ router.use("/myfreecams", rMyFreeCams);
 router.use("/sakura", rSakura);
 router.use("/streamate", rstreamate);
 router.use("/streamray", rStreamRay);
+router.use("/triplesiete", rTripleSiete);
 
 module.exports = router;

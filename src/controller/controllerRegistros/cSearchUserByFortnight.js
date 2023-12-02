@@ -933,6 +933,7 @@ const searchAllUserByFortnight = async (id) => {
       modelos: modelos,
       paginas: {},
       moneda: moneda,
+      tripleSiete,
     };
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin formateo usuario   ↑↑↑↑↑↑↑↑↑↑↑↑
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio adultwork   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1856,6 +1857,60 @@ const searchAllUserByFortnight = async (id) => {
     }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin stripchat   ↑↑↑↑↑↑↑↑↑↑↑↑
 
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  tripleSiete  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const registrosAgrupadosTripleSiete = {};
+
+    for (const registro of tripleSiete?.q_triplesiete) {
+      const { userName, userNameId } = registro;
+      if (userName) {
+        const registroTripleSiete = {
+          id: registro.id,
+          userName: registro.userName,
+          dolares: registro.dolares,
+          userNameId: registro.userNameId,
+          fecha: registro.createdAt,
+        };
+
+        if (!registrosAgrupadosTripleSiete[userName]) {
+          registrosAgrupadosTripleSiete[userName] = [registroTripleSiete];
+        } else {
+          registrosAgrupadosTripleSiete[userName].push(registroTripleSiete);
+        }
+      }
+    }
+
+    for (const usuarioKey of Object.keys(resultado.modelos)) {
+      const usuario = resultado.modelos[usuarioKey];
+      for (const nombreUsuario of Object.keys(registrosAgrupadosTripleSiete)) {
+        const registrosUsuario = registrosAgrupadosTripleSiete[nombreUsuario];
+        const usuarioEncontrado = usuario.userNamePage.find(
+          (name) =>
+            name.pagina.toLowerCase() === "triplesiete" &&
+            name.userName === nombreUsuario
+        );
+        if (usuarioEncontrado) {
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+          usuario.tripleSiete = registroMasReciente;
+          delete registrosAgrupadosTripleSiete[nombreUsuario];
+        }
+      }
+    }
+
+    const registrosNoAsignadosTripleSiete = Object.values(
+      registrosAgrupadosTripleSiete
+    ).flat();
+
+    if (registrosNoAsignadosTripleSiete.length > 0) {
+      resultado.paginas.tripleSiete = registrosNoAsignadosTripleSiete;
+    }
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin tripleSiete   ↑↑↑↑↑↑↑↑↑↑↑↑
+
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  vx   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const registrosAgrupadosVx = {};
 
@@ -2034,31 +2089,32 @@ const searchAllUserByFortnight = async (id) => {
 
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin prestamos   ↑↑↑↑↑↑↑↑↑↑↑↑
     for (const modelo of resultado.modelos) {
-      let totalLibras = modelo.adultworkTotal?.creditos || 0;
+      let totalLibras = parseFloat(modelo.adultworkTotal?.creditos || 0);
 
       let totalEuros =
-        ((modelo.dirty?.moneda === "euro" ? modelo.dirty?.plata : 0) || 0) +
-        (modelo.islive?.euros || 0) +
-        modelo.mondo?.euros +
-        ((modelo.senderAnterior?.euros
+        parseFloat((modelo.dirty?.moneda === "euro" ? modelo.dirty?.plata : 0) || 0) +
+        parseFloat(modelo.islive?.euros || 0) +
+        parseFloat(modelo.mondo?.euros || 0) +
+        parseFloat((modelo.senderAnterior?.euros
           ? modelo.sender?.euros - modelo.senderAnterior?.euros
           : 0) || 0) +
-        (modelo.vx?.euros || 0) +
-        (modelo.xlove?.euros || 0) +
-        (modelo.xlovenueva?.euros || 0);
+        parseFloat(modelo.vx?.euros || 0) +
+        parseFloat(modelo.xlove?.euros || 0) +
+        parseFloat(modelo.xlovenueva?.euros || 0);
 
       let totalDolares =
-        (modelo.amateur?.dolares || 0) +
-        (modelo.bongaTotal?.dolares || 0) +
-        (modelo.cam4?.dolares || 0) +
-        (modelo.chaturbate?.dolares || 0) +
-        ((modelo.dirty?.moneda === "dolar" ? modelo.dirty?.plata : 0) || 0) +
-        (modelo.myFreeCams?.dolares || 0) +
-        (modelo.sakura?.dolares || 0) +
-        (modelo.skype?.dolares || 0) +
-        (modelo.stripchat?.dolares || 0) +
-        modelo.streamRay?.dolares;
-      const totalCreditos = totalDolares + totalEuros + totalLibras;
+        parseFloat(modelo.amateur?.dolares || 0) +
+        parseFloat(modelo.bongaTotal?.dolares || 0) +
+        parseFloat(modelo.cam4?.dolares || 0) +
+        parseFloat(modelo.chaturbate?.dolares || 0) +
+        parseFloat((modelo.dirty?.moneda === "dolar" ? modelo.dirty?.plata : 0) || 0) +
+        parseFloat(modelo.myFreeCams?.dolares || 0) +
+        parseFloat(modelo.sakura?.dolares || 0) +
+        parseFloat(modelo.skype?.dolares || 0) +
+        parseFloat(modelo.stripchat?.dolares || 0) +
+        parseFloat(modelo.streamRay?.dolares || 0) +
+        parseFloat(modelo.tripleSiete?.dolares || 0);
+      const totalCreditos = parseFloat(totalDolares + totalEuros + totalLibras || 0);
       const porcentajeFinal =
         totalCreditos >= modelo.porcentaje?.meta
           ? modelo.porcentaje?.final
@@ -2072,17 +2128,17 @@ const searchAllUserByFortnight = async (id) => {
       const euro = monedaSeleccionada?.euro || 0;
       const libra = monedaSeleccionada?.libra || 0;
       const totalPesos =
-        ((totalLibras * porcentajeFinal) / 100) * libra +
-          ((totalEuros * porcentajeFinal) / 100) * euro +
-          ((totalDolares * porcentajeFinal) / 100) * dolar || 0;
+        parseFloat((((totalLibras * porcentajeFinal) / 100) * libra) || 0 )+
+          parseFloat((((totalEuros * porcentajeFinal) / 100) * euro) || 0 )+
+          parseFloat((((totalDolares * porcentajeFinal) / 100) * dolar )|| 0);
       const totalPrestamos =
-        modelo?.prestamos?.reduce((x, y) => x + y.cantidad, 0) || 0;
+        parseFloat(modelo?.prestamos?.reduce((x, y) => x + y.cantidad, 0) || 0);
       const totalVitrina =
         parseFloat(
-          modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2)
-        ) || 0;
+          (modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2)
+        ) || 0);
       const saldo = parseFloat(
-        (totalPesos - totalPrestamos - totalVitrina).toFixed(2)
+        parseFloat(totalPesos - totalPrestamos - totalVitrina).toFixed(2)
       );
 
       // Guardar los totales en el modelo

@@ -2,6 +2,7 @@ const { TripleSiete, UserName, Quincena } = require("../../db.js");
 
 const postTripeSiete = async (tripleSiete) => {
   try {
+    console.log(tripleSiete)
     const rsiete = [];
     for (const i of tripleSiete) {
       try {
@@ -17,9 +18,8 @@ const postTripeSiete = async (tripleSiete) => {
         });
         const r = await TripleSiete.create({
           userName: i.user,
-          plata: i.plata,
-          moneda: i.moneda,
-          mensual: true,
+          dolares: i.dolares,
+          mensual: false,
         });
         if (r) {
           await r.setCorte_triplesiete(userNameId);

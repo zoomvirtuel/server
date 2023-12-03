@@ -17,15 +17,15 @@ const postStreamate = async (streamate) => {
           },
         });
         const r = await Streamate.create({
-          // fecha: i.fecha,
-          // userName: i.user,
-          // creditos: i.creditos,
-          // parcial: i.parcial,
-          // mensual: false,
+          fecha: i.fecha,
+          userName: i.user,
+          dolares: i.dolares,
+          fecha: i.fecha,
+          mensual: false,
         });
         if (r) {
-          await r.setCorte_adult(userNameId);
-          await r.setQ_adult(quincena);
+          await r.setCorte_streamate(userNameId);
+          await r.setQ_streamate(quincena);
         }
       } catch (error) {
         console.error("Error en una iteración del bucle:", error);
@@ -43,6 +43,16 @@ const postStreamate = async (streamate) => {
   }
 };
 
+const getStreamate = async () => {
+  try {
+    const allStreamate = await Streamate.findAll();
+    return allStreamate;
+  } catch (error) {
+    throw new Error("Lo siento no hay registros para mostrar");
+  }
+};
+
 module.exports = {
   postStreamate,
+  getStreamate
 };

@@ -17,6 +17,10 @@ module.exports = (sequelize) => {
         type: DataTypes.DOUBLE,
         allowNull: false,
       },
+      fecha: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      },
       mensual: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

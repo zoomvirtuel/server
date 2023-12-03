@@ -61,6 +61,8 @@ const searchUserByFortnight = async (ids, id) => {
     }
 
     let quincenaId = quincenaAnterior.id;
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio adultwork   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const adultWork = await Quincena.findOne({
       where: { id: ids },
       attributes: ["id", "nombre", "inicia", "final"],
@@ -75,11 +77,15 @@ const searchUserByFortnight = async (ids, id) => {
             "parcial",
             "userName",
             "userNameId",
+            // "createdAt",
           ],
         },
       ],
     });
 
+    
+
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin adultwork   ↑↑↑↑↑↑↑↑↑↑↑↑
     const amateur = await Quincena.findOne({
       where: { id: ids },
       attributes: ["id", "nombre", "inicia", "final"],
@@ -94,6 +100,7 @@ const searchUserByFortnight = async (ids, id) => {
             "userNameId",
             "mensual",
             "tokens",
+            "createdAt",
           ],
         },
       ],
@@ -321,6 +328,8 @@ const searchUserByFortnight = async (ids, id) => {
       nombrePagina: pagina?.nombrePagina,
       userName: userNameMap[pagina?.id],
     }));
+
+
     const filtradoAdultWork = adultWork?.q_adult?.filter((registro) =>
       paginaUserName?.some(
         (item) =>
@@ -328,6 +337,21 @@ const searchUserByFortnight = async (ids, id) => {
           item?.userName === registro?.userName
       )
     );
+    // Divide los registros en dos categorías: parciales y no parciales
+const parciales = filtradoAdultWork?.filter((registro) => registro.parcial);
+const noParciales = filtradoAdultWork?.filter((registro) => !registro.parcial);
+
+    
+
+    const totalCreditos = filtradoAdultWork.reduce(
+      (total, registro) => total + registro.creditos,
+      0
+    );
+    // console.log(totalCreditos);
+    // console.log(paginas);
+    // console.log(noParciales);
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio amateur   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const filtradoAmateur = amateur?.q_amateur?.filter((registro) =>
       paginaUserName?.some(
         (item) =>
@@ -335,6 +359,22 @@ const searchUserByFortnight = async (ids, id) => {
           item?.userName === registro?.userName
       )
     );
+
+    // const ultimoRegistroAmateur = filtradoAmateur?.reduce(
+    //   (acumulador, registro) => {
+    //     if (
+    //       !acumulador ||
+    //       new Date(registro.createdAt) > new Date(acumulador.createdAt)
+    //     ) {
+    //       return registro;
+    //     }
+    //     return acumulador;
+    //   },
+    //   null
+    // );
+
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin amateur   ↑↑↑↑↑↑↑↑↑↑↑↑
+
     const filtradoBonga = bonga?.q_bonga?.filter((registro) =>
       paginaUserName?.some(
         (item) =>
@@ -422,6 +462,9 @@ const searchUserByFortnight = async (ids, id) => {
     );
     const result = {
       adultwork: filtradoAdultWork,
+      parciales,
+      noParciales,
+      totalCreditos,
       amateur: filtradoAmateur[0],
       bonga: filtradoBonga,
       cam4: filtradoCam4[0],
@@ -455,7 +498,6 @@ const searchUserByFortnight = async (ids, id) => {
 
 const searchAllUserByFortnight = async (id) => {
   try {
-    console.log(id);
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio peticiones al base de datos   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const quincenas = await Quincena.findAll({
       attributes: ["id", "nombre", "inicia", "final"],
@@ -711,7 +753,14 @@ const searchAllUserByFortnight = async (id) => {
         {
           model: Skype,
           as: "q_skype",
-          attributes: ["id", "userName", "dolares", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "userName",
+            "dolares",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -727,8 +776,8 @@ const searchAllUserByFortnight = async (id) => {
             "userName",
             "mensual",
             "dolares",
+            "fecha",
             "userNameId",
-            "createdAt",
           ],
         },
       ],
@@ -788,7 +837,14 @@ const searchAllUserByFortnight = async (id) => {
         {
           model: Vx,
           as: "q_vx",
-          attributes: ["id", "userName", "euros", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "userName",
+            "euros",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -799,7 +855,14 @@ const searchAllUserByFortnight = async (id) => {
         {
           model: Xlove,
           as: "q_xlove",
-          attributes: ["id", "userName", "euros", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "userName",
+            "euros",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -816,8 +879,8 @@ const searchAllUserByFortnight = async (id) => {
             "euros",
             "fecha",
             "mensual",
-
             "userNameId",
+            "createdAt",
           ],
         },
       ],
@@ -933,7 +996,6 @@ const searchAllUserByFortnight = async (id) => {
       modelos: modelos,
       paginas: {},
       moneda: moneda,
-      tripleSiete,
     };
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin formateo usuario   ↑↑↑↑↑↑↑↑↑↑↑↑
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio adultwork   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1109,7 +1171,6 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin amateur   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio bonga   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    //! a la espera de confirmacion de cortes
     const registrosAgrupadosBonga = {};
 
     for (const registro of bonga?.q_bonga) {
@@ -1559,6 +1620,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  Sakura  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  sender  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arregla ultomo registro
     const registrosAgrupadosSender = {};
 
     for (const registro of sender?.q_sender) {
@@ -1571,6 +1633,7 @@ const searchAllUserByFortnight = async (id) => {
           euros: registro.euros,
           coins: registro.coins,
           userNameId: registro.userNameId,
+          fechas: registro.createdAt,
         };
 
         if (!registrosAgrupadosSender[userName]) {
@@ -1591,7 +1654,14 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.sender = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fechas) > new Date(current.fechas)
+                ? prev
+                : current;
+            }
+          );
+          usuario.sender = registroMasReciente;
           delete registrosAgrupadosSender[nombreUsuario];
         }
       }
@@ -1607,6 +1677,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  sender  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio sender anterior   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arregla ultimo registro
     if (senderQuincenaAnterior?.q_sender) {
       const registrosAgrupadosSenderAnterior = {};
 
@@ -1620,6 +1691,7 @@ const searchAllUserByFortnight = async (id) => {
             euros: registro.euros,
             coins: registro.coins,
             userNameId: registro.userNameId,
+            fechas: registro.createdAt,
           };
 
           if (!registrosAgrupadosSenderAnterior[userName]) {
@@ -1647,7 +1719,14 @@ const searchAllUserByFortnight = async (id) => {
               name.userName === nombreUsuario
           );
           if (usuarioEncontrado) {
-            usuario.senderAnterior = registrosUsuario[0];
+            const registroMasReciente = registrosUsuario.reduce(
+              (prev, current) => {
+                return new Date(prev.fechas) > new Date(current.fechas)
+                  ? prev
+                  : current;
+              }
+            );
+            usuario.senderAnterior = registroMasReciente;
             delete registrosAgrupadosSenderAnterior[nombreUsuario];
           }
         }
@@ -1664,6 +1743,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  sender anterior  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  skype  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arregla registro mas reciente
     const registrosAgrupadosSkype = {};
 
     for (const registro of skype?.q_skype) {
@@ -1674,6 +1754,7 @@ const searchAllUserByFortnight = async (id) => {
           userName: registro.userName,
           dolares: registro.dolares,
           userNameId: registro.userNameId,
+          fecha: registro.createdAt,
         };
 
         if (!registrosAgrupadosSkype[userName]) {
@@ -1694,7 +1775,14 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.skype = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fechas) > new Date(current.fechas)
+                ? prev
+                : current;
+            }
+          );
+          usuario.skype = registroMasReciente;
           delete registrosAgrupadosSkype[nombreUsuario];
         }
       }
@@ -1710,52 +1798,62 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  skype  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Streamate   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    // const registrosAgrupadosSkype = {};
+    const registrosAgrupadosStreamate = {};
 
-    //         for (const registro of skype?.q_skype) {
-    //           const { userName, userNameId } = registro;
-    //           if (userName) {
-    //             const registroSkype = {
-    //               id: registro.id,
-    //               userName: registro.userName,
-    //               dolares: registro.dolares,
-    //               userNameId: registro.userNameId,
-    //             };
+    for (const registro of streamate?.q_streamate) {
+      const { userName, userNameId } = registro;
+      if (userName) {
+        const registroStreamate = {
+          id: registro.id,
+          userName: registro.userName,
+          dolares: registro.dolares,
+          fecha: registro.fecha,
+          userNameId: registro.userNameId,
+        };
 
-    //             if (!registrosAgrupadosSkype[userName]) {
-    //               registrosAgrupadosSkype[userName] = [registroSkype];
-    //             } else {
-    //               registrosAgrupadosSkype[userName].push(registroSkype);
-    //             }
-    //           }
-    //         }
+        if (!registrosAgrupadosStreamate[userName]) {
+          registrosAgrupadosStreamate[userName] = [registroStreamate];
+        } else {
+          registrosAgrupadosStreamate[userName].push(registroStreamate);
+        }
+      }
+    }
 
-    //         for (const usuarioKey of Object.keys(resultado.modelos)) {
-    //           const usuario = resultado.modelos[usuarioKey];
-    //           for (const nombreUsuario of Object.keys(registrosAgrupadosSkype)) {
-    //             const registrosUsuario = registrosAgrupadosSkype[nombreUsuario];
-    //             const usuarioEncontrado = usuario.userNamePage.find(
-    //               (name) =>
-    //                 name.pagina.toLowerCase() === "skype" &&
-    //                 name.userName === nombreUsuario
-    //             );
-    //             if (usuarioEncontrado) {
-    //               usuario.skype = registrosUsuario;
-    //               delete registrosAgrupadosSkype[nombreUsuario];
-    //             }
-    //           }
-    //         }
+    for (const usuarioKey of Object.keys(resultado.modelos)) {
+      const usuario = resultado.modelos[usuarioKey];
+      for (const nombreUsuario of Object.keys(registrosAgrupadosStreamate)) {
+        const registrosUsuario = registrosAgrupadosStreamate[nombreUsuario];
+        const usuarioEncontrado = usuario.userNamePage.find(
+          (name) =>
+            name.pagina.toLowerCase() === "streamate" &&
+            name.userName === nombreUsuario
+        );
+        if (usuarioEncontrado) {
+          const totalDolares = registrosUsuario.reduce(
+            (total, registro) => total + registro.dolares,
+            0
+          );
+          usuario.streamateTotal = {
+            userName: nombreUsuario,
+            dolares: totalDolares,
+          };
+          usuario.streamate = registrosUsuario;
+          delete registrosAgrupadosStreamate[nombreUsuario];
+        }
+      }
+    }
 
-    //         const registrosNoAsignadosSkype = Object.values(
-    //           registrosAgrupadosSkype
-    //         ).flat();
+    const registrosNoAsignadosStreamate = Object.values(
+      registrosAgrupadosStreamate
+    ).flat();
 
-    //         if (registrosNoAsignadosSkype.length > 0) {
-    //           resultado.paginas.skype = registrosNoAsignadosSkype;
-    //         }
+    if (registrosNoAsignadosSkype.length > 0) {
+      resultado.paginas.streamate = registrosNoAsignadosStreamate;
+    }
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  Streamate  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio StreamRay   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arregla ultimo registro
     const registrosAgrupadosStreamRay = {};
 
     for (const registro of streamRay?.q_streamRay) {
@@ -1811,6 +1909,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  StreamRay  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  stripchat  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arregla ultimo registro
     const registrosAgrupadosStripchat = {};
 
     for (const registro of stripchat?.q_stripchat) {
@@ -1822,6 +1921,7 @@ const searchAllUserByFortnight = async (id) => {
           dolares: registro.dolares,
           tokens: registro.tokens,
           userNameId: registro.userNameId,
+          fecha: registro.createdAt,
         };
 
         if (!registrosAgrupadosStripchat[userName]) {
@@ -1842,7 +1942,14 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.stripchat = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+          usuario.stripchat = registroMasReciente;
           delete registrosAgrupadosStripchat[nombreUsuario];
         }
       }
@@ -1858,6 +1965,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin stripchat   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  tripleSiete  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arregla ultimo registro
     const registrosAgrupadosTripleSiete = {};
 
     for (const registro of tripleSiete?.q_triplesiete) {
@@ -1912,6 +2020,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin tripleSiete   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio  vx   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arregla ultimo registro
     const registrosAgrupadosVx = {};
 
     for (const registro of vx?.q_vx) {
@@ -1922,6 +2031,7 @@ const searchAllUserByFortnight = async (id) => {
           userName: registro.userName,
           euros: registro.euros,
           userNameId: registro.userNameId,
+          fecha: registro.createdAt,
         };
 
         if (!registrosAgrupadosVx[userName]) {
@@ -1942,7 +2052,14 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.vx = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+          usuario.vx = registroMasReciente;
           delete registrosAgrupadosVx[nombreUsuario];
         }
       }
@@ -1956,6 +2073,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin  vx  ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Xlove    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arregla registro mas reciente
     const registrosAgrupadosXlove = {};
 
     for (const registro of xlove?.q_xlove) {
@@ -1966,6 +2084,7 @@ const searchAllUserByFortnight = async (id) => {
           userName: registro.userName,
           euros: registro.euros,
           userNameId: registro.userNameId,
+          fecha: registro.createdAt,
         };
 
         if (!registrosAgrupadosXlove[userName]) {
@@ -1986,7 +2105,14 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.xlove = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+          usuario.xlove = registroMasReciente;
           delete registrosAgrupadosXlove[nombreUsuario];
         }
       }
@@ -2002,6 +2128,7 @@ const searchAllUserByFortnight = async (id) => {
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin Xlove   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio XloveNueva  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //* se arregla registro mas reciente
     const registrosAgrupadosXloveNueva = {};
 
     for (const registro of xlovenueva?.q_xloveNueva) {
@@ -2013,6 +2140,7 @@ const searchAllUserByFortnight = async (id) => {
           euros: registro.euros,
           fecha: registro.fecha,
           userNameId: registro.userNameId,
+          fecha: registro.createdAt,
         };
 
         if (!registrosAgrupadosXloveNueva[userName]) {
@@ -2033,7 +2161,14 @@ const searchAllUserByFortnight = async (id) => {
             name.userName === nombreUsuario
         );
         if (usuarioEncontrado) {
-          usuario.xlovenueva = registrosUsuario[0];
+          const registroMasReciente = registrosUsuario.reduce(
+            (prev, current) => {
+              return new Date(prev.fecha) > new Date(current.fecha)
+                ? prev
+                : current;
+            }
+          );
+          usuario.xlovenueva = registroMasReciente;
           delete registrosAgrupadosXloveNueva[nombreUsuario];
         }
       }
@@ -2089,54 +2224,90 @@ const searchAllUserByFortnight = async (id) => {
 
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin prestamos   ↑↑↑↑↑↑↑↑↑↑↑↑
     for (const modelo of resultado.modelos) {
+      //? sacamos el total de libras
       let totalLibras = parseFloat(modelo.adultworkTotal?.creditos || 0);
 
+      //? sacamos el total de euros
       let totalEuros =
-        parseFloat((modelo.dirty?.moneda === "euro" ? modelo.dirty?.plata : 0) || 0) +
+        parseFloat(
+          (modelo.dirty?.moneda === "euro" ? modelo.dirty?.plata : 0) || 0
+        ) +
         parseFloat(modelo.islive?.euros || 0) +
         parseFloat(modelo.mondo?.euros || 0) +
-        parseFloat((modelo.senderAnterior?.euros
-          ? modelo.sender?.euros - modelo.senderAnterior?.euros
-          : 0) || 0) +
+        parseFloat(
+          (modelo.senderAnterior?.euros
+            ? modelo.sender?.euros - modelo.senderAnterior?.euros
+            : 0) || 0
+        ) +
         parseFloat(modelo.vx?.euros || 0) +
         parseFloat(modelo.xlove?.euros || 0) +
         parseFloat(modelo.xlovenueva?.euros || 0);
 
+      //? sacamos el total de dolares
       let totalDolares =
         parseFloat(modelo.amateur?.dolares || 0) +
         parseFloat(modelo.bongaTotal?.dolares || 0) +
         parseFloat(modelo.cam4?.dolares || 0) +
         parseFloat(modelo.chaturbate?.dolares || 0) +
-        parseFloat((modelo.dirty?.moneda === "dolar" ? modelo.dirty?.plata : 0) || 0) +
+        parseFloat(
+          (modelo.dirty?.moneda === "dolar" ? modelo.dirty?.plata : 0) || 0
+        ) +
         parseFloat(modelo.myFreeCams?.dolares || 0) +
         parseFloat(modelo.sakura?.dolares || 0) +
         parseFloat(modelo.skype?.dolares || 0) +
         parseFloat(modelo.stripchat?.dolares || 0) +
+        parseFloat(modelo.streamate?.dolares || 0) +
         parseFloat(modelo.streamRay?.dolares || 0) +
         parseFloat(modelo.tripleSiete?.dolares || 0);
-      const totalCreditos = parseFloat(totalDolares + totalEuros + totalLibras || 0);
+
+      //? sacamos el total de los creditos
+      const totalCreditos = parseFloat(
+        totalDolares + totalEuros + totalLibras || 0
+      );
+
+      //? sacamos el porcentaje
       const porcentajeFinal =
         totalCreditos >= modelo.porcentaje?.meta
           ? modelo.porcentaje?.final
           : modelo.porcentaje?.inicial;
+
+      //? sacamos la moneda para estadisticas
       const monedaEstadisticas = moneda?.monedas?.find(
         (x) => x.descripcion === "estadisticas"
       );
+
+      //? sacamos la moneda para pago
       const monedaPago = moneda?.monedas?.find((x) => x.descripcion === "pago");
+
+      //? seleccionamos la moneda poniendo primero la de pago
       const monedaSeleccionada = monedaPago || monedaEstadisticas;
+
+      //? seleccionamos el valor del dolar
       const dolar = monedaSeleccionada?.dolar || 0;
+
+      //? seleccionamos el valor del euro
       const euro = monedaSeleccionada?.euro || 0;
+
+      //? seleccionamos el valor de la libra
       const libra = monedaSeleccionada?.libra || 0;
+
+      //? sacamos el total en pesos
       const totalPesos =
-        parseFloat((((totalLibras * porcentajeFinal) / 100) * libra) || 0 )+
-          parseFloat((((totalEuros * porcentajeFinal) / 100) * euro) || 0 )+
-          parseFloat((((totalDolares * porcentajeFinal) / 100) * dolar )|| 0);
-      const totalPrestamos =
-        parseFloat(modelo?.prestamos?.reduce((x, y) => x + y.cantidad, 0) || 0);
-      const totalVitrina =
-        parseFloat(
-          (modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2)
-        ) || 0);
+        parseFloat(((totalLibras * porcentajeFinal) / 100) * libra || 0) +
+        parseFloat(((totalEuros * porcentajeFinal) / 100) * euro || 0) +
+        parseFloat(((totalDolares * porcentajeFinal) / 100) * dolar || 0);
+
+      //? sacamos el total de los prestamos
+      const totalPrestamos = parseFloat(
+        modelo?.prestamos?.reduce((x, y) => x + y.cantidad, 0) || 0
+      );
+
+      //? sacamos el total de las ventas de la vitrina
+      const totalVitrina = parseFloat(
+        modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2) || 0
+      );
+
+      //? sacamos el total final luego de los descuentos
       const saldo = parseFloat(
         parseFloat(totalPesos - totalPrestamos - totalVitrina).toFixed(2)
       );
@@ -2159,7 +2330,6 @@ const searchAllUserByFortnight = async (id) => {
     }
 
     //todo  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   final  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    // console.log(resultado)
     return resultado;
   } catch (error) {
     throw new Error(

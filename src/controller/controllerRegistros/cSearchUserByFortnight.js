@@ -77,13 +77,11 @@ const searchUserByFortnight = async (ids, id) => {
             "parcial",
             "userName",
             "userNameId",
-            // "createdAt",
+            "createdAt",
           ],
         },
       ],
     });
-
-    
 
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin adultwork   ↑↑↑↑↑↑↑↑↑↑↑↑
     const amateur = await Quincena.findOne({
@@ -130,7 +128,14 @@ const searchUserByFortnight = async (ids, id) => {
         {
           model: Cam4,
           as: "q_cam4",
-          attributes: ["id", "userName", "dolares", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "userName",
+            "dolares",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -148,6 +153,7 @@ const searchUserByFortnight = async (ids, id) => {
             "mensual",
             "userNameId",
             "tokens",
+            "createdAt",
           ],
         },
       ],
@@ -165,7 +171,7 @@ const searchUserByFortnight = async (ids, id) => {
             "plata",
             "userName",
             "mensual",
-
+            "createdAt",
             "userNameId",
           ],
         },
@@ -178,7 +184,61 @@ const searchUserByFortnight = async (ids, id) => {
         {
           model: IsLive,
           as: "q_isLive",
-          attributes: ["id", "codigo", "euros", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "codigo",
+            "euros",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
+        },
+      ],
+    });
+    const mondo = await Quincena.findOne({
+      where: { id: ids },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Mondo,
+          as: "q_mondo",
+          attributes: ["id", "euros", "userName", "userNameId", "createdAt"],
+        },
+      ],
+    });
+    const myFreeCams = await Quincena.findOne({
+      where: { id: ids },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: MyFreeCams,
+          as: "q_myfreecams",
+          attributes: [
+            "id",
+            "tokens",
+            "dolares",
+            "userName",
+            "userNameId",
+            "createdAt",
+          ],
+        },
+      ],
+    });
+    const sakura = await Quincena.findOne({
+      where: { id: ids },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Sakura,
+          as: "q_sakura",
+          attributes: [
+            "id",
+            "tokens",
+            "dolares",
+            "userName",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -197,6 +257,7 @@ const searchUserByFortnight = async (ids, id) => {
             "userNameId",
             "coins",
             "euros",
+            "createdAt",
           ],
         },
       ],
@@ -216,6 +277,7 @@ const searchUserByFortnight = async (ids, id) => {
             "userNameId",
             "coins",
             "euros",
+            "createdAt",
           ],
         },
       ],
@@ -227,7 +289,50 @@ const searchUserByFortnight = async (ids, id) => {
         {
           model: Skype,
           as: "q_skype",
-          attributes: ["id", "userName", "dolares", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "userName",
+            "dolares",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
+        },
+      ],
+    });
+    const streamate = await Quincena.findOne({
+      where: { id: ids },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Streamate,
+          as: "q_streamate",
+          attributes: [
+            "id",
+            "userName",
+            "mensual",
+            "dolares",
+            "fecha",
+            "userNameId",
+          ],
+        },
+      ],
+    });
+    const streamRay = await Quincena.findOne({
+      where: { id: ids },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: StreamRay,
+          as: "q_streamRay",
+          attributes: [
+            "id",
+            "userName",
+            "mensual",
+            "dolares",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -244,9 +349,20 @@ const searchUserByFortnight = async (ids, id) => {
             "mensual",
             "dolares",
             "tokens",
-
+            "createdAt",
             "userNameId",
           ],
+        },
+      ],
+    });
+    const tripleSiete = await Quincena.findOne({
+      where: { id: ids },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: TripleSiete,
+          as: "q_triplesiete",
+          attributes: ["id", "userName", "dolares", "userNameId", "createdAt"],
         },
       ],
     });
@@ -257,7 +373,14 @@ const searchUserByFortnight = async (ids, id) => {
         {
           model: Vx,
           as: "q_vx",
-          attributes: ["id", "userName", "euros", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "userName",
+            "euros",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -268,7 +391,14 @@ const searchUserByFortnight = async (ids, id) => {
         {
           model: Xlove,
           as: "q_xlove",
-          attributes: ["id", "userName", "euros", "mensual", "userNameId"],
+          attributes: [
+            "id",
+            "userName",
+            "euros",
+            "mensual",
+            "userNameId",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -285,19 +415,43 @@ const searchUserByFortnight = async (ids, id) => {
             "euros",
             "fecha",
             "mensual",
-
+            "createdAt",
             "userNameId",
           ],
         },
       ],
     });
-    // const  = await Quincena.findOne({where: {id: id}, include: []})
-    // const quincena = await Quincena.findOne({
-    //   where: { id: id },
-    //   attributes: ["id", "nombre", "inicia", "final"],
-    //   include: [],
-    // });
-
+    const prestamos = await Quincena.findOne({
+      where: { id: ids },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Prestamos,
+          as: "q_prestamos",
+          attributes: ["id", "userId", "cantidad", "createdAt"],
+        },
+      ],
+    });
+    const ventas = await Quincena.findOne({
+      where: { id: ids },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Ventas,
+          as: "q_venta",
+          attributes: [
+            "id",
+            "userId",
+            "cantidad",
+            "cuotas",
+            "productoId",
+            "nombre",
+            "valor",
+            "createdAt",
+          ],
+        },
+      ],
+    });
     const user = await User.findOne({
       where: { id: id },
       attributes: ["id", "nombre", "apellido"],
@@ -319,177 +473,567 @@ const searchUserByFortnight = async (ids, id) => {
         },
       ],
     });
-    const userNameMap = {};
-    user?.useres?.forEach((usuario) => {
-      userNameMap[usuario?.pagina] = usuario?.userName;
-    });
-    // Luego, crea un nuevo objeto con el formato deseado
-    const paginaUserName = paginas?.map((pagina) => ({
-      nombrePagina: pagina?.nombrePagina,
-      userName: userNameMap[pagina?.id],
-    }));
 
+    const formatearUsuario = (usuario, paginas) => {
+      // Obtener la información del usuario
+      const { id, nombre, apellido, p_porcentaje, p_ubicacion, useres } =
+        usuario;
 
+      // Crear un array de userNamePage para el usuario
+      const userNamePages = useres.map((userPage) => {
+        const { id, userName, pagina } = userPage;
+        const paginaInfo = paginas.find(
+          (paginaData) => paginaData.id === pagina
+        );
+        return {
+          id: id,
+          userName: userName,
+          pagina: paginaInfo ? paginaInfo.nombrePagina : null,
+          idPage: pagina,
+        };
+      });
+
+      // Estructurar la información del porcentaje
+      const porcentaje = p_porcentaje
+        ? {
+            id: p_porcentaje.id,
+            nombre: p_porcentaje.nombre,
+            inicial: p_porcentaje.inicial,
+            final: p_porcentaje.final,
+            meta: p_porcentaje.meta,
+          }
+        : null;
+
+      // Estructurar la información de la ubicación
+      const ubicacion = p_ubicacion
+        ? {
+            id: p_ubicacion.id,
+            ubicacion: p_ubicacion.ubicacion,
+          }
+        : null;
+
+      // Crear el objeto de usuario formateado
+      const usuarioFormateado = {
+        id: id,
+        nombre: nombre,
+        apellido: apellido,
+        porcentaje: porcentaje,
+        ubicacion: ubicacion,
+        userNamePage: userNamePages,
+      };
+
+      return usuarioFormateado;
+    };
+
+    // Llamada a la función para formatear el usuario
+    const usuarioFormateado = formatearUsuario(user, paginas);
+    const final = {
+      id: usuarioFormateado.id,
+      nomebre: usuarioFormateado.nombre,
+      apellido: usuarioFormateado.apellido,
+      porcentaje: usuarioFormateado.porcentaje,
+      ubicacion: usuarioFormateado.ubicacion,
+      userNamePage: usuarioFormateado.userNamePage,
+    };
+    // //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio adultWork   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const userNameToFilter = final.userNamePage?.find(
+      (item) => item?.pagina.toLowerCase() === "adultwork"
+    );
     const filtradoAdultWork = adultWork?.q_adult?.filter((registro) =>
-      paginaUserName?.some(
+      final.userNamePage?.some(
         (item) =>
-          item?.nombrePagina.toLowerCase() === "adultwork" &&
+          item?.pagina.toLowerCase() === "adultwork" &&
           item?.userName === registro?.userName
       )
     );
-    // Divide los registros en dos categorías: parciales y no parciales
-const parciales = filtradoAdultWork?.filter((registro) => registro.parcial);
-const noParciales = filtradoAdultWork?.filter((registro) => !registro.parcial);
 
-    
-
-    const totalCreditos = filtradoAdultWork.reduce(
-      (total, registro) => total + registro.creditos,
-      0
-    );
-    // console.log(totalCreditos);
-    // console.log(paginas);
-    // console.log(noParciales);
+    if (filtradoAdultWork && filtradoAdultWork.length > 0) {
+      const parciales = filtradoAdultWork.filter(
+        (registro) => registro?.parcial === true
+      );
+      const noParciales = filtradoAdultWork.filter(
+        (registro) => registro?.parcial !== true
+      );
+      const latestParcialRecord = parciales.reduce((latest, registro) => {
+        if (
+          !latest ||
+          new Date(registro.createdAt) > new Date(latest.createdAt)
+        ) {
+          return registro;
+        }
+        return latest;
+      }, null);
+      const latestNoParcialRecord = noParciales.reduce((latest, registro) => {
+        if (
+          !latest ||
+          new Date(registro.createdAt) > new Date(latest.createdAt)
+        ) {
+          return registro;
+        }
+        return latest;
+      }, null);
+      if (latestParcialRecord) {
+        latestParcialRecord.creditos *= 0.7;
+      }
+      if (
+        latestNoParcialRecord &&
+        (!latestParcialRecord ||
+          new Date(latestNoParcialRecord.createdAt) >
+            new Date(latestParcialRecord.createdAt))
+      ) {
+        final.adultwork = [latestNoParcialRecord, ...noParciales];
+      } else if (latestParcialRecord) {
+        final.adultwork = [latestParcialRecord, ...noParciales];
+      }
+      const totalCreditosAdultwork = final.adultwork.reduce(
+        (total, registro) => total + registro.creditos,
+        0
+      );
+      final.adultworkTotal = totalCreditosAdultwork;
+    }
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin adultwork   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio amateur   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
     const filtradoAmateur = amateur?.q_amateur?.filter((registro) =>
-      paginaUserName?.some(
+      final.userNamePage?.some(
         (item) =>
-          item?.nombrePagina.toLowerCase() === "amateur" &&
+          item?.pagina.toLowerCase() === "amateur" &&
           item?.userName === registro?.userName
       )
     );
-
-    // const ultimoRegistroAmateur = filtradoAmateur?.reduce(
-    //   (acumulador, registro) => {
-    //     if (
-    //       !acumulador ||
-    //       new Date(registro.createdAt) > new Date(acumulador.createdAt)
-    //     ) {
-    //       return registro;
-    //     }
-    //     return acumulador;
-    //   },
-    //   null
-    // );
+    const latestAmateurRecord = filtradoAmateur?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestAmateurRecord) {
+      final.amateur = latestAmateurRecord;
+    }
 
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin amateur   ↑↑↑↑↑↑↑↑↑↑↑↑
 
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio bonga   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const filtradoBonga = bonga?.q_bonga?.filter((registro) =>
-      paginaUserName?.some(
+      final.userNamePage?.some(
         (item) =>
-          item?.nombrePagina.toLowerCase() === "bonga" &&
+          item?.pagina.toLowerCase() === "bonga" &&
           item?.userName === registro?.userName
       )
     );
+    if (filtradoBonga && filtradoBonga.length > 0) {
+      const totalDolaresBonga = filtradoBonga.reduce(
+        (total, registro) => total + (registro.dolares || 0),
+        0
+      );
+      final.bongaTotal = totalDolaresBonga;
+      final.bonga = filtradoBonga;
+    }
+
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin bonga   ↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio cam4   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const filtradoCam4 = cam4?.q_cam4?.filter((registro) =>
-      paginaUserName?.some(
+      final.userNamePage?.some(
         (item) =>
-          item?.nombrePagina.toLowerCase() === "cam4" &&
+          item?.pagina.toLowerCase() === "cam4" &&
           item?.userName === registro?.userName
       )
     );
+    const latestCam4 = filtradoCam4?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestCam4) {
+      final.cam4 = latestCam4;
+    }
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin cam4   ↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio chaturbate   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const filtradoChatubate = chaturbate?.q_chaturbate?.filter((registro) =>
-      paginaUserName?.some(
+      final.userNamePage?.some(
         (item) =>
-          item?.nombrePagina.toLowerCase() === "chaturbate" &&
+          item?.pagina.toLowerCase() === "chaturbate" &&
           item?.userName === registro?.userName
       )
     );
+    const latestChaturbate = filtradoChatubate?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestChaturbate) {
+      final.chaturbate = latestChaturbate;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin chaturbate      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio dirty   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const filtradoDirty = dirty?.q_dirty?.filter((registro) =>
-      paginaUserName?.some(
+      final.userNamePage?.some(
         (item) =>
-          item?.nombrePagina.toLowerCase() === "dirty" &&
+          item?.pagina.toLowerCase() === "dirty" &&
           item?.userName === registro?.userName
       )
     );
+    const latestDirty = filtradoDirty?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestDirty) {
+      final.dirty = latestDirty;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin dirty      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio islive   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const filtradoIsLive = islive?.q_isLive?.filter((registro) =>
-      paginaUserName?.some(
+      final.userNamePage?.some(
         (item) =>
-          item?.nombrePagina.toLowerCase() === "islive" &&
+          item?.pagina.toLowerCase() === "islive" &&
           item?.userName === registro?.codigo
       )
     );
-    const filtradoSender = sender?.q_sender?.filter((registro) =>
-      paginaUserName?.some(
+    const latestIsLive = filtradoIsLive?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestIsLive) {
+      final.islive = latestIsLive;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin islive      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio mondo   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoMondo = mondo?.q_mondo?.filter((registro) =>
+      final.userNamePage?.some(
         (item) =>
-          item?.nombrePagina.toLowerCase() === "sender" &&
+          item?.pagina.toLowerCase() === "mondo" &&
           item?.userName === registro?.userName
       )
     );
+    const latestMondo = filtradoMondo?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestMondo) {
+      final.mondo = latestMondo;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin mondo      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio myFreeCams   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoMyFreeCams = myFreeCams?.q_myfreecams?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "myfreecams" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestMyFreeCams = filtradoMyFreeCams?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestMyFreeCams) {
+      final.myFreeCams = latestMyFreeCams;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin myFreeCams      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio sakura   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoSakura = sakura?.q_sakura?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "sakura" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestSakura = filtradoSakura?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestSakura) {
+      final.sakura = latestSakura;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin sakura      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio sender   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoSender = sender?.q_sender?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "sender" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestSender = filtradoSender?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestSender) {
+      final.sender = latestSender;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin sender      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio senderQuincenaAnterior   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const filtradoSenderAnterior = senderQuincenaAnterior?.q_sender?.filter(
       (registro) =>
-        paginaUserName?.some(
+        final.userNamePage?.some(
           (item) =>
-            item?.nombrePagina.toLowerCase() === "sender" &&
+            item?.pagina.toLowerCase() === "sender" &&
             item?.userName === registro?.userName
         )
     );
-    const filtradoSkype = skype?.q_skype?.filter((registro) =>
-      paginaUserName?.some(
-        (item) =>
-          item?.nombrePagina.toLowerCase() === "skype" &&
-          item?.userName === registro?.userName
-      )
-    );
-    const filtradoStripchat = stripchat?.q_stripchat?.filter((registro) =>
-      paginaUserName?.some(
-        (item) =>
-          item?.nombrePagina.toLowerCase() === "stripchat" &&
-          item?.userName === registro?.userName
-      )
-    );
-    const filtradoVx = vx?.q_vx?.filter((registro) =>
-      paginaUserName?.some(
-        (item) =>
-          item?.nombrePagina.toLowerCase() === "vx" &&
-          item?.userName === registro?.userName
-      )
-    );
-    const filtradoXlove = xlove?.q_xlove?.filter((registro) =>
-      paginaUserName?.some(
-        (item) =>
-          item?.nombrePagina.toLowerCase() === "xlove" &&
-          item?.userName === registro?.userName
-      )
-    );
-    const filtradoXloveNueva = xlovenueva?.q_xloveNueva?.filter((registro) =>
-      paginaUserName?.some(
-        (item) =>
-          item?.nombrePagina.toLowerCase() === "xlovenueva" &&
-          item?.userName === registro?.userName
-      )
-    );
-    const result = {
-      adultwork: filtradoAdultWork,
-      parciales,
-      noParciales,
-      totalCreditos,
-      amateur: filtradoAmateur[0],
-      bonga: filtradoBonga,
-      cam4: filtradoCam4[0],
-      chaturbate: filtradoChatubate[0],
-      dirty: filtradoDirty[0],
-      islive: filtradoIsLive[0],
-      sender: filtradoSender[0],
-      senderAnterior: filtradoSenderAnterior[0],
-      skype: filtradoSkype[0],
-      stripchat: filtradoStripchat[0],
-      vx: filtradoVx[0],
-      xlove: filtradoXlove[0],
-      xlovenueva: filtradoXloveNueva[0],
-      paginaUserName: paginaUserName,
-      user: {
-        id: user.id,
-        nombre: user.nombre,
-        apellido: user.apellido,
-        porcentaje: user.p_porcentaje,
-        ubicacion: user.p_ubicacion,
+    const latestSenderAnterior = filtradoSenderAnterior?.reduce(
+      (latest, registro) => {
+        if (
+          !latest ||
+          new Date(registro.createdAt) > new Date(latest.createdAt)
+        ) {
+          return registro;
+        }
+        return latest;
       },
-      moneda: moneda,
-    };
-    return result;
+      null
+    );
+    if (latestSenderAnterior) {
+      final.senderAnterior = latestSenderAnterior;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin senderQuincenaAnterior      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio skype   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoSkype = skype?.q_skype?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "skype" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestSkype = filtradoSkype?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestSkype) {
+      final.skype = latestSkype;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin skype      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio streamate   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoStreamate = streamate?.q_streamate?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "streamate" &&
+          item?.userName === registro?.userName
+      )
+    );
+    if (filtradoStreamate && filtradoStreamate.length > 0) {
+      const totalDolaresStreamate = filtradoStreamate.reduce(
+        (total, registro) => total + (registro.dolares || 0),
+        0
+      );
+      final.streamateTotal = totalDolaresStreamate;
+      final.streamate = filtradoStreamate;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin streamate      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio streamRay   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoStreamRay = streamRay?.q_streamRay?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "streamray" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestStreamRay = filtradoStreamRay?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestStreamRay) {
+      final.streamRay = latestStreamRay;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin streamRay      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio stripchat   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoStripchat = stripchat?.q_stripchat?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "stripchat" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestStripchat = filtradoStripchat?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestStripchat) {
+      final.stripchat = latestStripchat;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin stripchat      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio tripleSiete   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoTripleSiete = tripleSiete?.q_triplesiete?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "triplesiete" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestTripleSiete = filtradoTripleSiete?.reduce(
+      (latest, registro) => {
+        if (
+          !latest ||
+          new Date(registro.createdAt) > new Date(latest.createdAt)
+        ) {
+          return registro;
+        }
+        return latest;
+      },
+      null
+    );
+    if (latestTripleSiete) {
+      final.tripleSiete = latestTripleSiete;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin tripleSiete      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio vx   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoVx = vx?.q_vx?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "vx" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestVx = filtradoVx?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestVx) {
+      final.vx = latestVx;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin vx      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio xlove   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoXlove = xlove?.q_xlove?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "xlove" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestXlove = filtradoXlove?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestXlove) {
+      final.xlove = latestXlove;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin xlove      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio xlovenueva   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    const filtradoXloveNueva = xlovenueva?.q_xloveNueva?.filter((registro) =>
+      final.userNamePage?.some(
+        (item) =>
+          item?.pagina.toLowerCase() === "xlovenueva" &&
+          item?.userName === registro?.userName
+      )
+    );
+    const latestXloveNueva = filtradoXloveNueva?.reduce((latest, registro) => {
+      if (
+        !latest ||
+        new Date(registro.createdAt) > new Date(latest.createdAt)
+      ) {
+        return registro;
+      }
+      return latest;
+    }, null);
+    if (latestXloveNueva) {
+      final.xlovenueva = latestXloveNueva;
+    }
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin xlovenueva      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio prestamos   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    final.prestamos = prestamos.q_prestamos;
+    final.prestamoTotal = final.prestamos.reduce((x, y) => x + y.cantidad, 0);
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin prestamos      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio ventas   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    final.ventas = ventas.q_venta
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin ventas      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio rojos   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin rojos      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //todo ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Totales   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    
+
+    //todo ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin Totales      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+    return final;
   } catch (error) {
+    console.log(error);
     throw new Error(
       "Error ocurrio algo en el proceso por favor intente nuevamente o contacte con un programing thanks"
     );

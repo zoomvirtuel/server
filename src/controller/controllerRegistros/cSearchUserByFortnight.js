@@ -45,7 +45,14 @@ const searchUserByFortnight = async (ids, id) => {
         {
           model: Moneda,
           as: "monedas",
-          attributes: ["id", "descripcion", "dolar", "euro", "libra"],
+          attributes: [
+            "id",
+            "descripcion",
+            "dolar",
+            "euro",
+            "libra",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -60,7 +67,7 @@ const searchUserByFortnight = async (ids, id) => {
       });
     }
 
-    let quincenaId = quincenaAnterior.id;
+    let quincenaId = quincenaAnterior?.id;
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio adultwork   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const adultWork = await Quincena.findOne({
@@ -262,26 +269,30 @@ const searchUserByFortnight = async (ids, id) => {
         },
       ],
     });
-    const senderQuincenaAnterior = await Quincena.findOne({
-      where: { id: quincenaId },
-      attributes: ["id", "nombre", "inicia", "final"],
-      include: [
-        {
-          model: Sender,
-          as: "q_sender",
-          attributes: [
-            "id",
-            "userName",
-            "fecha",
-            "mensual",
-            "userNameId",
-            "coins",
-            "euros",
-            "createdAt",
-          ],
-        },
-      ],
-    });
+    let senderQuincenaAnterior;
+    if (quincenaId) {
+      senderQuincenaAnterior = await Quincena.findOne({
+        where: { id: quincenaId },
+        attributes: ["id", "nombre", "inicia", "final"],
+        include: [
+          {
+            model: Sender,
+            as: "q_sender",
+            attributes: [
+              "id",
+              "userName",
+              "fecha",
+              "mensual",
+              "userNameId",
+              "coins",
+              "euros",
+              "createdAt",
+            ],
+          },
+        ],
+      });
+    }
+
     const skype = await Quincena.findOne({
       where: { id: ids },
       attributes: ["id", "nombre", "inicia", "final"],
@@ -473,6 +484,30 @@ const searchUserByFortnight = async (ids, id) => {
         },
       ],
     });
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio formateo de moneda   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    const pagos = moneda?.monedas?.filter(
+      (registro) => registro.descripcion.toLowerCase() === "pago"
+    );
+    const estadisticas = moneda?.monedas?.filter(
+      (registro) => registro.descripcion.toLowerCase() === "estadisticas"
+    );
+    pagos?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    estadisticas?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    const monedaSeleccionada = {
+      id: moneda.id,
+      nombre: moneda.nombre,
+      inicia: moneda.inicia,
+      final: moneda.final,
+      monedas:
+        pagos?.length > 0
+          ? pagos[0]
+          : estadisticas?.[0]
+          ? estadisticas[0]
+          : null,
+    };
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin formateo de moneda   ↑↑↑↑↑↑↑↑↑↑↑↑
 
     const formatearUsuario = (usuario, paginas) => {
       // Obtener la información del usuario
@@ -529,11 +564,12 @@ const searchUserByFortnight = async (ids, id) => {
     const usuarioFormateado = formatearUsuario(user, paginas);
     const final = {
       id: usuarioFormateado.id,
-      nomebre: usuarioFormateado.nombre,
+      nombre: usuarioFormateado.nombre,
       apellido: usuarioFormateado.apellido,
       porcentaje: usuarioFormateado.porcentaje,
       ubicacion: usuarioFormateado.ubicacion,
       userNamePage: usuarioFormateado.userNamePage,
+      moneda: monedaSeleccionada,
     };
     // //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio adultWork   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const userNameToFilter = final.userNamePage?.find(
@@ -813,14 +849,18 @@ const searchUserByFortnight = async (ids, id) => {
     //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin sender      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio senderQuincenaAnterior   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    const filtradoSenderAnterior = senderQuincenaAnterior?.q_sender?.filter(
-      (registro) =>
-        final.userNamePage?.some(
-          (item) =>
-            item?.pagina.toLowerCase() === "sender" &&
-            item?.userName === registro?.userName
-        )
-    );
+    let filtradoSenderAnterior;
+    if (senderQuincenaAnterior) {
+      filtradoSenderAnterior = senderQuincenaAnterior?.q_sender?.filter(
+        (registro) =>
+          final.userNamePage?.some(
+            (item) =>
+              item?.pagina.toLowerCase() === "sender" &&
+              item?.userName === registro?.userName
+          )
+      );
+    }
+
     const latestSenderAnterior = filtradoSenderAnterior?.reduce(
       (latest, registro) => {
         if (
@@ -1014,12 +1054,18 @@ const searchUserByFortnight = async (ids, id) => {
     //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin xlovenueva      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio prestamos   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    final.prestamos = prestamos.q_prestamos;
-    final.prestamoTotal = final.prestamos.reduce((x, y) => x + y.cantidad, 0);
+    final.prestamos = prestamos?.q_prestamos?.filter(
+      (x) => x?.userId === final?.id
+    );
+    final.prestamoTotal = final?.prestamos?.reduce(
+      (x, y) => x + y?.cantidad,
+      0
+    );
     //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin prestamos      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio ventas   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    final.ventas = ventas.q_venta
+    final.ventas = ventas?.q_venta?.filter((x) => x?.userId === final?.id);
+    final.ventasTotal = final?.ventas?.reduce((x, y) => x + y?.valor, 0);
     //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin ventas      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio rojos   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1027,8 +1073,98 @@ const searchUserByFortnight = async (ids, id) => {
     //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin rojos      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     //todo ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Totales   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    
+    //? sacamos el total de libras
+    let totalLibras = parseFloat(final.adultworkTotal || 0);
 
+    //? sacamos el total de euros
+    let totalEuros =
+      parseFloat(
+        (final.dirty?.moneda.toLowerCase() === "euro" ? final.dirty?.plata : 0) || 0
+      ) +
+      parseFloat(final.islive?.euros || 0) +
+      parseFloat(final.mondo?.euros || 0) +
+      parseFloat(
+        (final.senderAnterior?.euros
+          ? final.sender?.euros - final.senderAnterior?.euros
+          : 0) || 0
+      ) +
+      parseFloat(final.vx?.euros || 0) +
+      parseFloat(final.xlove?.euros || 0) +
+      parseFloat(final.xlovenueva?.euros || 0);
+
+    //? sacamos el total de dolares
+    let totalDolares =
+      parseFloat(final.amateur?.dolares || 0) +
+      parseFloat(final.bongaTotal || 0) +
+      parseFloat(final.cam4?.dolares || 0) +
+      parseFloat(final.chaturbate?.dolares || 0) +
+      parseFloat(
+        (final.dirty?.moneda.toLowerCase() === "dolar" ? final.dirty?.plata : 0) || 0
+      ) +
+      parseFloat(final.myFreeCams?.dolares || 0) +
+      parseFloat(final.sakura?.dolares || 0) +
+      parseFloat(final.skype?.dolares || 0) +
+      parseFloat(final.stripchat?.dolares || 0) +
+      parseFloat(final.streamateTotal || 0) +
+      parseFloat(final.streamRay?.dolares || 0) +
+      parseFloat(final.tripleSiete?.dolares || 0);
+
+    //? sacamos el total de los creditos
+    const totalCreditos = parseFloat(
+      totalDolares + totalEuros + totalLibras || 0
+    );
+
+    //? sacamos el porcentaje
+    const porcentajeFinal =
+      totalCreditos >= final.porcentaje?.meta
+        ? final.porcentaje?.final
+        : final.porcentaje?.inicial;
+
+    //? seleccionamos el valor del dolar
+    const dolar = final?.moneda?.monedas?.dolar || 0;
+
+    //? seleccionamos el valor del euro
+    const euro = final?.moneda?.monedas?.euro || 0;
+
+    //? seleccionamos el valor de la libra
+    const libra = final?.moneda?.monedas?.libra || 0;
+
+    //? sacamos el total en pesos
+    const totalPesos =
+      parseFloat(((totalLibras * porcentajeFinal) / 100) * libra || 0) +
+      parseFloat(((totalEuros * porcentajeFinal) / 100) * euro || 0) +
+      parseFloat(((totalDolares * porcentajeFinal) / 100) * dolar || 0);
+
+    //? sacamos el total de los prestamos
+    const totalPrestamos = parseFloat(
+      final?.prestamoTotal || 0
+    );
+
+    //? sacamos el total de las ventas de la vitrina
+    const totalVitrina = parseFloat(
+      final?.ventasTotal || 0
+    );
+
+    //? sacamos el total final luego de los descuentos
+    const saldo = parseFloat(
+      parseFloat(totalPesos - totalPrestamos - totalVitrina).toFixed(2)
+    );
+
+    // Guardar los totales en el modelo
+    final.totales = {
+      totalCreditos,
+      totalDolares,
+      totalEuros,
+      totalLibras,
+      totalPrestamos,
+      totalVitrina,
+      porcentajeFinal,
+      totalPesos,
+      saldo,
+      libra,
+      euro,
+      dolar,
+    };
     //todo ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin Totales      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     return final;
@@ -1039,7 +1175,9 @@ const searchUserByFortnight = async (ids, id) => {
     );
   }
 };
+//todo ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin user Id      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
+//todo ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio All Users   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 const searchAllUserByFortnight = async (id) => {
   try {
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio peticiones al base de datos   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1056,7 +1194,14 @@ const searchAllUserByFortnight = async (id) => {
         {
           model: Moneda,
           as: "monedas",
-          attributes: ["id", "descripcion", "dolar", "euro", "libra"],
+          attributes: [
+            "id",
+            "descripcion",
+            "dolar",
+            "euro",
+            "libra",
+            "createdAt",
+          ],
         },
       ],
     });
@@ -1481,6 +1626,31 @@ const searchAllUserByFortnight = async (id) => {
       ],
     });
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin peticiones a la base de datos   ↑↑↑↑↑↑↑↑↑↑↑↑
+
+    //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio formateo de moneda   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    const pagos = moneda?.monedas?.filter(
+      (registro) => registro.descripcion.toLowerCase() === "pago"
+    );
+    const estadisticas = moneda?.monedas?.filter(
+      (registro) => registro.descripcion.toLowerCase() === "estadisticas"
+    );
+    pagos?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    estadisticas?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    const monedaSeleccionada = {
+      id: moneda.id,
+      nombre: moneda.nombre,
+      inicia: moneda.inicia,
+      final: moneda.final,
+      monedas:
+        pagos?.length > 0
+          ? pagos[0]
+          : estadisticas?.[0]
+          ? estadisticas[0]
+          : null,
+    };
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin formateo de moneda   ↑↑↑↑↑↑↑↑↑↑↑↑
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio formateo de usuario   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     const formatearUsuarios = (usuarios, paginas) => {
       return usuarios.map((usuario) => {
@@ -1539,7 +1709,7 @@ const searchAllUserByFortnight = async (id) => {
     const resultado = {
       modelos: modelos,
       paginas: {},
-      moneda: moneda,
+      moneda: monedaSeleccionada,
     };
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin formateo usuario   ↑↑↑↑↑↑↑↑↑↑↑↑
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio adultwork   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -2800,7 +2970,7 @@ const searchAllUserByFortnight = async (id) => {
         parseFloat(modelo.sakura?.dolares || 0) +
         parseFloat(modelo.skype?.dolares || 0) +
         parseFloat(modelo.stripchat?.dolares || 0) +
-        parseFloat(modelo.streamate?.dolares || 0) +
+        parseFloat(modelo.streamateTotal?.dolares || 0) +
         parseFloat(modelo.streamRay?.dolares || 0) +
         parseFloat(modelo.tripleSiete?.dolares || 0);
 
@@ -2815,25 +2985,14 @@ const searchAllUserByFortnight = async (id) => {
           ? modelo.porcentaje?.final
           : modelo.porcentaje?.inicial;
 
-      //? sacamos la moneda para estadisticas
-      const monedaEstadisticas = moneda?.monedas?.find(
-        (x) => x.descripcion === "estadisticas"
-      );
-
-      //? sacamos la moneda para pago
-      const monedaPago = moneda?.monedas?.find((x) => x.descripcion === "pago");
-
-      //? seleccionamos la moneda poniendo primero la de pago
-      const monedaSeleccionada = monedaPago || monedaEstadisticas;
-
       //? seleccionamos el valor del dolar
-      const dolar = monedaSeleccionada?.dolar || 0;
+      const dolar = resultado?.moneda?.monedas?.dolar || 0;
 
       //? seleccionamos el valor del euro
-      const euro = monedaSeleccionada?.euro || 0;
+      const euro = resultado?.moneda?.monedas?.euro || 0;
 
       //? seleccionamos el valor de la libra
-      const libra = monedaSeleccionada?.libra || 0;
+      const libra = resultado?.moneda?.monedas?.libra || 0;
 
       //? sacamos el total en pesos
       const totalPesos =
@@ -2876,6 +3035,7 @@ const searchAllUserByFortnight = async (id) => {
     //todo  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   final  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     return resultado;
   } catch (error) {
+    console.log(error);
     throw new Error(
       "Error ocurrio algo en el proceso por favor intente nuevamente o contacte con un programing thanks" +
         error.message

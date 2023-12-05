@@ -4,6 +4,9 @@ const postVentas = async (venta) => {
   try {
     const ventas = [];
     for (const item of venta) {
+      if (item.cuotas === 0) {
+        item.cuotas = 1;
+      }
       try {
         const quincenaId = await Quincena.findOne({
           where: { id: item.quincenaId },
@@ -14,19 +17,21 @@ const postVentas = async (venta) => {
 
         if (item.cuotas > 1) {
           const allQuincenas = await Quincena.findAll();
-    allQuincenas.sort((a, b) => {
-      // Convierte las fechas a un formato numérico para comparar
-      const dateA = Date.parse(
-        a.inicia.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
-      );
-      const dateB = Date.parse(
-        b.inicia.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
-      );
+          allQuincenas.sort((a, b) => {
+            // Convierte las fechas a un formato numérico para comparar
+            const dateA = Date.parse(
+              a.inicia.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+            );
+            const dateB = Date.parse(
+              b.inicia.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+            );
 
-      return dateA - dateB;
-    });
+            return dateA - dateB;
+          });
           for (let i = 0; i < item.cuotas; i++) {
-            const quincenaIndex = allQuincenas.findIndex((q) => q.id === item.quincenaId);
+            const quincenaIndex = allQuincenas.findIndex(
+              (q) => q.id === item.quincenaId
+            );
             const cuotaQuincenaId = allQuincenas[quincenaIndex + i]?.id;
             const nombre = `${i + 1}/${item.cuotas} ${productoId.nombre}`;
 
@@ -70,7 +75,6 @@ const postVentas = async (venta) => {
     throw new Error("Lo sentimos no pudimos crear la venta");
   }
 };
-
 
 const getAllVentas = async () => {
   try {

@@ -92,8 +92,10 @@ const {
   Ventas,
   //? ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    producto    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
   Producto,
-  //? ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    producto    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+  //? ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    prestamos    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
   Prestamos,
+  //? ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    rojo    ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+  Rojo,
 } = sequelize.models;
 
 //? relation of fortnight nad money
@@ -342,9 +344,9 @@ Compras.belongsTo(Producto, { as: "compra", foreignKey: "productoId" });
 // //? relation of fortnight and Prestamos
 Quincena.hasMany(Prestamos, { as: "q_prestamos", foreignKey: "quincena" });
 Prestamos.belongsTo(Quincena, { as: "q_prestamos", foreignKey: "quincena" });
-// //? relation of userName and Prestamos
-// UserName.hasMany(Prestamos, { as: "corte_prestamos", foreignKey: "userId" });
-// Prestamos.belongsTo(UserName, { as: "corte_prestamos", foreignKey: "userId" });
+// //? relation of fortnight and Rojo
+Quincena.hasMany(Rojo, { as: "q_rojo", foreignKey: "quincena" });
+Rojo.belongsTo(Quincena, { as: "q_rojo", foreignKey: "quincena" });
 
 module.exports = {
   ...sequelize.models, // para poder importar los modelos así: const { Product, User } = require('./db.js');

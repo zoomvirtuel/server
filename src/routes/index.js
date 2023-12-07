@@ -36,6 +36,7 @@ const rTripleSiete = require("./routesPaginas/rTripleSiete.js");
 const rSearchProducto = require("./routesRegistros/rSearchProducto.js");
 const rSearchUserByFortnight = require("./routesRegistros/rSearchUserByFortnight.js");
 const rPrestamos = require("./routesRegistros/rPrestamos.js");
+const rRojo = require("./routesRegistros/rRojo.js");
 
 //* ejecucion de rutasrouter.use("/", rPassport);
 router.use("/comentario", rComment);
@@ -53,6 +54,7 @@ router.use("/registro", rUser);
 router.use("/venta", rVenta);
 router.use("/relation", rRelationUbicationAndPorcentaje);
 router.use("/username", rUserName);
+router.use("/rojo", rRojo);
 
 router.use("/corte", rAdultwork);
 router.use("/amateur", rAmateur);

@@ -28,6 +28,7 @@ const {
   Paginas,
   Prestamos,
   Producto,
+  Rojo,
 } = require("../../db.js");
 
 const searchUserByFortnight = async (ids, id) => {
@@ -459,6 +460,21 @@ const searchUserByFortnight = async (ids, id) => {
             "nombre",
             "valor",
             "createdAt",
+          ],
+        },
+      ],
+    });
+    const rojo = await Quincena.findOne({
+      where: { id: ids },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Rojo,
+          as: "q_rojo",
+          attributes: [
+            "id",
+            "userId",
+            "rojo",
           ],
         },
       ],
@@ -1069,7 +1085,7 @@ const searchUserByFortnight = async (ids, id) => {
     //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin ventas      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     //! ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio rojos   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-
+    final.rojo = rojo?.q_rojo?.filter((x) => x?.userId === final?.id);
     //! ↑↑↑↑↑↑↑↑↑↑↑↑↑↑    fin rojos      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
     //todo ↓↓↓↓↓↓↓↓↓↓↓↓↓↓    inicio Totales   ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
@@ -1144,11 +1160,16 @@ const searchUserByFortnight = async (ids, id) => {
     const totalVitrina = parseFloat(
       final?.ventasTotal || 0
     );
+    //? sacamos el rojo
+    const rojox = final?.rojo[0]?.rojo || 0
+
+    //? sacamos los intereses
+    const interes = rojox >= 2000000 ? rojox*0.02:rojox*0.05 || 0;
 
     //? sacamos el total final luego de los descuentos
     const saldo = parseFloat(
-      parseFloat(totalPesos - totalPrestamos - totalVitrina).toFixed(2)
-    );
+      parseFloat(totalPesos - totalPrestamos - rojox - interes  - totalVitrina).toFixed(2)
+    ) || 0;
 
     // Guardar los totales en el modelo
     final.totales = {
@@ -1159,6 +1180,8 @@ const searchUserByFortnight = async (ids, id) => {
       totalPrestamos,
       totalVitrina,
       porcentajeFinal,
+      rojo: rojox,
+      interes,
       totalPesos,
       saldo,
       libra,
@@ -1621,6 +1644,21 @@ const searchAllUserByFortnight = async (id) => {
             "nombre",
             "valor",
             "createdAt",
+          ],
+        },
+      ],
+    });
+    const rojo = await Quincena.findOne({
+      where: { id: id },
+      attributes: ["id", "nombre", "inicia", "final"],
+      include: [
+        {
+          model: Rojo,
+          as: "q_rojo",
+          attributes: [
+            "id",
+            "userId",
+            "rojo",
           ],
         },
       ],
@@ -2914,7 +2952,7 @@ const searchAllUserByFortnight = async (id) => {
 
     //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin prestamos   ↑↑↑↑↑↑↑↑↑↑↑↑
 
-    //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio prestamos  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio ventas  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     ventas?.q_venta?.forEach((venta) => {
       const userModel = resultado.modelos.find(
         (model) => model.id === venta.userId
@@ -2936,7 +2974,25 @@ const searchAllUserByFortnight = async (id) => {
       }
     });
 
-    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin prestamos   ↑↑↑↑↑↑↑↑↑↑↑↑
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin ventas   ↑↑↑↑↑↑↑↑↑↑↑↑
+    //!  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   inicio rojos  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    rojo?.q_rojo?.forEach((rojo) => {
+      const userModel = resultado.modelos.find(
+        (model) => model.id === rojo.userId
+      );
+
+      if (userModel) {
+        // Crear la propiedad 'ventas' si aún no existe
+        if (!userModel.rojo) {
+          userModel.rojo = '';
+        }
+
+        // Agregar la venta al array 'ventas' del modelo
+        userModel.rojo=rojo;
+      }
+    });
+    //!  ↑↑↑↑↑↑↑↑↑↑↑↑   fin rojos   ↑↑↑↑↑↑↑↑↑↑↑↑
+
     for (const modelo of resultado.modelos) {
       //? sacamos el total de libras
       let totalLibras = parseFloat(modelo.adultworkTotal?.creditos || 0);
@@ -3010,10 +3066,16 @@ const searchAllUserByFortnight = async (id) => {
         modelo?.vitrina?.reduce((x, y) => x + y.valor, 0).toFixed(2) || 0
       );
 
+      //? sacamos el rojo
+      const rojox = modelo?.rojo?.rojo || 0;
+
+      //? sacamos los intereses
+      const interes = rojox >= 2000000?rojox*0.02:rojox*0.05 ||0;
+
       //? sacamos el total final luego de los descuentos
       const saldo = parseFloat(
-        parseFloat(totalPesos - totalPrestamos - totalVitrina).toFixed(2)
-      );
+        parseFloat(totalPesos - totalPrestamos - rojox - interes - totalVitrina).toFixed(2)
+      ) || 0;
 
       // Guardar los totales en el modelo
       modelo.totales = {
@@ -3025,6 +3087,8 @@ const searchAllUserByFortnight = async (id) => {
         totalVitrina,
         porcentajeFinal,
         totalPesos,
+        rojo: rojox,
+        interes,
         saldo,
         libra,
         euro,

@@ -22,7 +22,7 @@ const postProducto = async (producto) => {
 const getAllProductos = async () => {
   try {
     const allProductos = await Producto.findAll();
-    
+
     return allProductos;
   } catch (error) {
     throw new Error("Error: no hay registros para mostrar");
@@ -38,13 +38,20 @@ const getProductoById = async (id) => {
   }
 };
 
-const updateProducto = async (id, nProducto) => {
+const updateProducto = async (id, editProduct) => {
   try {
     const editProducto = await Producto.findByPk(id);
     if (!editProducto) {
       return { error: "No se encontro el producto." };
     }
-    await Producto.update(nProducto);
+    await Producto.update(
+      {
+        nombre: editProduct.nombre,
+        descripcion: editProduct.descripcion,
+        imagen: editProduct.imagen,
+      },
+      { where: { id } }
+    );
     const updateProducto = await Producto.findByPk(id);
     return updateProducto;
   } catch (error) {

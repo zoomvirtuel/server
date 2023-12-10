@@ -2,8 +2,6 @@ const {
   UserName,
   Paginas,
   User,
-  Adultwork,
-  Amateur,
 } = require("../../db.js");
 
 const postUserName = async (input) => {
@@ -60,7 +58,56 @@ const getAllUserName = async () => {
   }
 };
 
+const getUserNameById = async (id) => {
+try {
+const userName = await UserName.findByPk(id) 
+return userName
+} catch (error) {
+throw new Error ("No se encontro el UserName " + error.message);
+}
+};
+
+const updateUserName = async (id, editedUserName) => {
+  console.log(id)
+  console.log(editedUserName)
+  try {
+    const editUserNames = await UserName.findByPk(id);
+    if (!editUserNames) {
+      console.log('error')
+      return { error: "No se encontro el userName." };
+    }
+    await UserName.update(
+      {
+        userName: editedUserName.userName,
+      },
+      { where: { id } }
+    );
+    const updateUserName = await UserName.findByPk(id);
+    return updateUserName;
+  } catch (error) {
+    console.log(error)
+    throw Error("No pudimos actualizar el userName. " + error.message);
+  }
+};
+
+const deleteUserName = async (id) => {
+  try {
+    const deleteUserName = await UserName.findByPk(id);
+    if (!deleteUserName) {
+      return { error: "Lo sentimos no encontramos el UserName." };
+    }
+    await deleteUserName.destroy();
+    return { mensaje: "El UserName fue eliminado correctamente" };
+  } catch (error) {
+    throw Error("Error no se pudo eliminar el UserName.");
+  }
+};
+
 module.exports = {
   postUserName,
   getAllUserName,
+  getUserNameById,
+  updateUserName,
+  deleteUserName
+
 };

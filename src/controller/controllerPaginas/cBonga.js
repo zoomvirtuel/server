@@ -16,7 +16,6 @@ const pbo = async (cobo) => {
             id: i.quincena,
           },
         });
-        console.log(quincena)
         const [r, c] = await Bonga.findOrCreate({
           where: {
             fecha: i.fecha,
@@ -29,10 +28,9 @@ const pbo = async (cobo) => {
         });
         
         if (c) {
-          console.log(r)
+
           await r.setCorte_bonga(userNameId); // Establecer la relación con UserName
           await r.setQ_bonga(quincena); // Establecer la relación con Quincena
-          console.log(r)
           rcobo.push(r);
         }
       } catch (error) {
@@ -46,6 +44,7 @@ const pbo = async (cobo) => {
     });
     return rcobo;
   } catch (error) {
+    console.log(error)
     // Manejo de errores en caso de que algo falle durante el proceso de creación de registros.
     throw new Error("Error al guardar los registros: " + error.message);
   }
@@ -62,7 +61,21 @@ const gbo = async () => {
   }
 };
 
+const deleteBonga = async (id) => {
+  try {
+    const deleteBonga = await Bonga.findByPk(id)
+    if (!deleteBonga) {
+      return { error: "Lo sentimos no encontramos el Corte." };
+    }
+    await deleteBonga.destroy()
+    return { mensaje: "El corte fue eliminado correctamente" };
+  } catch (error) {
+    throw Error("Error no se pudo eliminar el corte.");
+  }
+}
+
 module.exports = {
   pbo,
   gbo,
+  deleteBonga
 };

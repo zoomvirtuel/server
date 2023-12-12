@@ -68,8 +68,6 @@ throw new Error ("No se encontro el UserName " + error.message);
 };
 
 const updateUserName = async (id, editedUserName) => {
-  console.log(id)
-  console.log(editedUserName)
   try {
     const editUserNames = await UserName.findByPk(id);
     if (!editUserNames) {

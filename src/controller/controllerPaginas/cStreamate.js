@@ -52,7 +52,21 @@ const getStreamate = async () => {
   }
 };
 
+const deleteStreamate = async (id) => {
+  try {
+    const deleteStreamate = await Streamate.findByPk(id);
+    if (!deleteStreamate) {
+      return { error: "Lo sentimos no encontramos el Corte." };
+    }
+    await deleteStreamate.destroy();
+    return { mensaje: "El corte fue eliminado correctamente" };
+  } catch (error) {
+    throw Error("Error no se pudo eliminar el corte.");
+  }
+};
+
 module.exports = {
   postStreamate,
-  getStreamate
+  getStreamate,
+  deleteStreamate
 };

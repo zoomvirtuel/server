@@ -83,10 +83,10 @@ router.get("/check/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const nUser = req.body.nUser;
+  const editUser = req.body;
   try {
-    const editUser = await updateUser(id, nUser);
-    return res.status(200).json(editUser);
+    const nUser = await updateUser(id, editUser);
+    return res.status(200).json(nUser);
   } catch (error) {
     return res.status(500).send(error.message);
   }

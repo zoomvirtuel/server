@@ -6,7 +6,6 @@ const pad = async (coad) => {
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of coad) {
       try {
-
         const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
@@ -62,31 +61,29 @@ const ppad = async (copad) => {
     // Recorremos newData y guardamos cada objeto como un registro en la base de datos
     for (const i of copad) {
       try {
-        
-      
-      const userNameId = await UserName.findOne({
-        where: {
-          userName: i.user,
-        },
-      });
-      const quincena = await Quincena.findOne({
-        where: {
-          id: i.quincena,
-        },
-      });
-      const r = await Adultwork.create({
+        const userNameId = await UserName.findOne({
+          where: {
+            userName: i.user,
+          },
+        });
+        const quincena = await Quincena.findOne({
+          where: {
+            id: i.quincena,
+          },
+        });
+        const r = await Adultwork.create({
           userName: i.user,
           creditos: i.creditos,
           parcial: i.parcial,
           mensual: false,
-      });
-      if (r) {
-        await r.setCorte_adult(userNameId);
-        await r.setQ_adult(quincena);
+        });
+        if (r) {
+          await r.setCorte_adult(userNameId);
+          await r.setQ_adult(quincena);
+        }
+      } catch (error) {
+        console.error("Error en una iteración del bucle:", error);
       }
-    } catch (error) {
-      console.error("Error en una iteración del bucle:", error);
-    }
     }
     // Opcionalmente, puedes devolver algún mensaje o resultado para confirmar que se han guardado los registros correctamente.
     rcopad.sort((a, b) => {
@@ -111,9 +108,23 @@ const gpad = async () => {
   }
 };
 
+const deleteCorte = async (id) => {
+  try {
+    const deleteAdult = await Adultwork.findByPk(id);
+    if (!deleteAdult) {
+      return { error: "Lo sentimos no encontramos el Corte" };
+    }
+    await deleteAdult.destroy();
+    return { mensaje: "El Corte fue eliminado" };
+  } catch (error) {
+    throw new Error("Error no se pudo eliminar el Corte");
+  }
+};
+
 module.exports = {
   pad,
   gad,
   ppad,
   gpad,
+  deleteCorte
 };

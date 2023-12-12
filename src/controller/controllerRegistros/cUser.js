@@ -128,13 +128,37 @@ const getCheckById = async (id) => {
   }
 };
 
-const updateUser = async (id, nUser) => {
+const updateUser = async (id, editUser) => {
   try {
-    const editUser = await User.findByPk(id);
-    if (!editUser) {
+    const nUser = await User.findByPk(id);
+    if (!nUser) {
       return { error: "no se encontro el usuario." };
     }
-    await editUser.update(nUser);
+    await User.update( {
+      nombre: editUser.nombre,
+      apellido: editUser.apellido,
+      direccion: editUser.direccion,
+      telefono: editUser.telefono,
+      whatsapp: editUser.whatsapp,
+      admin: editUser.admin,
+    },
+    { where: { id } });
+    const rUser = await User.findByPk(id);
+    if (!rUser) {
+      throw Error("Usuario no encontrado");
+    }
+    const rUbicacion = await Ubicacion.findByPk(editUser.ubicacion);
+    if (!rUbicacion) {
+      throw Error("Ubicacion no encontrada");
+    }
+    const rPorcentaje = await Porcentaje.findByPk(editUser.porcentaje);
+    if (!rPorcentaje) {
+      throw Error("Porcentaje no encontrado");
+    }
+
+    await rUser.setP_porcentaje(rPorcentaje);
+    await rUser.setP_ubicacion(rUbicacion);
+
     const updateUser = await User.findByPk(id);
     return updateUser;
   } catch (error) {

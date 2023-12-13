@@ -7,6 +7,9 @@ const postVentas = async (venta) => {
       if (item.cuotas === 0) {
         item.cuotas = 1;
       }
+      if (item.cantidad === 0) {
+        item.cantidad = 1
+      }
       try {
         const quincenaId = await Quincena.findOne({
           where: { id: item.quincenaId },

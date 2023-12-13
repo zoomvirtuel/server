@@ -1192,7 +1192,6 @@ const searchUserByFortnight = async (ids, id) => {
 
     return final;
   } catch (error) {
-    console.log(error);
     throw new Error(
       "Error ocurrio algo en el proceso por favor intente nuevamente o contacte con un programing thanks"
     );
@@ -1823,7 +1822,6 @@ const searchAllUserByFortnight = async (id) => {
           }, null);
 
           // Suma todos los créditos de los registros
-          // console.log(registrosUsuario)
           const totalCreditos = cortes.reduce(
             (total, registro) => total + registro.creditos,
             0
@@ -1847,7 +1845,6 @@ const searchAllUserByFortnight = async (id) => {
                 (totalCreditos + latestParcialRecord.creditos).toFixed(2)
               ),
             };
-            // console.log(latestParcialRecord)
             usuario.adultwork = [...cortes, latestParcialRecord];
           }
 
@@ -3099,7 +3096,6 @@ const searchAllUserByFortnight = async (id) => {
     //todo  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓   final  ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     return resultado;
   } catch (error) {
-    console.log(error);
     throw new Error(
       "Error ocurrio algo en el proceso por favor intente nuevamente o contacte con un programing thanks" +
         error.message

@@ -27,7 +27,6 @@ const pch = async (coch) => {
       if (c) {
         await r.setCorte_chaturbate(userNameId);
         await r.setQ_chaturbate(quincena);
-        console.log(r);
         rcoch.push(r);
       }
     } catch (error) {

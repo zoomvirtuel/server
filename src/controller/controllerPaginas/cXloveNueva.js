@@ -10,22 +10,19 @@ const pxln = async (coxln) => {
             id: i.quincena,
           },
         });
-        console.log(quincena)
         const userNameId = await UserName.findOne({
           where: {
             userName: i.user,
           },
         });
-        console.log(userNameId)
         const r = await XloveNueva.create({
           userName: i.user,
           fecha: i.fecha,
           euros: i.euros,
           mensual: false,
         });
-        console.log(r)
         if (r) {
-          console.log(r)
+
           await r.setCorte_xloveNueva(userNameId);
           await r.setQ_xloveNueva(quincena);
           rcoxln.push(r);

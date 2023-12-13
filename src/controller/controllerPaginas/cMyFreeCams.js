@@ -25,7 +25,6 @@ const postMyFreeCams = async (myFreeCams) => {
         if (r) {
           await r.setCorte_myfreecams(userNameId);
           await r.setQ_myfreecams(quincena);
-          console.log(r)
         }
       } catch (error) {
         console.error("Error en una iteración del bucle:", error);

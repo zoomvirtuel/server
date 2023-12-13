@@ -21,19 +21,12 @@ const pam = async (coam) => {
           dolares: i.dolares,
           mensual: false,
         });
-        // console.log(c);
-        // console.log(r);
         if (r) {
-          // console.log(r);
           await r.setCorte_amateur(userNameId);
           await r.setQ_amateur(quincena);
-          console.log(r);
-          // rcoam.push(r);
-          // console.log(rcoam);
         }
       } catch (error) {
         console.error("Error en una iteración del bucle:", error);
-        // Continuar con la próxima iteración
       }
     }
     rcoam.sort((a, b) => {

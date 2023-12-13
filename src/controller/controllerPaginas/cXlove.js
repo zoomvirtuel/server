@@ -2,7 +2,6 @@ const { Xlove, UserName, Quincena } = require("../../db.js");
 
 const pxl = async (coxl) => {
   try {
-    console.log(coxl);
     const rcoxl = [];
     for (const i of coxl) {
       try {
@@ -21,13 +20,10 @@ const pxl = async (coxl) => {
           euros: i.euros,
           mensual: false,
         });
-        console.log(userNameId);
-        console.log(quincena);
-        console.log(r);
+
         if (r) {
           await r.setCorte_xlove(userNameId);
           await r.setQ_xlove(quincena);
-          console.log(r);
           rcoxl.push(r);
         }
       } catch (error) {

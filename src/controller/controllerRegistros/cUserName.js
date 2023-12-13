@@ -17,27 +17,14 @@ const postUserName = async (input) => {
     const createdUserNames = [];
 
     for (const paginaId in userName) {
-      // console.log(paginaId);
       if (userName.hasOwnProperty(paginaId)) {
         const paginaName = userName[paginaId];
-        // console.log("username " + paginaName);
         const pagina = await Paginas.findOne({ where: { id: paginaId } });
-        // console.log("busqueda de pagina");
-        // console.log(pagina);
-
         if (pagina) {
           const newUserName = await UserName.create({ userName: paginaName });
-          // console.log("creacion");
-          // console.log(newUserName);
-          
           await newUserName.setUseres(newUser);
-          // console.log("creacion");
-          // console.log(newUserName);
           await newUserName.setUserNames(pagina);
-        
-
           newUserName.pagina = pagina.nombrePagina;
-
           createdUserNames.push(newUserName);
         }
       }
@@ -71,7 +58,6 @@ const updateUserName = async (id, editedUserName) => {
   try {
     const editUserNames = await UserName.findByPk(id);
     if (!editUserNames) {
-      console.log('error')
       return { error: "No se encontro el userName." };
     }
     await UserName.update(
@@ -83,7 +69,6 @@ const updateUserName = async (id, editedUserName) => {
     const updateUserName = await UserName.findByPk(id);
     return updateUserName;
   } catch (error) {
-    console.log(error)
     throw Error("No pudimos actualizar el userName. " + error.message);
   }
 };

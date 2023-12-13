@@ -69,7 +69,6 @@ router.get("/:id", async (req, res) => {
 router.get("/check/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const user = await getCheckById(id);
     if (user) {
       return res.status(200).json(user);

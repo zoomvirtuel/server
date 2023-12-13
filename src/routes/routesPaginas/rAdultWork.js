@@ -10,7 +10,6 @@ const {
 
 router.post("/", async (req, res) => {
   const coad = req.body.coad;
-  // console.log(req.body);
   try {
     const necoad = await pad(coad); //enviar al controller
     if (necoad[0]) {

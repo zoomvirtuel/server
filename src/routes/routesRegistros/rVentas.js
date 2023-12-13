@@ -11,7 +11,6 @@ const {
 
 router.post("/", async (req, res) => {
   const venta = req.body;
-  console.log(venta)
   try {
     const nVenta = await postVentas(venta);
     return res.status(200).json(nVenta);

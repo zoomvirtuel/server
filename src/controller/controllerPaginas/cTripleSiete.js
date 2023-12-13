@@ -2,7 +2,6 @@ const { TripleSiete, UserName, Quincena } = require("../../db.js");
 
 const postTripeSiete = async (tripleSiete) => {
   try {
-    console.log(tripleSiete)
     const rsiete = [];
     for (const i of tripleSiete) {
       try {

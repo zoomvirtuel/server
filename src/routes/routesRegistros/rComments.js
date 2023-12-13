@@ -11,7 +11,6 @@ const {
 
 router.post("/", async (req, res) => {
   const comment = req.body;
-  console.log(comment)
   try {
     const nComment = await postComment(comment);
     return res.status(200).json(nComment);

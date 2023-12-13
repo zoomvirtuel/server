@@ -1,7 +1,6 @@
 const { Ubicacion } = require("../../db.js");
 
 const postUbicacion = async (ubicacion) => {
-  console.log(ubicacion)
   try {
     const ubication = await Ubicacion.findOrCreate({ where: { ubicacion } });
     return ubication;

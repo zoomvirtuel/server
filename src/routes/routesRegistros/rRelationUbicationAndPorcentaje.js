@@ -11,7 +11,6 @@ router.post("/", async (req, res) => {
     const relation = await relationUbicationAndPorcentaje(input);
     return res.status(200).json(relation);
   } catch (error) {
-    console.log(error.message)
     return res.status(500).json({ error: "Error al crear las relaciones" });
   }
 });

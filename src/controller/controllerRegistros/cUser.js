@@ -92,7 +92,6 @@ const getAllUserIdName = async () => {
 
 const getUserById = async (id) => {
   try {
-    // console.log(id)
     const userId = await User.findOne({
       where: { id },
       include: [

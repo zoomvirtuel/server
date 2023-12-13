@@ -1,7 +1,6 @@
 const { Dirty, UserName, Quincena } = require("../../db.js");
 
 const pdi = async (codi) => {
-  console.log(codi)
   try {
     const rcodi = [];
     for (const i of codi) {
@@ -25,7 +24,6 @@ const pdi = async (codi) => {
       if (r) {
         await r.setCorte_dirty(userNameId);
         await r.setQ_dirty(quincena);
-        console.log(r)
         rcodi.push(r);
       }
       } catch (error) {

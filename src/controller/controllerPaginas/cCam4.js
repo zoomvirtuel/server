@@ -1,11 +1,10 @@
 const { Cam4, UserName, Quincena } = require("../../db.js");
 
 const pca = async (coca) => {
-  // console.log(coca)
   try {
     const rcoca = [];
     for (const i of coca) {
-      // console.log(i)
+
       try {
         const quincena = await Quincena.findOne({
           where: {
@@ -34,7 +33,6 @@ const pca = async (coca) => {
       // Continuar con la próxima iteración
     }
     }
-    // console.log(rcoca)
     rcoca.sort((a, b) => {
       return a.userName.localeCompare(b.userName);
     });

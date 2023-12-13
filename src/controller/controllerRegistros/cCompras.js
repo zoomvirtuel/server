@@ -2,9 +2,9 @@ const { Compras, Producto } = require("../../db.js");
 
 const postCompras = async (compra) => {
   try {
-    console.log(compra)
+
     const productoId = await Producto.findOne({where: {nombre: compra.producto}});
-    console.log(productoId)
+
     if (!productoId) {
       throw Error('No se encontro el producto buscado')
     }
@@ -14,9 +14,9 @@ const postCompras = async (compra) => {
       precioVenta: compra.precioVenta,
       precioVentaDiferido: compra.precioDiferido,
     });
-console.log(nCompra)
+
     await nCompra.setCompra(productoId)
-    console.log(nCompra)
+
     return nCompra;
   } catch (error) {
     throw new Error("Lo sentimos no pudimos crear la compra");

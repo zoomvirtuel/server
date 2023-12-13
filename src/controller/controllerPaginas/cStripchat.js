@@ -15,16 +15,12 @@ const pst = async (cost) => {
             userName: i.user,
           },
         });
-        console.log(userNameId);
-        console.log(quincena);
-        console.log(cost);
         const r = await Stripchat.create({
           userName: i.user,
           tokens: i.tokens,
           dolares: i.dolares,
           mensual: false,
         });
-        console.log(r);
         if (r) {
           await r.setCorte_stripchat(userNameId);
           await r.setQ_stripchat(quincena);

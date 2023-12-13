@@ -2,17 +2,15 @@ const { Comentario, User } = require("../../db.js");
 
 const postComment = async ({ userId, comment }) => {
   try {
-    console.log(userId)
-    console.log(comment)
+  
     const nComment = await Comentario.findOrCreate({where: {comment}});
-    console.log(nComment)
+
     const user = await User.findByPk(userId);
-    console.log(user)
-    console.log(nComment)
+
     if (user) {
       await nComment[0].setComments(user);
     }
-    console.log(nComment)
+
     return nComment[0];
   } catch (error) {
     throw new Error("Error no se pudo registrar el commentario");

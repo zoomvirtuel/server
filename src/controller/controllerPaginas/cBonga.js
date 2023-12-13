@@ -44,8 +44,6 @@ const pbo = async (cobo) => {
     });
     return rcobo;
   } catch (error) {
-    console.log(error)
-    // Manejo de errores en caso de que algo falle durante el proceso de creación de registros.
     throw new Error("Error al guardar los registros: " + error.message);
   }
 };

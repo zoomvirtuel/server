@@ -41,8 +41,6 @@ router.get("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const editedUserName = req.body;
-  console.log(id)
-  console.log(editedUserName)
   try {
     const userName = await updateUserName(id, editedUserName);
     return res.status(200).json(userName);
